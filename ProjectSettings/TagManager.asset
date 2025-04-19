@@ -11,6 +11,9 @@ TagManager:
   - 
   - Water
   - UI
+  - Bridge
+  - MainCollider
+  - RagdollCollider
   - 
   - 
   - 
@@ -32,10 +35,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
   - 
   m_SortingLayers:
   - name: Default

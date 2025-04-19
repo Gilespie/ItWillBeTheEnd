@@ -1,0 +1,236 @@
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    [Header("Inputs")]
+    [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode _crouchKey = KeyCode.C;
+    [SerializeField] private KeyCode _sprintKey = KeyCode.LeftShift;
+    [SerializeField] private KeyCode _shakeKey = KeyCode.Z;
+    [SerializeField] private KeyCode _interactKey = KeyCode.E;
+    [SerializeField] private KeyCode _ragdollKey = KeyCode.R;
+
+    [Header("Animator")]
+    [SerializeField] private string _moveBoolName = "isMoving";
+    [SerializeField] private string _airBoolName = "isOnAir";
+    [SerializeField] private string _jumpTriggerName = "onJump";
+    [SerializeField] private string _crouchBoolName = "isCrouch";
+    //[SerializeField] private string _crouchTriggerName = "onCrouch";
+    [SerializeField] private string _interactBoolName = "isInteract";
+    //[SerializeField] private string _interactTriggerName = "onInteract";
+    [SerializeField] private string _xAxisName = "xAxis";
+    [SerializeField] private string _zAxisName = "zAxis";
+
+    [Header("Physics")]
+    [SerializeField] private float gravity = -20f;
+    [SerializeField] private Raycasting _raycast;
+    [SerializeField] private Ragdoll _ragdoll;
+    private bool _isRagdoll = false;
+
+    [Header("Z Limits")]
+    [SerializeField] private float _zPosMin = -5f;
+    [SerializeField] private float _zPosMax = 5f;
+
+    [Header("Parameters")]
+    [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _sprintSpeed = 15f;
+    [SerializeField] private float _crouchSpeed = 5f;
+    [SerializeField] private float _jumpForce = 7f;
+    [SerializeField] private CameraFollower _follower;
+    [SerializeField] private bool _isGrounded = false;
+    private bool _isCrouch = false;
+    private bool _isInteract = false;
+
+    [Header("Health")]
+    [SerializeField] private float _maxHealth = 50f;
+    private float _currentHealth = 0f;
+    private bool _isAlive = true;
+
+    [Header("Falling")]
+    [SerializeField] private float _fallDamageMultiplier = 100f;
+    [SerializeField] private float _fallDamageThreshold = -10f;
+    private bool _wasGround = false;
+    private float _maxFallSpeed = 0f;
+    private float _fallDamage = 0f;
+
+    private float _currentSpeed = 0f;
+    private Vector3 _direction;
+    private Rigidbody _rb;
+    private CapsuleCollider _col;
+    private Animator _animator;
+
+    void Awake()
+    {
+        Physics.gravity = new(0, gravity, 0);
+        _currentHealth = _maxHealth;
+        _rb = GetComponent<Rigidbody>();
+        _col = GetComponent<CapsuleCollider>();
+        _animator = GetComponentInChildren<Animator>();
+    }
+
+    void Update()
+    {
+        CheckZPosition();
+        _direction.x = Input.GetAxis("Horizontal");
+        _animator.SetFloat(_xAxisName, _direction.x);
+        _direction.z = Input.GetAxis("Vertical");
+        _animator.SetFloat(_zAxisName, _direction.z);
+
+        _isGrounded = _raycast.IsGrounded();
+        _animator.SetBool(_airBoolName, !_isGrounded);
+        _animator.SetBool(_moveBoolName, _direction.sqrMagnitude != 0f);
+
+        if(Input.GetKeyDown(_ragdollKey))
+        {
+           _isRagdoll = !_isRagdoll;
+        }
+
+        if (Input.GetKeyDown(_jumpKey) && _isGrounded)
+        {
+            _animator.SetTrigger(_jumpTriggerName);
+            JumpPlayer();
+        }
+
+        if (Input.GetKey(_sprintKey))
+        {
+            _currentSpeed = _sprintSpeed;
+        }
+        else
+        {
+            _currentSpeed = _moveSpeed;
+        }
+
+        if (_isRagdoll)
+        {
+            _ragdoll.ActivateRagdoll();
+        }
+        else
+        { 
+            _ragdoll.DisableRagdoll();
+        }
+
+        if (Input.GetKeyDown(_crouchKey) && _isGrounded)
+        {
+            _isCrouch = !_isCrouch;
+        }
+
+        if (Input.GetKeyDown(_interactKey) && _isGrounded)
+        {
+            _isInteract = !_isInteract;
+        }
+
+        if(_isInteract)
+        {
+            _animator.SetBool(_interactBoolName, true);
+        }
+        else
+        {
+            _animator.SetBool(_interactBoolName, false);
+        }
+
+        if (_isCrouch)
+        {
+            Crouch();
+        }
+        else
+        {
+            Uncrouch();
+        }
+    
+
+        CalculateFallDamage();
+    }
+
+    void FixedUpdate()
+    {
+        if (_direction.sqrMagnitude != 0.0f && _isAlive)
+        {
+            MovePlayer(_direction);
+        }
+    }
+
+    private void CalculateFallDamage()
+    {
+        if(!_isGrounded)
+        {
+            if(_rb.velocity.y < _maxFallSpeed)
+            {
+                _maxFallSpeed = _rb.velocity.y;
+            }
+        }
+
+        if(_isGrounded && !_wasGround)
+        {
+            if(_maxFallSpeed < _fallDamageThreshold)
+            {
+                _fallDamage = Mathf.Abs(_maxFallSpeed + _fallDamageThreshold) * _fallDamageMultiplier;
+                TakeDamage(_fallDamage);
+            }
+
+            _maxFallSpeed = 0f;
+        }
+
+        _wasGround = _isGrounded;
+    }
+
+    private void MovePlayer(Vector3 dir)
+    {
+        _rb.MovePosition(transform.position + (transform.right * dir.x + transform.forward * dir.z).normalized * _currentSpeed * Time.fixedDeltaTime);
+    }
+
+    private void JumpPlayer()
+    {
+        _rb.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
+    }
+
+    private void Crouch()
+    {
+        _currentSpeed = _crouchSpeed;
+        _col.height = 1;
+        _col.center = new Vector3(_col.center.x, 0.5f, _col.center.z); // половина высоты
+        _animator.SetBool(_crouchBoolName, true);
+    }
+
+    private void Uncrouch()
+    {
+        _animator.SetBool(_crouchBoolName, false);
+        _col.height = 2;
+        _col.center = new Vector3(_col.center.x, 1f, _col.center.z); // половина высоты
+    }
+
+    private void CheckZPosition()
+    {
+        if (transform.position.z >= _zPosMax)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, _zPosMax);
+        }
+        if (transform.position.z <= _zPosMin)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, _zPosMin);
+        }
+    }
+
+    /// <summary>
+    /// Player receive damage
+    /// </summary>
+    /// <param name="damage"></param>
+    public void TakeDamage(float damage)
+    {
+        if (damage <= 0) return;
+
+        _currentHealth -= damage;
+
+        if(_currentHealth <= 0)
+        {
+            _currentHealth = 0f;
+            DeactivatePlayer();
+        }
+    }
+
+    private void DeactivatePlayer()
+    {
+        _isAlive = false;
+        _ragdoll.ActivateRagdoll();
+        this.enabled = false;
+    }
+}
