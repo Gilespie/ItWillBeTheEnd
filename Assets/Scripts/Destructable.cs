@@ -6,17 +6,51 @@ public abstract class Destructable : MonoBehaviour
     [SerializeField] protected int _id = 0;
 
     [Header("Health")]
-    [SerializeField] private float _maxHealth = 100f;
-    private float _currentHealth = 0f;
-    private bool _isAlive = true;
+    [SerializeField] protected float _maxHealth = 100f;
+    protected float _currentHealth = 0f;
+    protected bool _isAlive = true;
 
-    void Start()
+    protected virtual void Awake()
     {
-        
+
     }
 
-    void Update()
+    protected virtual void Start()
     {
-        
+       _currentHealth = _maxHealth;
+    }
+
+    protected virtual void Update()
+    {
+        if (!_isAlive) return;
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        if (!_isAlive) return;
+    }
+
+    protected virtual void LateUpdate()
+    {
+        if (!_isAlive) return;
+    }
+
+    public virtual void TakeDamage(float damage)
+    {
+        if (damage <= 0) return;
+
+        _currentHealth -= damage;
+
+        if (_currentHealth <= 0)
+        {
+            _currentHealth = 0f;
+            DeactivatePlayer();
+        }
+    }
+
+    protected virtual void DeactivatePlayer()
+    {
+        _isAlive = false;
+        this.enabled = false;
     }
 }

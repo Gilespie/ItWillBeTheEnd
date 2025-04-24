@@ -1,23 +1,23 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Destructable
 {
     [Header("Inputs")]
     [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
     [SerializeField] private KeyCode _crouchKey = KeyCode.C;
     [SerializeField] private KeyCode _sprintKey = KeyCode.LeftShift;
     [SerializeField] private KeyCode _shakeKey = KeyCode.Z;
-    [SerializeField] private KeyCode _interactKey = KeyCode.E;
+    [SerializeField] private KeyCode _pushingKey = KeyCode.E;
     [SerializeField] private KeyCode _ragdollKey = KeyCode.R;
+    [SerializeField] private KeyCode _pressingKey = KeyCode.F;
 
     [Header("Animator")]
     [SerializeField] private string _moveBoolName = "isMoving";
     [SerializeField] private string _airBoolName = "isOnAir";
     [SerializeField] private string _jumpTriggerName = "onJump";
     [SerializeField] private string _crouchBoolName = "isCrouch";
-    //[SerializeField] private string _crouchTriggerName = "onCrouch";
-    [SerializeField] private string _interactBoolName = "isInteract";
-    //[SerializeField] private string _interactTriggerName = "onInteract";
+    [SerializeField] private string _pushingBoolName = "isPushing";
+    [SerializeField] private string _pressTriggerName = "onPressed";
     [SerializeField] private string _xAxisName = "xAxis";
     [SerializeField] private string _zAxisName = "zAxis";
 
@@ -35,16 +35,16 @@ public class Player : MonoBehaviour
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _sprintSpeed = 15f;
     [SerializeField] private float _crouchSpeed = 5f;
+    [SerializeField] private float _pushingSpeed = 3f;
     [SerializeField] private float _jumpForce = 7f;
     [SerializeField] private CameraFollower _follower;
     [SerializeField] private bool _isGrounded = false;
+    private bool _isSprinting = false;
     private bool _isCrouch = false;
-    private bool _isInteract = false;
+    private bool _isPushing = false;
+    public bool IsPushing => _isPushing;
 
-    [Header("Health")]
-    [SerializeField] private float _maxHealth = 50f;
-    private float _currentHealth = 0f;
-    private bool _isAlive = true;
+    private bool _isInteractable = false;
 
     [Header("Falling")]
     [SerializeField] private float _fallDamageMultiplier = 100f;
@@ -59,45 +59,54 @@ public class Player : MonoBehaviour
     private CapsuleCollider _col;
     private Animator _animator;
 
-    void Awake()
+    protected override void Awake()
     {
         Physics.gravity = new(0, gravity, 0);
-        _currentHealth = _maxHealth;
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
         _animator = GetComponentInChildren<Animator>();
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         CheckZPosition();
+
         _direction.x = Input.GetAxis("Horizontal");
         _animator.SetFloat(_xAxisName, _direction.x);
         _direction.z = Input.GetAxis("Vertical");
         _animator.SetFloat(_zAxisName, _direction.z);
 
         _isGrounded = _raycast.IsGrounded();
+        _isInteractable = _raycast.IsInteract();
+
         _animator.SetBool(_airBoolName, !_isGrounded);
         _animator.SetBool(_moveBoolName, _direction.sqrMagnitude != 0f);
 
-        if(Input.GetKeyDown(_ragdollKey))
+        ChangeSpeed(_moveSpeed);
+
+        if (Input.GetKeyDown(_ragdollKey))
         {
            _isRagdoll = !_isRagdoll;
         }
 
-        if (Input.GetKeyDown(_jumpKey) && _isGrounded)
+        if (Input.GetKeyDown(_jumpKey) && _isGrounded && !_isCrouch)
         {
             _animator.SetTrigger(_jumpTriggerName);
             JumpPlayer();
         }
 
-        if (Input.GetKey(_sprintKey))
+        if (Input.GetKeyDown(_pressingKey) && _isGrounded && _isInteractable)
         {
-            _currentSpeed = _sprintSpeed;
+            _animator.SetTrigger(_pressTriggerName);
+            _raycast.Interact();
+            Pressing();
         }
-        else
+
+        if (Input.GetKey(_sprintKey) && _isGrounded)
         {
-            _currentSpeed = _moveSpeed;
+            ChangeSpeed(_sprintSpeed);
         }
 
         if (_isRagdoll)
@@ -114,18 +123,18 @@ public class Player : MonoBehaviour
             _isCrouch = !_isCrouch;
         }
 
-        if (Input.GetKeyDown(_interactKey) && _isGrounded)
+        if (Input.GetKeyDown(_pushingKey) && _isGrounded)
         {
-            _isInteract = !_isInteract;
+            _isPushing = !_isPushing;
         }
 
-        if(_isInteract)
+        if (_isPushing)
         {
-            _animator.SetBool(_interactBoolName, true);
+            Pushing();
         }
         else
         {
-            _animator.SetBool(_interactBoolName, false);
+            StopPushing();
         }
 
         if (_isCrouch)
@@ -136,17 +145,25 @@ public class Player : MonoBehaviour
         {
             Uncrouch();
         }
-    
 
         CalculateFallDamage();
     }
 
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if (_direction.sqrMagnitude != 0.0f && _isAlive)
         {
             MovePlayer(_direction);
         }
+    }
+
+    public float ChangeSpeed(float speed)
+    {
+        _currentSpeed = speed;
+
+        return _currentSpeed;
     }
 
     private void CalculateFallDamage()
@@ -175,7 +192,20 @@ public class Player : MonoBehaviour
 
     private void MovePlayer(Vector3 dir)
     {
-        _rb.MovePosition(transform.position + (transform.right * dir.x + transform.forward * dir.z).normalized * _currentSpeed * Time.fixedDeltaTime);
+        Vector3 moveDir = (transform.right * dir.x + transform.forward * dir.z).normalized;
+
+        _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
+
+       /* if (moveDir != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(moveDir);
+            transform.rotation = targetRot;
+        }*/
+    }
+
+    public float GetSpeed()
+    {
+        return _currentSpeed;
     }
 
     private void JumpPlayer()
@@ -185,9 +215,10 @@ public class Player : MonoBehaviour
 
     private void Crouch()
     {
+        ChangeSpeed(_crouchSpeed);
         _currentSpeed = _crouchSpeed;
         _col.height = 1;
-        _col.center = new Vector3(_col.center.x, 0.5f, _col.center.z); // половина высоты
+        _col.center = new Vector3(_col.center.x, 0.5f, _col.center.z);
         _animator.SetBool(_crouchBoolName, true);
     }
 
@@ -195,7 +226,23 @@ public class Player : MonoBehaviour
     {
         _animator.SetBool(_crouchBoolName, false);
         _col.height = 2;
-        _col.center = new Vector3(_col.center.x, 1f, _col.center.z); // половина высоты
+        _col.center = new Vector3(_col.center.x, 1f, _col.center.z);
+    }
+
+    public void Pushing()
+    {
+        ChangeSpeed(_pushingSpeed);
+        _animator.SetBool(_pushingBoolName, _isPushing);
+    }
+
+    public void StopPushing()
+    {
+        _animator.SetBool(_pushingBoolName, _isPushing);
+    }    
+
+    public void Pressing()
+    {
+        _raycast.Interact();
     }
 
     private void CheckZPosition()
@@ -210,27 +257,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Player receive damage
-    /// </summary>
-    /// <param name="damage"></param>
-    public void TakeDamage(float damage)
+    protected override void DeactivatePlayer()
     {
-        if (damage <= 0) return;
-
-        _currentHealth -= damage;
-
-        if(_currentHealth <= 0)
-        {
-            _currentHealth = 0f;
-            DeactivatePlayer();
-        }
-    }
-
-    private void DeactivatePlayer()
-    {
-        _isAlive = false;
+        base.DeactivatePlayer();
+        _rb.constraints = RigidbodyConstraints.None;
         _ragdoll.ActivateRagdoll();
-        this.enabled = false;
     }
 }
