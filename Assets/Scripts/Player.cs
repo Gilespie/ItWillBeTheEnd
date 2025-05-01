@@ -49,6 +49,9 @@ public class Player : Destructable
     [Header("Falling")]
     [SerializeField] private float _fallDamageMultiplier = 100f;
     [SerializeField] private float _fallDamageThreshold = -10f;
+
+    public DeathScreenManager deathScreenManager;
+
     private bool _wasGround = false;
     private float _maxFallSpeed = 0f;
     private float _fallDamage = 0f;
@@ -262,5 +265,15 @@ public class Player : Destructable
         base.DeactivatePlayer();
         _rb.constraints = RigidbodyConstraints.None;
         _ragdoll.ActivateRagdoll();
+    }
+
+    // public void ActivateRagdollOnFall()
+    // {
+    //     _isRagdoll = true;
+    // }
+
+    public void Die()
+    {
+        deathScreenManager.ShowDeathScreen();
     }
 }
