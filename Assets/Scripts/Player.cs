@@ -20,6 +20,7 @@ public class Player : Destructable
     [SerializeField] private string _pressTriggerName = "onPressed";
     [SerializeField] private string _xAxisName = "xAxis";
     [SerializeField] private string _zAxisName = "zAxis";
+    [SerializeField] private string _moveStateName = "moveState";
 
     [Header("Physics")]
     [SerializeField] private float gravity = -20f;
@@ -61,6 +62,7 @@ public class Player : Destructable
     private Rigidbody _rb;
     private CapsuleCollider _col;
     private Animator _animator;
+    Vector3 _lastNonZeroDirection = Vector3.forward;
 
     protected override void Awake()
     {
@@ -83,6 +85,11 @@ public class Player : Destructable
 
         _isGrounded = _raycast.IsGrounded();
         _isInteractable = _raycast.IsInteract();
+
+        if (_direction.sqrMagnitude > 0.01f)
+        {
+            _lastNonZeroDirection = _direction.normalized;
+        }
 
         _animator.SetBool(_airBoolName, !_isGrounded);
         _animator.SetBool(_moveBoolName, _direction.sqrMagnitude != 0f);
@@ -159,6 +166,11 @@ public class Player : Destructable
         if (_direction.sqrMagnitude != 0.0f && _isAlive)
         {
             MovePlayer(_direction);
+            _animator.SetFloat(_moveStateName, 1.0f);
+        }
+        else
+        {
+            _animator.SetFloat(_moveStateName, 0.0f);
         }
     }
 
@@ -199,11 +211,12 @@ public class Player : Destructable
 
         _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
 
-       /* if (moveDir != Vector3.zero)
+        if (moveDir != Vector3.zero)
         {
-            Quaternion targetRot = Quaternion.LookRotation(moveDir);
-            transform.rotation = targetRot;
-        }*/
+            moveDir = (transform.right * _lastNonZeroDirection.x + transform.forward * _lastNonZeroDirection.z).normalized;
+            /*Quaternion targetRot = Quaternion.LookRotation(moveDir);
+            transform.rotation = targetRot;*/
+        }
     }
 
     public float GetSpeed()
