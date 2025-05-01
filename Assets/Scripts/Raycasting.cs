@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[ExecuteAlways]
 public class Raycasting : MonoBehaviour
 {
     [Header("Rays")]
@@ -41,7 +40,7 @@ public class Raycasting : MonoBehaviour
         if (Physics.SphereCast(_interactRay, _intRadius, out _interactHit, _interactRayDistance, _interactLayer))
         {
 
-            if(_interactHit.collider.TryGetComponent<IInteract>(out IInteract interact))
+            if(_interactHit.collider.TryGetComponent<IInteractable>(out IInteractable interact))
             {
                 Debug.Log("Pressed button");
                 interact.Interact();
