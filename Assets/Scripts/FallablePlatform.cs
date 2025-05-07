@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class FallablePlatform : MonoBehaviour
 {
-    [SerializeField] private Player _player;
+    //[SerializeField] private Player _player;
     [SerializeField] private float _delay = 1.5f;
     private Rigidbody _rigidbody;
     private Coroutine _currentRoutine = null;
@@ -18,7 +18,7 @@ public class FallablePlatform : MonoBehaviour
         if (_currentRoutine != null) return;
 
 
-        if(_currentRoutine == null && collision.gameObject.TryGetComponent(out _player))
+        if(_currentRoutine == null && collision.gameObject.TryGetComponent(out Player player))
         {
             StartCoroutine(ActivateKinemticRoutine());
         }

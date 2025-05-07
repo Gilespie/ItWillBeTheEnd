@@ -14,6 +14,7 @@ public class CameraFollower : MonoBehaviour
     [SerializeField] private float _bobIntensity = 0.05f;
 
     [SerializeField] private float _speedRate = 5f;
+    [SerializeField] private float _zPosConstant = -10f;
     [SerializeField] private Transform _target;
     [SerializeField] private Vector3 _offset;
 
@@ -33,6 +34,9 @@ public class CameraFollower : MonoBehaviour
     private void FixedUpdate()
     {
         _currentPosition = _target.position + _offset + _bobOffset + _shakeOffset;
+
+        _currentPosition.z = _zPosConstant;
+
         transform.position = Vector3.Lerp(transform.position, _currentPosition, _speedRate * Time.fixedDeltaTime);
         transform.LookAt(_target);
     }
@@ -55,9 +59,9 @@ public class CameraFollower : MonoBehaviour
         {
             float x = Random.Range(-_intensityIndex, _intensityIndex) * force;
             float y = Random.Range(-_intensityIndex, _intensityIndex) * force;
-            float z = Random.Range(-_intensityIndex, _intensityIndex) * force;
+            //float z = Random.Range(-_intensityIndex, _intensityIndex) * force;
 
-            _shakeOffset = new Vector3(x, y, z);
+            _shakeOffset = new Vector3(x, y, 0);
 
             elapsed += Time.deltaTime;
 

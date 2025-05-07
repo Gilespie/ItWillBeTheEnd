@@ -1,59 +1,83 @@
 using System.Collections;
-using System.Collections.Generic;
-using TreeEditor;
 using UnityEngine;
 
 public class MovablePlatform : MonoBehaviour
 {
-    [SerializeField] private Transform[] _waypoints;
+    [SerializeField] private WaypointPath _waypointPath;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _offset = 0.1f;
-    [SerializeField] private LayerMask _mask;
-    private int _currentIndex = 0;
-    private bool _isAwait = false;
+    [SerializeField] private float _waitSeconds = 3f;
+    private Transform _targetWaypoint;
+    private int _targetWaypointIndex = 0;
+    private float _distanceToWaypoint = 0f;
+    private bool _isMoving = true;
+    private Rigidbody _rb;
+    private Coroutine _currentRoutine = null;
 
-    void Start()
+    private void Awake()
     {
-        _currentIndex = 0;
+        _rb = GetComponent<Rigidbody>();
+
+        TargetNextWaypoint();
     }
 
     void Update()
     {
-        MoveTo();
-
-        if(Vector3.Distance(transform.position, _waypoints[_currentIndex].position) <= _offset)
+        if (GetDistance() <= _offset)
         {
-            GetNextTransform();
+            if (_currentRoutine == null)
+            {
+                _currentRoutine = StartCoroutine(AwaitingRoutine());
+            }
         }
     }
 
-    private Transform GetCurrentTransform()
+    private void FixedUpdate()
     {
-        return _waypoints[_currentIndex];
+        if (_isMoving)
+        {
+            MoveTo();
+        }
     }
 
-    private Transform GetNextTransform()
+    private float GetDistance()
     {
-        _currentIndex++;
-
-        if(_currentIndex > _waypoints.Length - 1) _currentIndex = 0;
-
-        return _waypoints[_currentIndex];
+        return _distanceToWaypoint = Vector3.Distance(transform.position, _targetWaypoint.position);
     }
 
     private void MoveTo()
     {
-        Vector3 dir = (_waypoints[_currentIndex].position - transform.position).normalized;
-
-        transform.position += dir * _speed * Time.deltaTime;
+        Vector3 dir = (_targetWaypoint.position - transform.position).normalized;
+        _rb.MovePosition(transform.position + dir * _speed * Time.fixedDeltaTime);
     }
 
-   /* private void OnTriggerEnter(Collider other)
+    private void TargetNextWaypoint()
     {
-        other.transform.SetParent(transform);
+        _targetWaypointIndex = _waypointPath.GetNextWaypointIndex(_targetWaypointIndex);
+        _targetWaypoint = _waypointPath.GetWaypoint(_targetWaypointIndex);
     }
+
+    private IEnumerator AwaitingRoutine()
+    {
+        _isMoving = false;
+        yield return new WaitForSeconds(_waitSeconds);
+        TargetNextWaypoint();
+        _isMoving = true;
+
+        _currentRoutine = null;
+
+        yield return null;
+    }
+
+    /*private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 7)
+            other.transform.SetParent(transform);
+    }
+
     private void OnTriggerExit(Collider other)
     {
-        other.transform.SetParent(null);
+        if (other.gameObject.layer == 7)
+            other.transform.SetParent(null);
     }*/
 }

@@ -2,63 +2,84 @@ using UnityEngine;
 
 public class Elevator : MonoBehaviour
 {
-    [SerializeField] private float _elapsedTime = 0f;
-    [SerializeField] private float _timeToPoint = 0f;
     [SerializeField] private float _moveSpeed = 5f;
-    [SerializeField] private Transform[] _points;
-    private int _currentIndex = 0;
-    private int _previousIndex = 0;
+    [SerializeField] private WaypointPath _waypointPath;
+    private float _elapsedTime = 0f;
+    private float _timeToPoint = 0f;
+    private Transform _targetWaypoint;
+    private Transform _previousWaypoint;
+    private int _targetWaypointIndex = 0;
     private float _distanceToPoint = 0f;
     private float _elapsedPercetage = 0f;
-    //private float _offset = 0.1f;
-    //private Rigidbody _rb;
+    private Rigidbody _rb;
+    private bool _isMoving = false;
 
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        TargetNextWaypoint();
+        SetStartPosition(_targetWaypoint);
+    }
+
     void Update()
     {
+        if (!_isMoving) return;
+
         _elapsedTime += Time.deltaTime;
-
-        _distanceToPoint = Vector3.Distance(GetPreviousPoint().position, GetNextPoint().position);
-
-        _timeToPoint = _distanceToPoint/ _moveSpeed;
 
         _elapsedPercetage = _elapsedTime / _timeToPoint;
 
-        _elapsedPercetage = Mathf.SmoothStep(0, 1, _elapsedPercetage);
-
-        Vector3 dir = Vector3.Lerp(GetPreviousPoint().position, GetNextPoint().position, _elapsedPercetage);
-
-        transform.position = dir;
-
-        if(_elapsedPercetage >= 1)
+        if (_elapsedPercetage >= 1)
         {
-            Debug.Log("Next");
-            GetNextPoint();
-            _elapsedTime = 0f;
+            _isMoving = false;
+            _rb.MovePosition(_targetWaypoint.position);
         }
+
     }
 
-    private Transform GetCurrentPoint()
+    private void FixedUpdate()
     {
-        return _points[ _currentIndex ];
+        if(!_isMoving) return;
+
+        MoveTo();
     }
 
-    private Transform GetNextPoint()
+    private void MoveTo()
     {
-        _currentIndex++;
+        float easedTime = Mathf.SmoothStep(0f, 1f, _elapsedPercetage);
 
-        if (_currentIndex > _points.Length - 1) _currentIndex = 0;
-
-        return _points[_currentIndex];
+        Vector3 newPos = Vector3.Lerp(_previousWaypoint.position, _targetWaypoint.position, easedTime);
+        _rb.MovePosition(newPos);
     }
 
-    private Transform GetPreviousPoint()
+    public void Activate()
     {
-        _currentIndex--;
+        if (_isMoving) return;
 
-        if (_currentIndex < 0) _currentIndex = _points.Length - 1;
+        TargetNextWaypoint();
 
-        return _points[_currentIndex];
+        _isMoving = true;
+    }
+
+    private void TargetNextWaypoint()
+    { 
+        _previousWaypoint = _waypointPath.GetWaypoint(_targetWaypointIndex);
+        _targetWaypointIndex = _waypointPath.GetNextWaypointIndex(_targetWaypointIndex);
+        _targetWaypoint = _waypointPath.GetWaypoint(_targetWaypointIndex);
+
+        _elapsedTime = 0;
+        _elapsedPercetage = 0f;
+
+        _distanceToPoint = Vector3.Distance(_previousWaypoint.position, _targetWaypoint.position);
+        _timeToPoint = _distanceToPoint / _moveSpeed;
+    }
+
+    private void SetStartPosition(Transform target)
+    {
+        _rb.MovePosition(target.position);
     }
 }

@@ -10,8 +10,5 @@ EditorBuildSettings:
     guid: da3a8590986805c4d85b3d8e9822c6d8
   - enabled: 1
     path: Assets/Scenes/GrayBox.unity
-    guid: 3de29223d4e85894c9bc7dba51cc5743
-  - enabled: 1
-    path: Assets/Scenes/Level1Test.unity
-    guid: c3902567203c004488b25fbdc819f398
+    guid: 5a6d8c720d7b9a24faf9be9ab5c22afd
   m_configObjects: {}

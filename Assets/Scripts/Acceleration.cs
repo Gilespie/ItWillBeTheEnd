@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class Acceleration : MonoBehaviour
 {
-    [SerializeField] private float _speedMultiplier = 3f;
-    private float _dafaultSpeed = 0;
+    [SerializeField] private float _speedMultiplier = 1.5f;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.TryGetComponent(out Player player))
+        if (other.gameObject.TryGetComponent(out Player player))
         {
-            _dafaultSpeed = player.GetSpeed();
-            player.ChangeSpeed(_speedMultiplier);
+            player.SetSpeedMultiplier(_speedMultiplier);
         }
     }
 
@@ -18,7 +16,7 @@ public class Acceleration : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out Player player))
         {
-            player.ChangeSpeed(_dafaultSpeed);
+            player.SetSpeedMultiplier(1f);
         }
     }
 }

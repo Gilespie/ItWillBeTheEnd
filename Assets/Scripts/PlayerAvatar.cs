@@ -9,8 +9,13 @@ public class PlayerAvatar : MonoBehaviour
         _parent = GetComponentInParent<Player>();    
     }
 
-    public void Interact()
+    public void Pushing()
     {
         _parent.Pushing();
+    }
+
+    public void Pressing()
+    {
+        _parent.Pressing();
     }
 }

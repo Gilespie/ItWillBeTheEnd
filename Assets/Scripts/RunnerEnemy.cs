@@ -13,9 +13,7 @@ public class RunnerEnemy : Enemy
     {
         if (player == null) return;
 
-        float distance = Vector3.Distance(transform.position, player.transform.position);
-
-        if (!hasSeenPlayer && distance <= detectionRadius)
+        if (!hasSeenPlayer && distanceToPlayer <= detectionRadius)
         {
             hasSeenPlayer = true;
             moveDirection = (transform.position - player.transform.position).normalized;
@@ -23,7 +21,7 @@ public class RunnerEnemy : Enemy
 
         if (hasSeenPlayer)
         {
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
+            _rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
 
             if (moveDirection != Vector3.zero)
             {
@@ -39,5 +37,11 @@ public class RunnerEnemy : Enemy
         {
             DealDamage(hitPlayer);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

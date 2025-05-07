@@ -5,19 +5,24 @@ public class Raycasting : MonoBehaviour
     [Header("Rays")]
     [SerializeField] private Ray _groundRay;
     [SerializeField] private Ray _interactRay;
+    [SerializeField] private Ray _pushingRay;
     [SerializeField] private Transform _groundOrigin;
     [SerializeField] private Transform _interactOrigin;
     private RaycastHit _groundHit;
     private RaycastHit _interactHit;
+    private RaycastHit _pushingHit;
 
     [Header("Settings")]
-    [SerializeField] private float _groundRayDistance = 0.25f;
+    [SerializeField] private float _groundRayDistance = 0.45f;
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private float _interactRayDistance = 0.5f;
-    [SerializeField] private LayerMask _interactLayer;
-    [SerializeField] private float _intRadius = 5f;
+    [SerializeField] private LayerMask _interactLayer; 
+    [SerializeField] private float _pushingRayDistance = 0.5f;
+    [SerializeField] private LayerMask _pushingLayer; 
+    [SerializeField] private float _intRadius = 0.1f;
     private bool _isGrounded = false;
     private bool _isInteractable = false;
+    private bool _isPushing = false;
 
     public bool IsGrounded()
     {
@@ -33,17 +38,39 @@ public class Raycasting : MonoBehaviour
         return _isInteractable = Physics.Raycast(_interactRay, out _interactHit, _interactRayDistance, _interactLayer);
     }
 
+    public bool IsPushing()
+    {
+        _pushingRay = new Ray(_interactOrigin.position, transform.forward);
+
+        return _isPushing = Physics.Raycast(_pushingRay, out _pushingHit, _pushingRayDistance, _pushingLayer);
+    }
+
     public void Interact()
     {
         _interactRay = new Ray(_interactOrigin.position, transform.forward);
 
         if (Physics.SphereCast(_interactRay, _intRadius, out _interactHit, _interactRayDistance, _interactLayer))
         {
-
-            if(_interactHit.collider.TryGetComponent<IInteractable>(out IInteractable interact))
+            if (_interactHit.collider.TryGetComponent(out IInteractable interact))
             {
-                Debug.Log("Pressed button");
                 interact.Interact();
+            }
+            /*else if (_interactHit.collider.TryGetComponent(out IPushable pushable))
+            {
+                pushable.Pushing();
+            }*/
+        }
+    }
+
+    public void Pushing()
+    {
+        _pushingRay = new Ray(_interactOrigin.position, transform.forward);
+
+        if (Physics.SphereCast(_pushingRay, _intRadius, out _pushingHit, _pushingRayDistance, _pushingLayer))
+        {
+            if (_pushingHit.collider.TryGetComponent(out IPushable pushable))
+            {
+                pushable.Pushing();
             }
         }
     }
@@ -56,5 +83,11 @@ public class Raycasting : MonoBehaviour
         _interactRay = new Ray(_interactOrigin.position, transform.forward);
         Gizmos.color = _isInteractable ? Color.blue : Color.red;
         Gizmos.DrawLine(_interactRay.origin, _interactRay.origin + _interactRay.direction * _interactRayDistance);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(_interactHit.point, _intRadius);
+
+        Gizmos.color = _isPushing ? Color.green : Color.red;
+        Gizmos.DrawLine(_pushingRay.origin, _pushingRay.origin + _pushingRay.direction * _pushingRayDistance);
     }
 }
