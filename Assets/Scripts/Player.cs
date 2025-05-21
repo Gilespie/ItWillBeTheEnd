@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Player : Destructable
 {
+    [Header("Reference")]
+    [SerializeField] private Transform _mesh;
+
     [Header("Inputs")]
     [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
     [SerializeField] private KeyCode _crouchKey = KeyCode.C;
@@ -19,12 +22,14 @@ public class Player : Destructable
     [SerializeField] private string _xAxisName = "xAxis";
     [SerializeField] private string _zAxisName = "zAxis";
     [SerializeField] private string _moveStateName = "moveState";
+    [SerializeField] private string _slopeBoolName = "isSliding";
 
     [Header("Physics")]
     [SerializeField] private float gravity = -20f;
     [SerializeField] private Raycasting _raycast;
     [SerializeField] private Ragdoll _ragdoll;
     [SerializeField] private RotationTransform _rotationTransform;
+    [SerializeField] private PhysicMaterial _physicsMaterial;
 
     [Header("Z Limits")]
     [SerializeField] private float _zPosMin = -5f;
@@ -46,6 +51,8 @@ public class Player : Destructable
     public bool CanMove => _canMove;
 
     private bool _isInteractable = false;
+    private bool _isSlope = false;
+    private bool _isCeiling = false;
 
     [Header("Falling")]
     [SerializeField] private float _fallDamageMultiplier = 100f;
@@ -87,17 +94,35 @@ public class Player : Destructable
         _isGrounded = _raycast.IsGrounded();
         _isInteractable = _raycast.IsInteract();
         _isPushing = _raycast.IsPushing();
+        _isSlope = _raycast.IsSlope();
+        _isCeiling = _raycast.IsCeiling();
+        
 
         _animator.SetBool(_airBoolName, !_isGrounded);
         _animator.SetBool(_moveBoolName, _direction.sqrMagnitude != 0f);
 
         _animator.SetFloat(_xAxisName, _direction.x);
         _animator.SetFloat(_zAxisName, _direction.z);
-        _animator.SetFloat(_moveStateName, _direction.sqrMagnitude);
+        //_animator.SetFloat(_moveStateName, _direction.sqrMagnitude);
+
+        if (_isSlope)
+        {
+            _animator.SetBool(_slopeBoolName, _isSlope);
+
+            _rb.maxLinearVelocity = 15f;
+            _col.sharedMaterial = _physicsMaterial;
+            SlopeRotateMesh();
+        }
+        else
+        {
+            _animator.SetBool(_slopeBoolName, _isSlope);
+            _rb.maxLinearVelocity = float.MaxValue;
+            _col.sharedMaterial = null;
+        }
 
         CalculateFallDamage();
 
-        if (Input.GetKeyDown(_jumpKey) && _isGrounded && !_isCrouch)
+        if (Input.GetKeyDown(_jumpKey) && _isGrounded && !_isCrouch && !_isSlope)
         {
             _animator.SetTrigger(_jumpTriggerName);
             JumpPlayer();
@@ -109,7 +134,7 @@ public class Player : Destructable
             Pressing();
         }
 
-        if (Input.GetKeyDown(_crouchKey) && _isGrounded) 
+        if (Input.GetKeyDown(_crouchKey) && _isGrounded && !_isCeiling) 
         {
             _isCrouch = !_isCrouch;
         }
@@ -166,10 +191,11 @@ public class Player : Destructable
         {
             MovePlayer(_direction);
         }
-        /*else
-        {
-            _animator.SetFloat(_moveStateName, 0.0f);
-        }*/
+    }
+
+    public void SlopeRotateMesh()
+    {
+        _mesh.transform.rotation = Quaternion.LookRotation(_rb.velocity); 
     }
 
     public float ChangeSpeed(float speed)
@@ -244,7 +270,6 @@ public class Player : Destructable
         _canMove = true;
         _raycast.Interact(); 
         _raycast.Pushing();
-        _ragdoll.DeactivateCollsion();
         _rotationTransform.IsPushing(_canMove);
         _animator.SetBool(_pushingBoolName, _canMove);
     }
@@ -254,7 +279,6 @@ public class Player : Destructable
         _canMove = false;
         _raycast.Interact();
         _raycast.Pushing();
-        _ragdoll.ActivateCollision();
         _rotationTransform.IsPushing(_canMove);
         _animator.SetBool(_pushingBoolName, _canMove);
     }    
@@ -286,6 +310,7 @@ public class Player : Destructable
         _col.enabled = false;
         _rotationTransform.enabled = false;
         _ragdoll.ActivateRagdoll();
+        _ragdoll.ActivateCollision();
 
         if(!_isOnce)
         {

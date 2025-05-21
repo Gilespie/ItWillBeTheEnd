@@ -8,6 +8,7 @@ public class Ragdoll : MonoBehaviour
     void Start()
     {
         DisableRagdoll();
+        DeactivateCollsion();
     }
 
     public void DisableRagdoll()

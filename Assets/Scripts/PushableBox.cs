@@ -5,6 +5,8 @@ public class PushableBox : MonoBehaviour, IPushable
     [SerializeField]private Player _player;
     [SerializeField] private Transform _standPos;
     private Rigidbody _rb;
+    private float _standMass = 10000f;
+    private float _moveMass = 0.001f;
 
     private void Awake()
     {
@@ -30,11 +32,15 @@ public class PushableBox : MonoBehaviour, IPushable
 
     public void StartMoving()
     {
-        transform.SetParent(_player.transform.GetChild(0));
+        FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+        joint.connectedBody = _player.GetComponent<Rigidbody>();
+        _rb.mass = _moveMass;
     }
 
     public void StopMoving()
     {
-        transform.SetParent(null);
+        FixedJoint joint = gameObject.GetComponent<FixedJoint>();
+        Destroy(joint);
+        _rb.mass = _standMass;
     }
 }

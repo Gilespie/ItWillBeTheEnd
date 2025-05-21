@@ -493,6 +493,7 @@ Transform:
   - {fileID: 2201957078274410411}
   - {fileID: 3878494392285803613}
   - {fileID: 2200058410085796393}
+  - {fileID: 8506458877259692876}
   m_Father: {fileID: 4964084085140020267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1793900502437099465
@@ -507,8 +508,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86bd3d57893b0a74986e7d1679bbeaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedRotDefault: 10
-  _speedRotPushing: 1
+  _speedRotDefault: 22
+  _speedRotPushing: 0.1
 --- !u!114 &4151322587728923077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,15 +524,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundOrigin: {fileID: 2200058410085796393}
   _interactOrigin: {fileID: 3878494392285803613}
-  _groundRayDistance: 0.5
+  _ceilingOrigin: {fileID: 8506458877259692876}
+  _groundRayDistance: 1
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 1073741889
-  _interactRayDistance: 0.5
+    m_Bits: 1073744449
+  _interactRayDistance: 1
   _interactLayer:
     serializedVersion: 2
     m_Bits: 512
+  _pushingRayDistance: 1
+  _pushingLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  _ceilingRayDistance: 0.45
   _intRadius: 0.1
+  _maxSlopeAngle: 29
 --- !u!1 &2138269858641149237
 GameObject:
   m_ObjectHideFlags: 0
@@ -1918,10 +1926,7 @@ MonoBehaviour:
   _maxHealth: 50
   _jumpKey: 32
   _crouchKey: 306
-  _sprintKey: 304
-  _shakeKey: 122
   _pushingKey: 101
-  _ragdollKey: 114
   _pressingKey: 102
   _moveBoolName: isMoving
   _airBoolName: isOnAir
@@ -1932,22 +1937,26 @@ MonoBehaviour:
   _xAxisName: xAxis
   _zAxisName: zAxis
   _moveStateName: moveState
+  _slopeBoolName: isSliding
   gravity: -20
   _raycast: {fileID: 4151322587728923077}
   _ragdoll: {fileID: 3094651629819230405}
   _rotationTransform: {fileID: 1793900502437099465}
-  _zPosMin: -10
+  _physicsMaterial: {fileID: 13400000, guid: 1eb94a61eb6e7be41866ae1a20a32251, type: 2}
+  _zPosMin: -5
   _zPosMax: 10
-  _moveSpeed: 5
-  _sprintSpeed: 7
+  _speedMultiplier: 1
+  _moveSpeed: 3.5
   _crouchSpeed: 2
-  _pushingSpeed: 2
+  _pushingSpeed: 1
   _jumpForce: 30
   _follower: {fileID: 0}
   _isGrounded: 0
   _fallDamageMultiplier: 5
   _fallDamageThreshold: -20
+  _spawner: {fileID: 0}
   deathScreenManager: {fileID: 0}
+  _secondsUntilRestart: 3
 --- !u!54 &5283282478363902830
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1982,7 +1991,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3634448441287230994}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1eb94a61eb6e7be41866ae1a20a32251, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3458,6 +3467,37 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!1 &8171936709353222003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8506458877259692876}
+  m_Layer: 7
+  m_Name: CeilingOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8506458877259692876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8171936709353222003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8537475725002043208}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8180386918096272512
 GameObject:
   m_ObjectHideFlags: 0
