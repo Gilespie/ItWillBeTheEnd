@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,10 +7,10 @@ public class MainMenu : MonoBehaviour
     public GameObject creditsPanel;
     public GameObject controlsPanel;
 
-    public void StartGame()
+   /* public void StartGame()
     {
         SceneManager.LoadScene("GrayBox");
-    }
+    }*/
 
     public void QuitGame()
     {
