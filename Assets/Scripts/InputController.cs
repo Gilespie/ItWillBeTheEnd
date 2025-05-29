@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    [SerializeField] private TypeOgInput _typeInput = TypeOgInput.Press;
+    [SerializeField] private TypeOfInput _typeInput = TypeOfInput.Press;
+    public delegate void ControlDelegate();
+    public ControlDelegate Control;
 
     [Header("Buttons")]
     [SerializeField] private KeyCode _jumpKey;
@@ -13,20 +15,44 @@ public class InputController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Animator _animator;
+    [SerializeField] private Movement _movement;
+
+    [SerializeField] private bool _isGrounded = false;
+
+    private bool _isCrouch = false;
+    private bool _isPushing = false;
+    private bool _isOnce = false;
+    private bool _canMove = false;
+    public bool CanMove => _canMove;
+
+    private bool _isInteractable = false;
+    private bool _isSlope = false;
+    private bool _isCeiling = false;
+
+    private void Start()
+    {
+        Control = _movement.MovePlayer;
+    }
 
     void Update()
     {
         switch (_typeInput)
         {
-            case TypeOgInput.Press:
+            case TypeOfInput.Press:
+                if (Input.GetKeyDown(_jumpKey) && _isGrounded)
+                    Control = _movement.JumpPlayer;
+
+                if (Input.GetKeyDown(_crouchKey) && _isGrounded)
+                    Control = _movement.Crouch;
+
 
                 break;
 
-            case TypeOgInput.Holding:
+            case TypeOfInput.Holding:
 
                 break;
 
-            case TypeOgInput.Mix:
+            case TypeOfInput.Mix:
 
                 break;
         }

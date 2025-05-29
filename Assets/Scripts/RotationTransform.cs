@@ -45,9 +45,4 @@ public class RotationTransform : MonoBehaviour
     {
         _currentRotationSpeed = speed;
     }
-
-    public void IsPushing(bool state)
-    {
-        _isPushing = state;
-    }
 }

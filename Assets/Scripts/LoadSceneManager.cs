@@ -54,7 +54,6 @@ public class LoadSceneManager : MonoBehaviour
         _isLoading = true;
 
         _loadingBG.enabled = true;
-        _sliderProgress.gameObject.SetActive(true);
 
         float t = 0.0f;
 
@@ -69,6 +68,8 @@ public class LoadSceneManager : MonoBehaviour
 
         _loadingBG.color = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 
+        _sliderProgress.gameObject.SetActive(true);
+
         _stateText.enabled = true;
         _stateText.text = $"Loading...";
 
@@ -79,7 +80,6 @@ public class LoadSceneManager : MonoBehaviour
         while (asyncOp.progress < 0.9f)
         {
             _sliderProgress.value = asyncOp.progress / 0.9f;
-            Debug.Log(_sliderProgress.value);
             yield return null;
         }
 

@@ -31,10 +31,6 @@ public class Player : Destructable
     [SerializeField] private RotationTransform _rotationTransform;
     [SerializeField] private PhysicMaterial _physicsMaterial;
 
-    [Header("Z Limits")]
-    [SerializeField] private float _zPosMin = -5f;
-    [SerializeField] private float _zPosMax = 5f;
-
     [Header("Parameters")]
     [SerializeField] private float _speedMultiplier = 1f;
     [SerializeField] private float _moveSpeed = 4f;
@@ -86,10 +82,16 @@ public class Player : Destructable
     {
         base.Update();
 
-        CheckZPosition();
-
-        _direction.x = Input.GetAxis("Horizontal");
-        _direction.z = Input.GetAxis("Vertical");
+        if(!_isSlope)
+        {
+            _direction.x = Input.GetAxis("Horizontal");
+            _direction.z = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            _direction.z = Input.GetAxis("Vertical");
+        }
+       
 
         _isGrounded = _raycast.IsGrounded();
         _isInteractable = _raycast.IsInteract();
@@ -128,22 +130,22 @@ public class Player : Destructable
             JumpPlayer();
         }
 
-        if (Input.GetKeyDown(_pressingKey) && _isGrounded && _isInteractable) //old version eliminar en el futuro
+    /*    if (Input.GetKeyDown(_pressingKey) && _isGrounded && _isInteractable) //old version eliminar en el futuro
         {
             _animator.SetTrigger(_pressTriggerName);
             Pressing();
-        }
+        }*/
 
         if (Input.GetKeyDown(_crouchKey) && _isGrounded && !_isCeiling) 
         {
             _isCrouch = !_isCrouch;
         }
 
-/*        if (Input.GetKeyDown(_pushingKey) && _isGrounded && _isInteractable)  new version hacer asi
+        if (Input.GetKeyDown(_pushingKey) && _isGrounded && _isInteractable)  //new version hacer asi
         {
             _animator.SetTrigger(_pressTriggerName);
             Pressing();
-        }*/
+        }
 
         if (Input.GetKey(_pushingKey) && _isGrounded && _isPushing && !_isCrouch)
         {
@@ -191,11 +193,21 @@ public class Player : Destructable
         {
             MovePlayer(_direction);
         }
+        else if(_direction.sqrMagnitude != 0.0f && _isAlive && _isSlope)
+        {
+            SlopeMovement(_direction);
+        }
     }
 
     public void SlopeRotateMesh()
     {
         _mesh.transform.rotation = Quaternion.LookRotation(_rb.velocity); 
+    }
+
+    public void SlopeMovement(Vector3 dir)
+    {
+        Vector3 moveDir = (transform.forward * dir.z).normalized;
+        _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
     }
 
     public float ChangeSpeed(float speed)
@@ -270,7 +282,7 @@ public class Player : Destructable
         _canMove = true;
         _raycast.Interact(); 
         _raycast.Pushing();
-        _rotationTransform.IsPushing(_canMove);
+        _rotationTransform.enabled = false;
         _animator.SetBool(_pushingBoolName, _canMove);
     }
 
@@ -279,25 +291,13 @@ public class Player : Destructable
         _canMove = false;
         _raycast.Interact();
         _raycast.Pushing();
-        _rotationTransform.IsPushing(_canMove);
+        _rotationTransform.enabled = true;
         _animator.SetBool(_pushingBoolName, _canMove);
     }    
 
     public void Pressing()
     {
         _raycast.Interact();
-    }
-
-    private void CheckZPosition()
-    {
-        if (transform.position.z >= _zPosMax)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, _zPosMax);
-        }
-        if (transform.position.z <= _zPosMin)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, _zPosMin);
-        }
     }
 
     protected override void DeactivatePlayer()

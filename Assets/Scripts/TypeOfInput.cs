@@ -1,4 +1,4 @@
-public enum TypeOgInput
+public enum TypeOfInput
 {
     Press,
     Holding,
