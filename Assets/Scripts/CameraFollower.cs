@@ -10,9 +10,9 @@ public class CameraFollower : MonoBehaviour
 
     [SerializeField] private float _speedRate = 5f;
     [SerializeField] private float _zPosConstant = -10f;
-    [SerializeField] private Transform _target;
     [SerializeField] private Vector3 _offset;
 
+    private Transform _target;
     private Vector3 _currentPosition;
     private Vector3 _shakeOffset;
     private Vector3 _bobOffset;
@@ -20,8 +20,8 @@ public class CameraFollower : MonoBehaviour
 
     private void Start()
     {
-        _target.position = GameManager.Instance.Player.transform.position;
-        transform.position =  _target.position;
+        _target = GameManager.Instance.Player.transform;
+        transform.position = _target.position;
         
     }
 

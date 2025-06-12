@@ -1,3 +1,4 @@
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -35,12 +36,19 @@ public class GameManager : MonoBehaviour
         set { _actualCheckpoint = value; }
     }
 
-    private Transform[] _aiNodes;
+    private Transform[] _aiDogNodes;
 
-    public Transform[] AINodes
+    public Transform[] AIDogNodes
     {
-        get { return _aiNodes; }
-        set { _aiNodes = value; }
+        get { return _aiDogNodes; }
+        set { _aiDogNodes = value; }
     }
 
+    private NavMeshSurface _surface;
+
+    public NavMeshSurface Surface
+    { 
+        get { return _surface; }
+        set { _surface = value; }
+    }
 }

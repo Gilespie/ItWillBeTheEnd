@@ -9,7 +9,9 @@ public class Airplane : MonoBehaviour
     [SerializeField] private GameObject _explosivePrefab;
     [SerializeField] private bool _isLanding = false;
     [SerializeField] private bool _isCrashing = false;
+    [SerializeField] private bool _isCrashing2 = false;
     private string _boolCrashName = "isCrashing";
+    private string _boolCrash2Name = "isCrashing2";
     private string _boolLandName = "isLanding";
     private Animator _animator;
     private AudioSource _audiosource;
@@ -32,6 +34,10 @@ public class Airplane : MonoBehaviour
         {
             _animator.SetTrigger(_boolCrashName);
         }
+        else if(_isCrashing2)
+        {
+            _animator.SetTrigger(_boolCrash2Name);
+        }
     }
 
     public void CrashPlane()
@@ -39,7 +45,7 @@ public class Airplane : MonoBehaviour
         _animator.enabled = true;
     }
 
-    public void TurnoffLights()
+    public void TurnOffLights()
     {
         for (int i = 0; i < _lights.Length; i++)
         {
@@ -56,8 +62,6 @@ public class Airplane : MonoBehaviour
     {
         Instantiate(_dustParticle, new(transform.position.x, transform.position.y - 11f, transform.position.z), _dustParticle.transform.rotation);
     }
-
-
 
     private void OnCollisionEnter(Collision collision)
     {

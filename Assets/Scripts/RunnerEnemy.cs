@@ -10,23 +10,24 @@ public class RunnerEnemy : Enemy
 
     protected override void Act()
     {
-        if (player == null) return;
+        if (_player == null) return;
 
-        if (!hasSeenPlayer && distanceToPlayer <= detectionRadius)
+        if (!hasSeenPlayer && _distanceToPlayer <= detectionRadius * detectionRadius)
         {
             hasSeenPlayer = true;
-            moveDirection = (transform.position - player.transform.position).normalized;
+            moveDirection = (transform.position - _player.transform.position).normalized;
         }
 
         if (hasSeenPlayer)
         {
-            _rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+            _agent.SetDestination(transform.position + moveDirection);
+            //_rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
 
-            if (moveDirection != Vector3.zero)
+            /*if (moveDirection != Vector3.zero)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
-            }
+            }*/
         }
     }
 

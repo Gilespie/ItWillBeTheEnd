@@ -2,31 +2,37 @@ using UnityEngine;
 
 public class ChaserEnemy : Enemy
 {
-/*    private void OnEnable()
-    {
-        player.OnDead += Act;
-    }
-
-    private void OnDisable()
-    {
-        player.OnDead -= Act;
-    }*/
-
     protected override void Act()
     {
-        if (player.IsAlive == false) return;
+        if (_player.IsAlive == false) return;
 
-        if (distanceToPlayer > attackDistance)
+        if (_distanceToPlayer > attackDistance * attackDistance)
         {
             _animator.SetFloat(_nameIdle, 1f);
             _animator.SetFloat(_nameRun, 1f);
-            RotateTransform(player.transform);
-            Vector3 dir = (player.transform.position - transform.position).normalized;
-            _rb.MovePosition(transform.position + dir * moveSpeed * Time.deltaTime);
+
+            if(_agent.isStopped)
+            {
+                _agent.isStopped = true;
+            }
+
+            _agent.SetDestination(_player.transform.position);
+
+            /*RotateTransform(_player.transform);
+            Vector3 dir = (_player.transform.position - transform.position).normalized;
+            _rb.MovePosition(transform.position + dir * moveSpeed * Time.deltaTime);*/
         }
         else
         {
-            DealDamage(player);
+            if (!_agent.isStopped)
+            {
+                _agent.isStopped = true;
+            }
+
+            _animator.SetFloat(_nameIdle, 0f);
+            _animator.SetFloat(_nameRun, 0f);
+
+            DealDamage(_player);
 
         }
     }
