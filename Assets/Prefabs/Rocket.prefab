@@ -109,9 +109,8 @@ MonoBehaviour:
     m_Bits: 128
   _explosions:
   - {fileID: 4644002542568832150, guid: 6f71817aa6cf2ca44abfbbce17657276, type: 3}
-  - {fileID: 2370128034801292007, guid: 788033b0673c98742834cd20a5ed31df, type: 3}
+  - {fileID: 6336234500650849196, guid: 58e46da40f3a65543848b5cd7136685c, type: 3}
   - {fileID: 1148365042550903640, guid: d1d9db7c341149e4da3f83e77de91746, type: 3}
-  _explosionClip: {fileID: 8300000, guid: c8696d91203835e408a07665767f320a, type: 3}
   _flyClip: {fileID: 8300000, guid: 7465eddf9165ce840aeeeb480fdc27c3, type: 3}
 --- !u!82 &4548046151951988600
 AudioSource:

@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4250523778758872804}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -561.72, y: 32.87, z: -2.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6ac926efd5ec946add0b701610f68a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallSpeed: 10
-  noiseScale: 1
-  horizontalAmplitude: 1
-  lifetime: 3
-  branchPrefab: {fileID: 0}
-  branchChance: 0.3
+  fallSpeed: 50
+  noiseScale: 10
+  horizontalAmplitude: 15
+  lifetime: 5
+  branchPrefab: {fileID: 4250523778758872804}
+  branchChance: 1
 --- !u!96 &6706134284419052512
 TrailRenderer:
   serializedVersion: 3
@@ -93,7 +93,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.3
+  m_Time: 0.5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3

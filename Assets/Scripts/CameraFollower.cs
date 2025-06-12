@@ -20,7 +20,9 @@ public class CameraFollower : MonoBehaviour
 
     private void Start()
     {
-       transform.position =  _target.position;
+        _target.position = GameManager.Instance.Player.transform.position;
+        transform.position =  _target.position;
+        
     }
 
     private void Update()

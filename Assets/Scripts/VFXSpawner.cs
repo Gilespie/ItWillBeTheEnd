@@ -8,9 +8,5 @@ public class VFXSpawner : MonoBehaviour
     {
         Instantiate(_prefabEffect.gameObject, target.position, Quaternion.identity);
         _prefabEffect.Play();
-
-       /* var life = _prefabEffect.main;
-
-        Destroy(_prefabEffect.gameObject, life.startLifetime.constant);*/
     }
 }
