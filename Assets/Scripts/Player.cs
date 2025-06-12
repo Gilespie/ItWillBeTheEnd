@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Player : Destructable
@@ -34,6 +35,7 @@ public class Player : Destructable
     [Header("Parameters")]
     [SerializeField] private float _speedMultiplier = 1f;
     [SerializeField] private float _moveSpeed = 4f;
+    [SerializeField] private float _slopeSpeed = 8f;
     [SerializeField] private float _crouchSpeed = 5f;
     [SerializeField] private float _pushingSpeed = 1f;
     [SerializeField] private float _jumpForce = 25f;
@@ -66,23 +68,47 @@ public class Player : Destructable
 
     private float _currentSpeed = 0f;
     private Vector3 _direction;
+
+    private Quaternion _defaultRotation;
     private Rigidbody _rb;
     private CapsuleCollider _col;
     private Animator _animator;
 
+/*    private AnimationController _controller;
+    private Movement _movement;
+    private InputController _inputController;*/
+
     protected override void Awake()
     {
         Physics.gravity = new(0, gravity, 0);
+
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
         _animator = GetComponentInChildren<Animator>();
+
+        GameManager.Instance.Player = this;
+
+        //_movement = GetComponent<Movement>();
+        //_controller = GetComponent<AnimationController>();
+        //_inputController = new InputController(_controller, _movement);
     }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        _defaultRotation = _mesh.rotation;
+        GameManager.Instance.ActualCheckpoint = transform.position;
+    }
+
 
     protected override void Update()
     {
         base.Update();
 
-        if(!_isSlope)
+        //_inputController.ArtificialUpdate();
+
+        if (!_isSlope)
         {
             _direction.x = Input.GetAxis("Horizontal");
             _direction.z = Input.GetAxis("Vertical");
@@ -91,14 +117,14 @@ public class Player : Destructable
         {
             _direction.z = Input.GetAxis("Vertical");
         }
-       
+
 
         _isGrounded = _raycast.IsGrounded();
         _isInteractable = _raycast.IsInteract();
         _isPushing = _raycast.IsPushing();
         _isSlope = _raycast.IsSlope();
         _isCeiling = _raycast.IsCeiling();
-        
+
 
         _animator.SetBool(_airBoolName, !_isGrounded);
         _animator.SetBool(_moveBoolName, _direction.sqrMagnitude != 0f);
@@ -110,7 +136,6 @@ public class Player : Destructable
         if (_isSlope)
         {
             _animator.SetBool(_slopeBoolName, _isSlope);
-
             _rb.maxLinearVelocity = 15f;
             _col.sharedMaterial = _physicsMaterial;
             SlopeRotateMesh();
@@ -130,13 +155,14 @@ public class Player : Destructable
             JumpPlayer();
         }
 
-    /*    if (Input.GetKeyDown(_pressingKey) && _isGrounded && _isInteractable) //old version eliminar en el futuro
+        /*    if (Input.GetKeyDown(_pressingKey) && _isGrounded && _isInteractable) //old version eliminar en el futuro
         {
             _animator.SetTrigger(_pressTriggerName);
             Pressing();
-        }*/
+        }
+        */
 
-        if (Input.GetKeyDown(_crouchKey) && _isGrounded && !_isCeiling) 
+        if (Input.GetKeyDown(_crouchKey) && _isGrounded && !_isCeiling)
         {
             _isCrouch = !_isCrouch;
         }
@@ -151,12 +177,12 @@ public class Player : Destructable
         {
             if (!_canMove)
             {
-                Pushing(); 
+                Pushing();
             }
         }
         else
         {
-            if (_canMove) 
+            if (_canMove)
             {
                 StopPushing();
             }
@@ -179,6 +205,10 @@ public class Player : Destructable
         {
             ChangeSpeed(_crouchSpeed);
         }
+        else if(_isSlope)
+        {
+            ChangeSpeed(_slopeSpeed);
+        }
         else
         {
             ChangeSpeed(_moveSpeed);
@@ -189,25 +219,42 @@ public class Player : Destructable
     {
         base.FixedUpdate();
 
+        //_inputController.ArtificialFixedUpdate();
+
         if (_direction.sqrMagnitude != 0.0f && _isAlive)
         {
             MovePlayer(_direction);
         }
-        else if(_direction.sqrMagnitude != 0.0f && _isAlive && _isSlope)
+        else if (_direction.sqrMagnitude != 0.0f && _isAlive && _isSlope)
         {
             SlopeMovement(_direction);
         }
     }
 
+    public void ResetPlayer()
+    {
+        transform.position = GameManager.Instance.ActualCheckpoint;
+    }
+
     public void SlopeRotateMesh()
     {
-        _mesh.transform.rotation = Quaternion.LookRotation(_rb.velocity); 
+        //_mesh.transform.rotation = Quaternion.LookRotation(new(30, 0, 0));
+        //_mesh.transform.rotation = Quaternion.LookRotation(_rb.velocity);
+
+        Vector3 slopeNormal = _raycast.Normal;
+        Vector3 forward = _rb.velocity;
+
+        Quaternion slopeTilt = Quaternion.FromToRotation(Vector3.up, slopeNormal);
+        Vector3 adjustedForward = Vector3.ProjectOnPlane(forward, slopeNormal).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(adjustedForward, slopeNormal);
+
+        _mesh.rotation = targetRotation;
     }
 
     public void SlopeMovement(Vector3 dir)
     {
         Vector3 moveDir = (transform.forward * dir.z).normalized;
-        _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
+        _rb.MovePosition(transform.position + moveDir  * _currentSpeed * Time.fixedDeltaTime);
     }
 
     public float ChangeSpeed(float speed)

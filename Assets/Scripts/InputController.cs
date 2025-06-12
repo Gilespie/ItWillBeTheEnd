@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class InputController : MonoBehaviour
+public class InputController// : MonoBehaviour
 {
     [SerializeField] private TypeOfInput _typeInput = TypeOfInput.Press;
-    public delegate void ControlDelegate();
-    public ControlDelegate Control;
+
+    /*public delegate void ControlDelegate();
+    public ControlDelegate Control;*/
 
     [Header("Buttons")]
     [SerializeField] private KeyCode _jumpKey;
@@ -14,37 +15,31 @@ public class InputController : MonoBehaviour
     [SerializeField] private KeyCode _ragdollKey;
 
     [Header("References")]
-    [SerializeField] private Animator _animator;
+    [SerializeField] private AnimationController _animController;
     [SerializeField] private Movement _movement;
+    Vector3 _direction;
 
-    [SerializeField] private bool _isGrounded = false;
-
-    private bool _isCrouch = false;
-    private bool _isPushing = false;
-    private bool _isOnce = false;
-    private bool _canMove = false;
-    public bool CanMove => _canMove;
-
-    private bool _isInteractable = false;
-    private bool _isSlope = false;
-    private bool _isCeiling = false;
-
-    private void Start()
+    public InputController(AnimationController animcontroller, Movement movement)
     {
-        Control = _movement.MovePlayer;
+        _movement = movement;
+        _animController = animcontroller;
     }
 
-    void Update()
+    public void ArtificialUpdate()
     {
+        _direction.x = Input.GetAxisRaw("Horizontal");
+        _direction.z = Input.GetAxisRaw("Vertical");
+
         switch (_typeInput)
         {
             case TypeOfInput.Press:
-                if (Input.GetKeyDown(_jumpKey) && _isGrounded)
-                    Control = _movement.JumpPlayer;
 
-                if (Input.GetKeyDown(_crouchKey) && _isGrounded)
-                    Control = _movement.Crouch;
+                if (Input.GetKeyDown(_jumpKey))
+                   _movement.JumpPlayer();
 
+                if (Input.GetKeyDown(_crouchKey))
+                    _movement.Crouch();
+           
 
                 break;
 
@@ -55,6 +50,14 @@ public class InputController : MonoBehaviour
             case TypeOfInput.Mix:
 
                 break;
+        }
+    }
+
+    public void ArtificialFixedUpdate()
+    {
+        if(_direction.sqrMagnitude != 0.0f)
+        {
+            _movement.MovePlayer(_direction);
         }
     }
 }

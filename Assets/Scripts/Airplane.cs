@@ -1,12 +1,16 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 public class Airplane : MonoBehaviour
 {
     [SerializeField] private Lights[] _lights = new Lights[4];
-    [SerializeField] private ParticleSystem _particle;
+    [SerializeField] private ParticleSystem _dustParticle;
+    [SerializeField] private ParticleSystem _dustShockParticle;
     [SerializeField] private GameObject _explosivePrefab;
+    [SerializeField] private bool _isLanding = false;
+    [SerializeField] private bool _isCrashing = false;
+    private string _boolCrashName = "isCrashing";
+    private string _boolLandName = "isLanding";
     private Animator _animator;
     private AudioSource _audiosource;
 
@@ -19,13 +23,20 @@ public class Airplane : MonoBehaviour
     private void Start()
     {
         _lights = GetComponentsInChildren<Lights>();
+
+        if (_isLanding)
+        {
+            _animator.SetTrigger(_boolLandName);
+        }
+        else if (_isCrashing)
+        {
+            _animator.SetTrigger(_boolCrashName);
+        }
     }
 
     public void CrashPlane()
     {
-        _audiosource.Play();
         _animator.enabled = true;
-        Invoke("Explote", 8f);
     }
 
     public void TurnoffLights()
@@ -37,7 +48,22 @@ public class Airplane : MonoBehaviour
     }
 
     public void Explote()
+    { 
+        Instantiate(_explosivePrefab, transform.position, _explosivePrefab.transform.rotation);
+    }
+
+    public void Dust()
     {
-        Instantiate(_explosivePrefab, new Vector3(191.3f, 0, 68.5f), _explosivePrefab.transform.rotation);
+        Instantiate(_dustParticle, new(transform.position.x, transform.position.y - 11f, transform.position.z), _dustParticle.transform.rotation);
+    }
+
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.TryGetComponent(out Player player))
+        {
+            player.TakeDamage(1000f);
+        }
     }
 }

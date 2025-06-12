@@ -528,7 +528,10 @@ MonoBehaviour:
   _groundRayDistance: 1
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 1073744449
+    m_Bits: 1073748545
+  _slopeLayer:
+    serializedVersion: 2
+    m_Bits: 4096
   _interactRayDistance: 1
   _interactLayer:
     serializedVersion: 2
@@ -539,7 +542,7 @@ MonoBehaviour:
     m_Bits: 2048
   _ceilingRayDistance: 0.45
   _intRadius: 0.1
-  _maxSlopeAngle: 29
+  _maxSlopeAngle: 26
 --- !u!1 &2138269858641149237
 GameObject:
   m_ObjectHideFlags: 0
@@ -1857,6 +1860,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4964084085140020267}
+  - component: {fileID: 2705854405617094746}
   - component: {fileID: 3094651629819230405}
   - component: {fileID: 5281366123846900767}
   - component: {fileID: 5283282478363902830}
@@ -1885,6 +1889,20 @@ Transform:
   - {fileID: 8537475725002043208}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2705854405617094746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3634448441287230994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc5adf3b00366144bbc72e8468c8cfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _zPosMin: -10
+  _zPosMax: 0
 --- !u!114 &3094651629819230405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1924,6 +1942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 0
   _maxHealth: 50
+  _mesh: {fileID: 8537475725002043208}
   _jumpKey: 32
   _crouchKey: 306
   _pushingKey: 101
@@ -1943,13 +1962,11 @@ MonoBehaviour:
   _ragdoll: {fileID: 3094651629819230405}
   _rotationTransform: {fileID: 1793900502437099465}
   _physicsMaterial: {fileID: 13400000, guid: 1eb94a61eb6e7be41866ae1a20a32251, type: 2}
-  _zPosMin: -5
-  _zPosMax: 10
   _speedMultiplier: 1
   _moveSpeed: 3.5
   _crouchSpeed: 2
   _pushingSpeed: 1
-  _jumpForce: 30
+  _jumpForce: 25
   _follower: {fileID: 0}
   _isGrounded: 0
   _fallDamageMultiplier: 5

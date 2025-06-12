@@ -27,6 +27,8 @@ public class Raycasting : MonoBehaviour
     [SerializeField] private float _intRadius = 0.1f;
     [SerializeField] private float _maxSlopeAngle = 26.5f;
     private float _currentSlopeAngle = 0f;
+    private Vector3 _normalOrient;
+    public Vector3 Normal => _normalOrient;
 
     public bool IsGrounded()
     {
@@ -45,6 +47,7 @@ public class Raycasting : MonoBehaviour
 
             if (_currentSlopeAngle >= _maxSlopeAngle)
             {
+                _normalOrient = _groundHit.normal;
                 return true;
             }
         }

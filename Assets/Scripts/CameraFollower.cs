@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class CameraFollower : MonoBehaviour
 {
-    [Header("Shake Intensity")]
-    [SerializeField, Range(1f, 10f)] private float _intensityIndex = 1f;
-    [SerializeField, Range(1f, 10f)] private float _force = 5f;
-    [SerializeField] private float _shakeDuration = 1.5f;
-
     [Header("Bob Effect")]
     [SerializeField] private bool _isBobEnable = true;
     [SerializeField] private float _bobSpeed = 3.5f;
@@ -19,9 +14,14 @@ public class CameraFollower : MonoBehaviour
     [SerializeField] private Vector3 _offset;
 
     private Vector3 _currentPosition;
-    private Vector3 _bobOffset;
     private Vector3 _shakeOffset;
+    private Vector3 _bobOffset;
     private Vector3 _defaultOffset;
+
+    private void Start()
+    {
+       transform.position =  _target.position;
+    }
 
     private void Update()
     {
@@ -41,34 +41,14 @@ public class CameraFollower : MonoBehaviour
         transform.LookAt(_target);
     }
 
+    public void SetShakeOffset(Vector3 offset)
+    {
+        _shakeOffset = offset;
+    }
+
     public void ChangeOffset()
     {
         StartCoroutine(SmoothOffsetChange(new(_offset.x + 16f, _offset.y, _offset.z), 1f, 8f));
-    }
-
-    public void ActiveShake()
-    {
-        StartCoroutine(ShakeCamera(_force, _shakeDuration));
-    }
-
-    public IEnumerator ShakeCamera(float force, float duration)
-    {
-        float elapsed = 0.0f;
-
-        while (elapsed < duration)
-        {
-            float x = Random.Range(-_intensityIndex, _intensityIndex) * force;
-            float y = Random.Range(-_intensityIndex, _intensityIndex) * force;
-            //float z = Random.Range(-_intensityIndex, _intensityIndex) * force;
-
-            _shakeOffset = new Vector3(x, y, 0);
-
-            elapsed += Time.deltaTime;
-
-            yield return null;
-        }
-
-        _shakeOffset = Vector3.zero;
     }
 
     private void BobEffect(float speed, float intensity)
@@ -93,6 +73,7 @@ public class CameraFollower : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
+
         _offset = newOffset;
 
         yield return new WaitForSeconds(returnDelay);

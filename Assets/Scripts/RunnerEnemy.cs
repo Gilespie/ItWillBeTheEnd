@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class RunnerEnemy : Enemy
 {
-    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float detectionRadius = 10f;
     [SerializeField] private float collisionDamage = 5f;
 

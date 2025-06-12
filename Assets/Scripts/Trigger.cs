@@ -5,15 +5,26 @@ public class Trigger : MonoBehaviour
 {
     [SerializeField] private bool _isOnce = false;
     [SerializeField] private UnityEvent _actions;
+    private bool _hasTriggered = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_isOnce) return;
+        if (_isOnce && _hasTriggered) return;
 
-        if(other.GetComponent<Player>())
+        if (_isOnce)
         {
-            _actions?.Invoke();
-            _isOnce = true;
+            if (other.GetComponent<Player>())
+            {
+                _actions?.Invoke();
+                _hasTriggered = true;
+            }
+        }
+        else
+        {
+            if (other.GetComponent<Player>())
+            {
+                _actions?.Invoke();
+            }
         }
     }
 }

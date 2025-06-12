@@ -8,12 +8,24 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _crouchSpeed = 5f;
     [SerializeField] private float _pushingSpeed = 1f;
     [SerializeField] private float _jumpForce = 25f;
-
+    [SerializeField] private Raycasting _raycasting;
 
     private float _currentSpeed = 0f;
     private Vector3 _direction;
     private Rigidbody _rb;
     private CapsuleCollider _col;
+    
+    private bool _isGrounded = false;
+    private bool _isCrouch = false;
+    private bool _isPushing = false;
+    private bool _isOnce = false;
+    private bool _canMove = false;
+    public bool CanMove => _canMove;
+
+    private bool _isInteractable = false;
+    private bool _isSlope = false;
+    private bool _isCeiling = false;
+
 
     protected void Awake()
     {
@@ -21,9 +33,10 @@ public class Movement : MonoBehaviour
         _col = GetComponent<CapsuleCollider>();
     }
 
-    //protected void Update()
-    //{
-    //    _direction.x = Input.GetAxis("Horizontal");
+    protected void Update()
+    {
+        _isGrounded = _raycasting.IsGrounded();
+            //    _direction.x = Input.GetAxis("Horizontal");
     //    _direction.z = Input.GetAxis("Vertical");
 
     //    if (_isSlope)
@@ -102,7 +115,7 @@ public class Movement : MonoBehaviour
     //    {
     //        ChangeSpeed(_moveSpeed);
     //    }
-    //}
+    }
     public float ChangeSpeed(float speed)
     {
         _currentSpeed = speed * _speedMultiplier;
@@ -114,19 +127,24 @@ public class Movement : MonoBehaviour
         _speedMultiplier = value;
     }
 
-    public void MovePlayer()
+    public void MovePlayer(Vector3 dir)
     {
-        _direction.x = Input.GetAxis("Horizontal");
-        _direction.z = Input.GetAxis("Vertical");
+        Vector3 moveDir = new( );
 
-        Vector3 moveDir = (transform.right * _direction.x + transform.forward * _direction.z).normalized;
+        if (_isSlope)
+        {
+             moveDir = (transform.forward * dir.z).normalized;
+        }
+        else
+        {
+            moveDir = (transform.right * dir.x + transform.forward * dir.z).normalized;
+        }
+
         _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
     }
 
     public void SlopeMovement()
     {
-        _direction.z = Input.GetAxis("Vertical");
-
         Vector3 moveDir = (transform.forward * _direction.z).normalized;
         _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
     }
@@ -145,6 +163,14 @@ public class Movement : MonoBehaviour
         _rb.MovePosition(transform.position + moveDir * speed * Time.fixedDeltaTime);
     }
 
+    public void SetMovement(float x, float z, float speed) //abstract method for movement
+    {
+        _direction.x = x;
+        _direction.z = z;
+
+        Vector3 moveDir = (transform.right * _direction.x + transform.forward * _direction.z).normalized;
+        _rb.MovePosition(transform.position + moveDir * speed * Time.fixedDeltaTime);
+    }
 
     public float GetSpeed()
     {
@@ -153,8 +179,7 @@ public class Movement : MonoBehaviour
 
     public void JumpPlayer()
     {
-        _direction.x = Input.GetAxis("Horizontal");
-        _direction.z = Input.GetAxis("Vertical");
+        if (!_isGrounded) return;
 
         _rb.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
 

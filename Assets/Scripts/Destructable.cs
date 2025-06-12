@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public abstract class Destructable : MonoBehaviour
 {
+    //public event Action OnDead;
+
     [Header("Entity ID")]
     [SerializeField] protected int _id = 0;
 
@@ -9,6 +12,7 @@ public abstract class Destructable : MonoBehaviour
     [SerializeField] protected float _maxHealth = 100f;
     protected float _currentHealth = 0f;
     protected bool _isAlive = true;
+    public bool IsAlive => _isAlive;
 
     protected virtual void Awake()
     {
