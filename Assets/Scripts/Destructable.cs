@@ -1,10 +1,7 @@
-using System;
 using UnityEngine;
 
 public abstract class Destructable : MonoBehaviour
 {
-    //public event Action OnDead;
-
     [Header("Entity ID")]
     [SerializeField] protected int _id = 0;
 

@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 public class Airplane : MonoBehaviour
 {
     [SerializeField] private Lights[] _lights = new Lights[4];
+    [SerializeField] private GameObject _mesh;
     [SerializeField] private ParticleSystem _dustParticle;
     [SerializeField] private ParticleSystem _dustShockParticle;
     [SerializeField] private GameObject _explosivePrefab;
@@ -38,11 +39,14 @@ public class Airplane : MonoBehaviour
         {
             _animator.SetTrigger(_boolCrash2Name);
         }
+
+        _mesh.SetActive(false);
     }
 
     public void CrashPlane()
     {
         _animator.enabled = true;
+        _mesh.SetActive(true);
     }
 
     public void TurnOffLights()

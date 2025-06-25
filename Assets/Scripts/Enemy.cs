@@ -8,12 +8,9 @@ public abstract class Enemy : MonoBehaviour
     [Header("Animations")]
     [SerializeField] protected string _nameIdle = "Vert"; 
     [SerializeField] protected string _nameRun = "State"; 
-    //[SerializeField] protected Transform _mesh;
 
     [Header("Enemy Settings")]
     [SerializeField] protected float damage = 100f;
-    /*[SerializeField] protected float rotationSpeed = 10f;
-    [SerializeField] protected float moveSpeed = 5f;*/
     [SerializeField] protected float attackDistance = 2f;
     [SerializeField] protected float detectionDistance = 5f;
     [SerializeField] protected float _updateNodeDistance = 0.75f;
@@ -105,17 +102,4 @@ public abstract class Enemy : MonoBehaviour
             return newNode;
         }
     }
-
-    /*protected void RotateTransform(Transform target)
-    {
-        _direction = target.position - transform.position;
-
-        _direction.y = 0;
-
-        if (_direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(_direction);
-            _mesh.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-        }
-    }*/
 }

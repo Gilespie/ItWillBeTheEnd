@@ -44,7 +44,6 @@ public class Player : Destructable
     private bool _isCrouch = false;
     private bool _isPushing = false;
     private bool _isOnce = false;
-    //public bool IsPushing => _isPushing;
     private bool _canMove = false;
     public bool CanMove => _canMove;
 
@@ -74,10 +73,6 @@ public class Player : Destructable
     private CapsuleCollider _col;
     private Animator _animator;
 
-/*    private AnimationController _controller;
-    private Movement _movement;
-    private InputController _inputController;*/
-
     protected override void Awake()
     {
         Physics.gravity = new(0, gravity, 0);
@@ -87,10 +82,6 @@ public class Player : Destructable
         _animator = GetComponentInChildren<Animator>();
 
         GameManager.Instance.Player = this;
-
-        //_movement = GetComponent<Movement>();
-        //_controller = GetComponent<AnimationController>();
-        //_inputController = new InputController(_controller, _movement);
     }
 
     protected override void Start()
@@ -105,8 +96,6 @@ public class Player : Destructable
     protected override void Update()
     {
         base.Update();
-
-        //_inputController.ArtificialUpdate();
 
         if (!_isSlope)
         {
@@ -131,7 +120,6 @@ public class Player : Destructable
 
         _animator.SetFloat(_xAxisName, _direction.x);
         _animator.SetFloat(_zAxisName, _direction.z);
-        //_animator.SetFloat(_moveStateName, _direction.sqrMagnitude);
 
         if (_isSlope)
         {
@@ -219,8 +207,6 @@ public class Player : Destructable
     {
         base.FixedUpdate();
 
-        //_inputController.ArtificialFixedUpdate();
-
         if (_direction.sqrMagnitude != 0.0f && _isAlive)
         {
             MovePlayer(_direction);
@@ -238,9 +224,6 @@ public class Player : Destructable
 
     public void SlopeRotateMesh()
     {
-        //_mesh.transform.rotation = Quaternion.LookRotation(new(30, 0, 0));
-        //_mesh.transform.rotation = Quaternion.LookRotation(_rb.velocity);
-
         Vector3 slopeNormal = _raycast.Normal;
         Vector3 forward = _rb.velocity;
 
@@ -295,7 +278,7 @@ public class Player : Destructable
     private void MovePlayer(Vector3 dir)
     {
         Vector3 moveDir = (transform.right * dir.x + transform.forward * dir.z).normalized;
-        _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
+        _rb.MovePosition(_rb.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
     }
 
     public float GetSpeed()

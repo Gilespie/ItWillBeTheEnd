@@ -1865,7 +1865,6 @@ GameObject:
   - component: {fileID: 5281366123846900767}
   - component: {fileID: 5283282478363902830}
   - component: {fileID: 2974607695797015382}
-  - component: {fileID: 7526304566904321216}
   m_Layer: 7
   m_Name: Player
   m_TagString: MainPlayer
@@ -1964,6 +1963,7 @@ MonoBehaviour:
   _physicsMaterial: {fileID: 13400000, guid: 1eb94a61eb6e7be41866ae1a20a32251, type: 2}
   _speedMultiplier: 1
   _moveSpeed: 3.5
+  _slopeSpeed: 8
   _crouchSpeed: 2
   _pushingSpeed: 1
   _jumpForce: 25
@@ -2000,7 +2000,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &2974607695797015382
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2024,14 +2024,6 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
---- !u!81 &7526304566904321216
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3634448441287230994}
-  m_Enabled: 1
 --- !u!1 &3696147575028081969
 GameObject:
   m_ObjectHideFlags: 0

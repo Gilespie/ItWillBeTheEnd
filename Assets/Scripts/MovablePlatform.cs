@@ -68,16 +68,4 @@ public class MovablePlatform : MonoBehaviour
 
         yield return null;
     }
-
-    /*private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 7)
-            other.transform.SetParent(transform);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.layer == 7)
-            other.transform.SetParent(null);
-    }*/
 }

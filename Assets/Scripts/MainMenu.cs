@@ -1,16 +1,11 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public GameObject mainMenuPanel;
-    public GameObject creditsPanel;
-    public GameObject controlsPanel;
-
-   /* public void StartGame()
-    {
-        SceneManager.LoadScene("GrayBox");
-    }*/
+    [SerializeField] private GameObject _mainMenuPanel;
+    [SerializeField] private GameObject _settingsPanel;
+    [SerializeField] private GameObject _controlsPanel;
+    [SerializeField] private GameObject _creditsPanel;
 
     public void QuitGame()
     {
@@ -20,25 +15,37 @@ public class MainMenu : MonoBehaviour
 
     public void ShowCredits()
     {
-        mainMenuPanel.SetActive(false);
-        creditsPanel.SetActive(true);
+        _mainMenuPanel.SetActive(false);
+        _creditsPanel.SetActive(true);
     }
 
     public void CloseCredits()
     {
-        creditsPanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
+        _creditsPanel.SetActive(false);
+        _mainMenuPanel.SetActive(true);
     }
 
     public void ShowControls()
     {
-        mainMenuPanel.SetActive(false);
-        controlsPanel.SetActive(true);
+        _mainMenuPanel.SetActive(false);
+        _controlsPanel.SetActive(true);
     }
 
     public void CloseControls()
     {
-        controlsPanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
+        _controlsPanel.SetActive(false);
+        _mainMenuPanel.SetActive(true);
+    }
+
+    public void ShowSettings()
+    {
+        _mainMenuPanel.SetActive(false);
+        _settingsPanel.SetActive(true);
+    }
+
+    public void CloseSettings()
+    {
+        _mainMenuPanel.SetActive(true);
+        _settingsPanel.SetActive(false);
     }
 }

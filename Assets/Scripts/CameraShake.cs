@@ -5,13 +5,6 @@ public class CameraShake : MonoBehaviour
 {
     public static CameraShake Instance;
 
-    [Header("Shake Intensity")]
-    [SerializeField, Range(1f, 10f)] private float _force = 5f;
-    [SerializeField] private float _shakeDuration = 1.5f;
-    [SerializeField] private float _speedTransition = 0.1f;
-    private Vector3 _shakeOffset;
-    private CameraFollower _camera;
-
     private void Awake()
     {
         if(Instance == null)
@@ -25,9 +18,16 @@ public class CameraShake : MonoBehaviour
         }
     }
 
+    [Header("Shake Intensity")]
+    [SerializeField, Range(1f, 10f)] private float _force = 5f;
+    [SerializeField] private float _shakeDuration = 1.5f;
+    [SerializeField] private float _speedTransition = 0.1f;
+    private Vector3 _shakeOffset;
+    private CameraFollower _camera;
+
     private void Start()
     {
-        _camera = GetComponent<CameraFollower>();
+        _camera = GameManager.Instance.Camera;
     }
 
     public void ActiveShake()

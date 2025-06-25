@@ -17,10 +17,6 @@ public class ChaserEnemy : Enemy
             }
 
             _agent.SetDestination(_player.transform.position);
-
-            /*RotateTransform(_player.transform);
-            Vector3 dir = (_player.transform.position - transform.position).normalized;
-            _rb.MovePosition(transform.position + dir * moveSpeed * Time.deltaTime);*/
         }
         else
         {
@@ -33,7 +29,6 @@ public class ChaserEnemy : Enemy
             _animator.SetFloat(_nameRun, 0f);
 
             DealDamage(_player);
-
         }
     }
 

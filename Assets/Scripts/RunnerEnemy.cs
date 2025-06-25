@@ -21,13 +21,6 @@ public class RunnerEnemy : Enemy
         if (hasSeenPlayer)
         {
             _agent.SetDestination(transform.position + moveDirection);
-            //_rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
-
-            /*if (moveDirection != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
-            }*/
         }
     }
 

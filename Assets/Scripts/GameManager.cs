@@ -51,4 +51,12 @@ public class GameManager : MonoBehaviour
         get { return _surface; }
         set { _surface = value; }
     }
+
+    private CameraFollower _camera;
+
+    public CameraFollower Camera
+    {
+        get { return _camera; }
+        set { _camera = value; }
+    }
 }
