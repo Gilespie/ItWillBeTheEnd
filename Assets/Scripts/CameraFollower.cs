@@ -27,6 +27,7 @@ public class CameraFollower : MonoBehaviour
     private Vector3 _defaultOffset;
     private float _defaultFOV = 60f;
     private float _currentFOV;
+
     private void Awake()
     {
         GameManager.Instance.Camera = this;    
@@ -40,7 +41,9 @@ public class CameraFollower : MonoBehaviour
         _defaultOffset = _offset;
 
         _target = GameManager.Instance.Player.transform;
-        transform.position = _target.position;
+        
+        SnapToTarget();
+        Debug.Log("ResetCamera");
     }
 
     private void Update()
@@ -59,6 +62,13 @@ public class CameraFollower : MonoBehaviour
 
         transform.position = Vector3.Lerp(transform.position, _currentPosition, _speedRate * Time.fixedDeltaTime);
         transform.LookAt(_target);
+    }
+
+    public void SnapToTarget()
+    {
+        _currentPosition = _target.position + _offset + _bobOffset + _shakeOffset;
+        _currentPosition.z = _zPosConstant;
+        transform.position = _currentPosition;
     }
 
     public void SetShakeOffset(Vector3 offset)

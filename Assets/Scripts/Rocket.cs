@@ -53,7 +53,6 @@ public class Rocket : MonoBehaviour
     public void SetTarget(Transform target)
     {
         _target = target;
-
     }
 
     private void Explosion(Vector3 centre)
@@ -80,9 +79,9 @@ public class Rocket : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+   /* private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _radius);
-    }
+    }*/
 }

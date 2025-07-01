@@ -1,12 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuManager : MonoBehaviour
 {
-    public GameObject pausePanel;
+    [SerializeField] private GameObject _pausePanel;
     private bool isPaused = false;
+
+    private void Start()
+    {
+        _pausePanel.SetActive(false);             
+    }
 
     private void Update()
     {
@@ -21,14 +24,14 @@ public class PauseMenuManager : MonoBehaviour
 
     public void Pause()
     {
-        pausePanel.SetActive(true);
+        _pausePanel.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
     }
 
     public void Resume()
     {
-        pausePanel.SetActive(false);
+        _pausePanel.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
     }
@@ -45,4 +48,3 @@ public class PauseMenuManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 }
-

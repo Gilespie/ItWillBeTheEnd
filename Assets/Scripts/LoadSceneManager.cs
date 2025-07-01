@@ -28,7 +28,6 @@ public class LoadSceneManager : MonoBehaviour
     [SerializeField] private float _fadeTime = 0.5f;
     [SerializeField] private TextMeshProUGUI _stateText;
     [SerializeField] private Slider _sliderProgress;
-
     private bool _isLoading = false;
 
     private void Start()

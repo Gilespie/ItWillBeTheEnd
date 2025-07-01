@@ -18,4 +18,19 @@ public class PlayerAvatar : MonoBehaviour
     {
         _parent.Pressing();
     }
+
+    public void ActivateControl()
+    {
+        _parent.ActivateControl();
+    }
+
+    public void DeactivateControl()
+    {
+        _parent.DeactivateControl();
+    }
+
+    public void PlayFootStep()
+    {
+        _parent.PlayFootStep();
+    }
 }

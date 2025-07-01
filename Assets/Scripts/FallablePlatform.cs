@@ -17,10 +17,9 @@ public class FallablePlatform : MonoBehaviour
     {
         if (_currentRoutine != null) return;
 
-
-        if(_currentRoutine == null && collision.gameObject.TryGetComponent(out Player player))
+        if(collision.gameObject.TryGetComponent(out Player player))
         {
-            StartCoroutine(ActivateKinemticRoutine());
+           _currentRoutine = StartCoroutine(ActivateKinemticRoutine());
         }
     }
 
@@ -28,6 +27,7 @@ public class FallablePlatform : MonoBehaviour
     {
         yield return new WaitForSeconds(_delay);
         _rigidbody.isKinematic = false;
+        Destroy(gameObject, 5f);
         yield return null;
     }
 }

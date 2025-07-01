@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +5,7 @@ public class CheckpointUI : MonoBehaviour
 {
     [SerializeField] private Image _saveIcon;
     [SerializeField] private Checkpoint[] _points;
+    [SerializeField] private AudioClip _clip;
     private Animation _animation;
 
     private void OnEnable()
@@ -34,5 +34,6 @@ public class CheckpointUI : MonoBehaviour
     {
         _animation.Stop();
         _animation.Play();
+        AudioManager.Instance.PlayUI(_clip);
     }
 }

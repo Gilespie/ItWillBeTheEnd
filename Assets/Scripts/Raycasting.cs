@@ -131,7 +131,7 @@ public class Raycasting : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+   /* private void OnDrawGizmos()
     {
         bool isGrounded = false;
         bool isInteractable = false;
@@ -155,5 +155,5 @@ public class Raycasting : MonoBehaviour
         Gizmos.DrawRay(_ceilingOrigin.position + transform.forward * 0.3f, Vector3.up * _ceilingRayDistance);
         Gizmos.DrawRay(_ceilingOrigin.position, Vector3.up * _ceilingRayDistance);
         Gizmos.DrawRay(_ceilingOrigin.position + -transform.forward * 0.3f, Vector3.up * _ceilingRayDistance);
-    }
+    }*/
 }

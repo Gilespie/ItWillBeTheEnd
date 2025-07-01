@@ -3,10 +3,9 @@ using UnityEngine;
 public class PushableBox : MonoBehaviour, IPushable
 {
     [SerializeField]private Player _player;
-    //[SerializeField] private Transform _standPos;
+    [SerializeField] private float _standMass = 50f;
+    [SerializeField] private float _moveMass = 0.5f;
     private Rigidbody _rb;
-    private float _standMass = 10000f;
-    private float _moveMass = 0.001f;
 
     private void Awake()
     {

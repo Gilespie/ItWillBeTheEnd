@@ -85,4 +85,9 @@ public class AudioManager : MonoBehaviour
 
         _audioSource.Pause();
     }
+
+    public void PlayUI(AudioClip clip)
+    {
+        _audioSource.PlayOneShot(clip);
+    }
 }

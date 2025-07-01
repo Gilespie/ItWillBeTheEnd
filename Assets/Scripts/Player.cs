@@ -25,6 +25,10 @@ public class Player : Destructable
     [SerializeField] private string _moveStateName = "moveState";
     [SerializeField] private string _slopeBoolName = "isSliding";
 
+    [Header("SFX Step")]
+    [SerializeField] private AudioClip _footstep;
+    private AudioSource _audioSource;
+
     [Header("Physics")]
     [SerializeField] private float gravity = -20f;
     [SerializeField] private Raycasting _raycast;
@@ -80,6 +84,7 @@ public class Player : Destructable
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
         _animator = GetComponentInChildren<Animator>();
+        _audioSource = GetComponent<AudioSource>();
 
         GameManager.Instance.Player = this;
     }
@@ -89,7 +94,11 @@ public class Player : Destructable
         base.Start();
 
         _defaultRotation = _mesh.rotation;
-        GameManager.Instance.ActualCheckpoint = transform.position;
+
+        if(GameManager.Instance.ActualCheckpoint == Vector3.zero)
+            GameManager.Instance.ActualCheckpoint = transform.position;
+        else
+            transform.position = GameManager.Instance.ActualCheckpoint;
     }
 
 
@@ -330,6 +339,18 @@ public class Player : Destructable
         _raycast.Interact();
     }
 
+    public void ActivateControl()
+    {
+        this.enabled = true;
+        _rotationTransform.enabled = true;
+    }
+
+    public void DeactivateControl()
+    {
+        this.enabled = false;
+        _rotationTransform.enabled = false;
+    }
+
     protected override void DeactivatePlayer()
     {
         if (_isOnce) return;
@@ -360,6 +381,12 @@ public class Player : Destructable
 
     public void Die()
     {
-        deathScreenManager.ShowDeathScreen();
+        deathScreenManager.ActivateFadeIn();
+    }
+
+    public void PlayFootStep()
+    {
+        _audioSource.pitch = Random.Range(0.7f, 1.3f);
+        _audioSource.PlayOneShot(_footstep);
     }
 }

@@ -9,9 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu/MainMenu.unity
     guid: da3a8590986805c4d85b3d8e9822c6d8
   - enabled: 1
-    path: Assets/Scenes/Level1/Level1.unity
+    path: Assets/Scenes/Airport/Airport.unity
     guid: c7e06759c5b556b48b6881fdad3cf688
   - enabled: 1
+    path: Assets/Scenes/Mines/Mines.unity
+    guid: 2ddc9895b81771d478bb927d04a6f66b
+  - enabled: 0
     path: Assets/Scenes/GrayBox/GrayBox.unity
     guid: 5a6d8c720d7b9a24faf9be9ab5c22afd
   m_configObjects: {}
