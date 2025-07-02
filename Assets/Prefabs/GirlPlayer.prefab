@@ -300,7 +300,6 @@ MonoBehaviour:
   _zAxisName: zAxis
   _moveStateName: moveState
   _slopeBoolName: isSliding
-  _footstep: {fileID: 8300000, guid: 2fe03f691d3e9b74895581684c2795e9, type: 3}
   gravity: -20
   _raycast: {fileID: 521541852565614409}
   _ragdoll: {fileID: 8166369532175708567}
@@ -317,6 +316,10 @@ MonoBehaviour:
   _fallDamageMultiplier: 5
   _fallDamageThreshold: -20
   _spawner: {fileID: 0}
+  _footstep: {fileID: 8300000, guid: 2fe03f691d3e9b74895581684c2795e9, type: 3}
+  _voices:
+  - {fileID: 8300000, guid: 1eedef5dc18d93d48bfe3a74570a8ccb, type: 3}
+  - {fileID: 8300000, guid: 1a03b94fc104993469998fd8527f29c3, type: 3}
   deathScreenManager: {fileID: 0}
   _secondsUntilRestart: 3
 --- !u!54 &3565802296631388737
@@ -1611,7 +1614,7 @@ Transform:
   m_GameObject: {fileID: 2693579562000053184}
   serializedVersion: 2
   m_LocalRotation: {x: -0.010164347, y: -0.014058134, z: 0.05056399, w: 0.9985702}
-  m_LocalPosition: {x: -0.005004883, y: 0.9594424, z: 0.010648727}
+  m_LocalPosition: {x: -0.0049743652, y: 0.9594426, z: 0.010648489}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

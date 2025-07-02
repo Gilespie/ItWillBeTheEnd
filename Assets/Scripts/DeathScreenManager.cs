@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DeathScreenManager : MonoBehaviour
 {
-    [SerializeField] private float _fadeTime = 1f;
+    [SerializeField] private float _fadeTime = 2f;
     private Image _image;
 
     private void Start()
@@ -62,7 +62,7 @@ public class DeathScreenManager : MonoBehaviour
         while (elapsed < _fadeTime)
         {
             elapsed += Time.deltaTime;
-            float alpha = Mathf.Clamp01(1f - (elapsed / _fadeTime));
+            float alpha = Mathf.Clamp01(1f - elapsed / _fadeTime);
             color.a = alpha;
             _image.color = color;
             yield return null;

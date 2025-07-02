@@ -30,4 +30,10 @@ public class Trigger : MonoBehaviour
             }
         }
     }
+
+    [ContextMenu("Activate Trigger")]
+    public void Activate()
+    {
+        _actions?.Invoke();
+    }
 }

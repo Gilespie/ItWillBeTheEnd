@@ -41,9 +41,8 @@ public class CameraFollower : MonoBehaviour
         _defaultOffset = _offset;
 
         _target = GameManager.Instance.Player.transform;
-        
-        SnapToTarget();
-        Debug.Log("ResetCamera");
+
+        transform.position = GameManager.Instance.ActualCheckpoint;
     }
 
     private void Update()
@@ -62,13 +61,6 @@ public class CameraFollower : MonoBehaviour
 
         transform.position = Vector3.Lerp(transform.position, _currentPosition, _speedRate * Time.fixedDeltaTime);
         transform.LookAt(_target);
-    }
-
-    public void SnapToTarget()
-    {
-        _currentPosition = _target.position + _offset + _bobOffset + _shakeOffset;
-        _currentPosition.z = _zPosConstant;
-        transform.position = _currentPosition;
     }
 
     public void SetShakeOffset(Vector3 offset)

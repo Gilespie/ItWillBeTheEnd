@@ -25,10 +25,6 @@ public class Player : Destructable
     [SerializeField] private string _moveStateName = "moveState";
     [SerializeField] private string _slopeBoolName = "isSliding";
 
-    [Header("SFX Step")]
-    [SerializeField] private AudioClip _footstep;
-    private AudioSource _audioSource;
-
     [Header("Physics")]
     [SerializeField] private float gravity = -20f;
     [SerializeField] private Raycasting _raycast;
@@ -61,6 +57,9 @@ public class Player : Destructable
 
     [Header("SFX&VFX")]
     [SerializeField] private VFXSpawner _spawner;
+    [SerializeField] private AudioClip _footstep;
+    [SerializeField] private AudioClip[] _voices;
+    private AudioSource _audioSource;
 
     public DeathScreenManager deathScreenManager;
     [SerializeField] private float _secondsUntilRestart = 3f;
@@ -362,6 +361,7 @@ public class Player : Destructable
         _rotationTransform.enabled = false;
         _ragdoll.ActivateRagdoll();
         _ragdoll.ActivateCollision();
+        PlayVoice();
 
         if(!_isOnce)
         {
@@ -388,5 +388,11 @@ public class Player : Destructable
     {
         _audioSource.pitch = Random.Range(0.7f, 1.3f);
         _audioSource.PlayOneShot(_footstep);
+    }
+
+    public void PlayVoice()
+    {
+        int index = Random.Range(0, _voices.Length);
+        _audioSource.PlayOneShot(_voices[index]);
     }
 }
