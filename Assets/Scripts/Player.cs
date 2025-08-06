@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Player : Destructable
 {
+    public static event Action OnEndGame;
     [Header("Reference")]
     [SerializeField] private Transform _mesh;
 
@@ -55,6 +56,21 @@ public class Player : Destructable
     [SerializeField] private float _fallDamageMultiplier = 100f;
     [SerializeField] private float _fallDamageThreshold = -10f;
 
+    [Header("Swimming")]
+    [SerializeField] private float _swimSpeed = 2f;
+    [SerializeField] private float _swimUpForce = 5f;
+    [SerializeField] private string _startSwimTriggerName = "onStartSwimming";
+    [SerializeField] private string _stopSwimTriggerName = "onStopSwimming";
+    [SerializeField] private ParticleSystem[] _bubleParticles;
+    [SerializeField] private Transform _headPoint;
+    [SerializeField] private float _waterCheckDistance = 0.2f;
+    [SerializeField] private LayerMask _waterLayer;
+    [SerializeField] private AirManager _airManager;
+
+    private Coroutine _slowFallCoroutine;
+    private float _slowTime = 0f;
+    private bool _isSwimming = false;
+
     [Header("SFX&VFX")]
     [SerializeField] private VFXSpawner _spawner;
     [SerializeField] private AudioClip _footstep;
@@ -65,8 +81,10 @@ public class Player : Destructable
     [SerializeField] private float _secondsUntilRestart = 3f;
 
     private bool _wasGround = false;
+    private bool _inWaterZone = false;
     private float _maxFallSpeed = 0f;
     private float _fallDamage = 0f;
+    private bool _isEndGame = false;
 
     private float _currentSpeed = 0f;
     private Vector3 _direction;
@@ -88,13 +106,23 @@ public class Player : Destructable
         GameManager.Instance.Player = this;
     }
 
+    private void OnEnable()
+    {
+        AirManager.OnFinishOxygen += DeactivatePlayer;
+    }
+
     protected override void Start()
     {
         base.Start();
 
         _defaultRotation = _mesh.rotation;
 
-        if(GameManager.Instance.ActualCheckpoint == Vector3.zero)
+        foreach (var particle in _bubleParticles)
+        {
+            particle.Stop();
+        }
+
+        if (GameManager.Instance.ActualCheckpoint == Vector3.zero)
             GameManager.Instance.ActualCheckpoint = transform.position;
         else
             transform.position = GameManager.Instance.ActualCheckpoint;
@@ -105,115 +133,61 @@ public class Player : Destructable
     {
         base.Update();
 
-        if (!_isSlope)
+        /*if (!_isSwimming && _inWaterZone && _headPoint.position.y < WaterZone._boundY)
+        {
+            EnterWater();
+        }
+
+        if (_isSwimming && _inWaterZone && _headPoint.position.y > WaterZone._boundY)
+        {
+            ExitWater();
+        }*/
+
+        if (!_isSwimming && _inWaterZone && _headPoint.position.y < WaterZone._boundY)
+        {
+            EnterWater();
+        }
+
+        if (_isSwimming && _headPoint.position.y >= WaterZone._boundY && _raycast.IsGrounded())
+        {
+            ExitWater();
+        }
+
+        if (_isSwimming)
         {
             _direction.x = Input.GetAxis("Horizontal");
+            _direction.y = Input.GetAxis("Jump") > 0 ? 1 : (Input.GetKey(KeyCode.LeftControl) ? -1 : 0);
             _direction.z = Input.GetAxis("Vertical");
+
+            _animator.SetBool(_moveBoolName, _direction.sqrMagnitude > 0.01f);
+            _animator.SetFloat(_xAxisName, _direction.x);
+            _animator.SetFloat(_zAxisName, _direction.z);
+
+            return;
         }
-        else
-        {
-            _direction.z = Input.GetAxis("Vertical");
-        }
 
-
-        _isGrounded = _raycast.IsGrounded();
-        _isInteractable = _raycast.IsInteract();
-        _isPushing = _raycast.IsPushing();
-        _isSlope = _raycast.IsSlope();
-        _isCeiling = _raycast.IsCeiling();
-
-
-        _animator.SetBool(_airBoolName, !_isGrounded);
-        _animator.SetBool(_moveBoolName, _direction.sqrMagnitude != 0f);
-
-        _animator.SetFloat(_xAxisName, _direction.x);
-        _animator.SetFloat(_zAxisName, _direction.z);
-
-        if (_isSlope)
-        {
-            _animator.SetBool(_slopeBoolName, _isSlope);
-            _rb.maxLinearVelocity = 15f;
-            _col.sharedMaterial = _physicsMaterial;
-            SlopeRotateMesh();
-        }
-        else
-        {
-            _animator.SetBool(_slopeBoolName, _isSlope);
-            _rb.maxLinearVelocity = float.MaxValue;
-            _col.sharedMaterial = null;
-        }
+        HandleGroundChecks();
 
         CalculateFallDamage();
 
-        if (Input.GetKeyDown(_jumpKey) && _isGrounded && !_isCrouch && !_isSlope)
-        {
-            _animator.SetTrigger(_jumpTriggerName);
-            JumpPlayer();
-        }
+        HandleInput();
 
-        /*    if (Input.GetKeyDown(_pressingKey) && _isGrounded && _isInteractable) //old version eliminar en el futuro
-        {
-            _animator.SetTrigger(_pressTriggerName);
-            Pressing();
-        }
-        */
+        HandleStateChanges();
 
-        if (Input.GetKeyDown(_crouchKey) && _isGrounded && !_isCeiling)
-        {
-            _isCrouch = !_isCrouch;
-        }
-
-        if (Input.GetKeyDown(_pushingKey) && _isGrounded && _isInteractable)  //new version hacer asi
-        {
-            _animator.SetTrigger(_pressTriggerName);
-            Pressing();
-        }
-
-        if (Input.GetKey(_pushingKey) && _isGrounded && _isPushing && !_isCrouch)
-        {
-            if (!_canMove)
-            {
-                Pushing();
-            }
-        }
-        else
-        {
-            if (_canMove)
-            {
-                StopPushing();
-            }
-        }
-
-        if (_isCrouch)
-        {
-            Crouch();
-        }
-        else
-        {
-            Uncrouch();
-        }
-
-        if (_canMove)
-        {
-            ChangeSpeed(_pushingSpeed);
-        }
-        else if (_isCrouch)
-        {
-            ChangeSpeed(_crouchSpeed);
-        }
-        else if(_isSlope)
-        {
-            ChangeSpeed(_slopeSpeed);
-        }
-        else
-        {
-            ChangeSpeed(_moveSpeed);
-        }
+        HandleSpeed();
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+
+        if (!_isAlive) return;
+
+        if (_isSwimming)
+        {
+            SwimPlayer(_direction);
+            return;
+        }
 
         if (_direction.sqrMagnitude != 0.0f && _isAlive)
         {
@@ -225,9 +199,103 @@ public class Player : Destructable
         }
     }
 
+    private void OnDisable()
+    {
+        AirManager.OnFinishOxygen -= DeactivatePlayer;
+    }
+
     public void ResetPlayer()
     {
         transform.position = GameManager.Instance.ActualCheckpoint;
+    }
+
+    private void HandleInput()
+    {
+        if (Input.GetKeyDown(_jumpKey) && _isGrounded && !_isCrouch && !_isSlope)
+        {
+            _animator.SetTrigger(_jumpTriggerName);
+            JumpPlayer();
+        }
+
+        if (Input.GetKeyDown(_crouchKey) && _isGrounded && !_isCeiling)
+        {
+            _isCrouch = !_isCrouch;
+        }
+
+        if (Input.GetKeyDown(_pushingKey) && _isGrounded && _isInteractable)
+        {
+            _animator.SetTrigger(_pressTriggerName);
+            Pressing();
+        }
+
+        if (Input.GetKey(_pushingKey) && _isGrounded && _isPushing && !_isCrouch)
+        {
+            if (!_canMove) Pushing();
+        }
+        else
+        {
+            if (_canMove) StopPushing();
+        }
+    }
+
+    private void HandleGroundChecks()
+    {
+        _isGrounded = _raycast.IsGrounded();
+        _isInteractable = _raycast.IsInteract();
+        _isPushing = _raycast.IsPushing();
+        _isSlope = _raycast.IsSlope();
+        _isCeiling = _raycast.IsCeiling();
+
+        _animator.SetBool(_airBoolName, !_isGrounded);
+        _animator.SetBool(_moveBoolName, _direction.sqrMagnitude != 0f);
+        _animator.SetBool(_slopeBoolName, _isSlope);
+        _animator.SetFloat(_xAxisName, _direction.x);
+        _animator.SetFloat(_zAxisName, _direction.z);
+
+        _col.sharedMaterial = _isSlope ? _physicsMaterial : null;
+        _rb.maxLinearVelocity = _isSlope ? 15f : float.MaxValue;
+
+        if (_isSlope)
+            SlopeRotateMesh();
+
+        CalculateFallDamage();
+
+        // Обновление направления движения в зависимости от наклона
+        if (_isSlope)
+        {
+            _direction.x = 0f;
+            _direction.z = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            _direction.x = Input.GetAxis("Horizontal");
+            _direction.z = Input.GetAxis("Vertical");
+        }
+    }
+
+    private void HandleStateChanges()
+    {
+        if (_isCrouch)
+            Crouch();
+        else
+            Uncrouch();
+    }
+
+    private void HandleSpeed()
+    {
+        if (_canMove)
+            ChangeSpeed(_pushingSpeed);
+        else if (_isCrouch)
+            ChangeSpeed(_crouchSpeed);
+        else if (_isSlope)
+            ChangeSpeed(_slopeSpeed);
+        else
+            ChangeSpeed(_moveSpeed);
+    }
+
+    public void SetInWaterZone(bool state)
+    {
+        _inWaterZone = state;
     }
 
     public void SlopeRotateMesh()
@@ -259,19 +327,49 @@ public class Player : Destructable
         _speedMultiplier = value;
     }
 
+    public void EnterWater()
+    {
+        _isSwimming = true;
+        _rb.useGravity = false;
+
+        _animator.SetTrigger(_startSwimTriggerName);
+
+        foreach (var particle in _bubleParticles)
+        {
+            particle.Play();
+        }
+    }
+
+    public void ExitWater()
+    {
+        _isSwimming = false;
+        _rb.useGravity = true;
+        _animator.SetTrigger(_stopSwimTriggerName);
+
+        foreach (var particle in _bubleParticles)
+        {
+            particle.Stop();
+        }
+    }
+
     private void CalculateFallDamage()
     {
-        if(!_isGrounded)
+        if (!_isGrounded && !_isSwimming)
         {
-            if(_rb.velocity.y < _maxFallSpeed)
+            if (_rb.velocity.y < _maxFallSpeed)
             {
                 _maxFallSpeed = _rb.velocity.y;
             }
         }
-
-        if(_isGrounded && !_wasGround)
+        else
         {
-            if(_maxFallSpeed < _fallDamageThreshold)
+            _maxFallSpeed = 0;
+            _wasGround = false;
+        }
+
+        if (_isGrounded && !_wasGround)
+        {
+            if (_maxFallSpeed < _fallDamageThreshold)
             {
                 _fallDamage = Mathf.Abs(_maxFallSpeed + _fallDamageThreshold) * _fallDamageMultiplier;
                 TakeDamage(_fallDamage);
@@ -280,6 +378,13 @@ public class Player : Destructable
             _maxFallSpeed = 0f;
         }
 
+/*        if ()
+        {
+            Debug.Log("fall in water");
+            
+            return;
+        }*/
+
         _wasGround = _isGrounded;
     }
 
@@ -287,6 +392,25 @@ public class Player : Destructable
     {
         Vector3 moveDir = (transform.right * dir.x + transform.forward * dir.z).normalized;
         _rb.MovePosition(_rb.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
+    }
+
+    /*private void SwimPlayer(Vector3 dir)
+    {
+        Vector3 moveDir = (transform.right * dir.x + transform.up * dir.y + transform.forward * dir.z).normalized;
+        _rb.MovePosition(_rb.position + moveDir * _swimSpeed * Time.fixedDeltaTime);
+    }*/
+
+    private void SwimPlayer(Vector3 dir)
+    {
+        Vector3 swimDir = Vector3.zero;
+
+        if (_headPoint.position.y >= WaterZone._boundY && dir.y > 0f)
+        {
+            dir.y = 0f;
+        }
+
+        swimDir = (transform.right * dir.x + transform.up * dir.y + transform.forward * dir.z).normalized;
+        _rb.MovePosition(_rb.position + swimDir * _swimSpeed * Time.fixedDeltaTime);
     }
 
     public float GetSpeed()
@@ -363,7 +487,12 @@ public class Player : Destructable
         _ragdoll.ActivateCollision();
         PlayVoice();
 
-        if(!_isOnce)
+        if (_isEndGame)
+        {
+            _spawner.SpawnParticle(transform);
+            OnEndGame?.Invoke();
+        }
+        else if(!_isOnce)
         {
             StartCoroutine(GameOverPanel());
             _spawner.SpawnParticle(transform);
@@ -386,13 +515,32 @@ public class Player : Destructable
 
     public void PlayFootStep()
     {
-        _audioSource.pitch = Random.Range(0.7f, 1.3f);
+        _audioSource.pitch = UnityEngine.Random.Range(0.7f, 1.3f);
         _audioSource.PlayOneShot(_footstep);
     }
 
     public void PlayVoice()
     {
-        int index = Random.Range(0, _voices.Length);
+        int index = UnityEngine.Random.Range(0, _voices.Length);
         _audioSource.PlayOneShot(_voices[index]);
     }
+
+    public void SetEndGame()
+    {
+        _isEndGame = true;
+    }
+
+/*    private void OnDrawGizmos()
+    {
+        if (_headPoint == null) return;
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(
+            _headPoint.position,
+            _headPoint.position + Vector3.up * _waterCheckDistance
+        );
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(_headPoint.position, _headPoint.position + Vector3.up * _waterCheckDistance);
+    }*/
 }

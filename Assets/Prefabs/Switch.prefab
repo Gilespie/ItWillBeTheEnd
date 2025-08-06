@@ -97,7 +97,7 @@ Animator:
   m_GameObject: {fileID: 699183343714996861}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1f0903065341dcc46b3f22b2ef10b34e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -432,9 +432,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8764951994050050859}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -906.87, y: 2.28, z: -5.0604877}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.52271, y: 0.52271, z: 0.52271}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 234927347580170630}
@@ -496,3 +496,4 @@ MonoBehaviour:
   _light: {fileID: 7467202926046621836}
   _audioSource: {fileID: 2926755687215352004}
   _meshRenderer: {fileID: 7179359763740715814}
+  _autoResetDelay: 30

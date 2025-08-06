@@ -12,11 +12,14 @@ public class Switch : MonoBehaviour, IInteractable
     [SerializeField] private Light _light;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private MeshRenderer _meshRenderer;
+    [SerializeField] private float _autoResetDelay = 0f;
+    private Animator _animator;
     private bool _isActive = false;
     private int _count = 0;
 
     private void Start()
     {
+        _animator = GetComponentInChildren<Animator>();
         _light.color = _colorOff;
         ActivateLamp(_isActive);
     }
@@ -40,16 +43,31 @@ public class Switch : MonoBehaviour, IInteractable
     {
         _isActive = !_isActive;
         _light.color = _isActive ? _colorOn : _colorOff;
+        _animator.SetBool("isActive", _isActive);
         PlaySound(_sfxOn, _sfxOff);
         ActivateLamp(_isActive);
         _event?.Invoke();
         _count++;
+
+        if (_autoResetDelay > 0)
+        {
+            Invoke(nameof(ResetSwitch), _autoResetDelay);
+        }
     }
 
     private void PlaySound(AudioClip clip1, AudioClip clip2)
     {
         _audioSource.clip = _isActive ? clip1 : clip2;
         _audioSource.Play();
+    }
+
+    public void ResetSwitch()
+    {
+        _isActive = false;
+        _light.color = _colorOff;
+        _animator.SetBool("isActive", false);
+        PlaySound(_sfxOn, _sfxOff);
+        ActivateLamp(false);
     }
 
     private void ActivateLamp(bool isActive)

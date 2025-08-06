@@ -6,6 +6,7 @@ public class Raycasting : MonoBehaviour
     private Ray _groundRay;
     private Ray _interactRay;
     private Ray _pushingRay;
+    //private Ray _waterRay;
     private Ray[] _ceilingRay = new Ray[3];
     [SerializeField] private Transform _groundOrigin;
     [SerializeField] private Transform _interactOrigin;
@@ -14,6 +15,7 @@ public class Raycasting : MonoBehaviour
     private RaycastHit _interactHit;
     private RaycastHit _pushingHit;
     private RaycastHit _ceilingHit;
+   // private RaycastHit _waterHit;
 
     [Header("Settings")]
     [SerializeField] private float _groundRayDistance = 0.45f;
@@ -24,12 +26,16 @@ public class Raycasting : MonoBehaviour
     [SerializeField] private float _pushingRayDistance = 0.5f;
     [SerializeField] private LayerMask _pushingLayer;
     [SerializeField] private float _ceilingRayDistance = 0.3f;
+/*    [SerializeField] private float _waterRayDistance = 0.1f;
+    [SerializeField] private LayerMask _waterLayer;*/
     [SerializeField] private float _intRadius = 0.1f;
     [SerializeField] private float _maxSlopeAngle = 26.5f;
     private float _currentSlopeAngle = 0f;
     private Vector3 _normalOrient;
     public Vector3 Normal => _normalOrient;
 
+    private float _yPos;
+    public float YPos => _yPos;
     public bool IsGrounded()
     {
         _groundRay = new Ray(_groundOrigin.position, -transform.up);
@@ -54,6 +60,18 @@ public class Raycasting : MonoBehaviour
 
         return false;
     }
+
+    /*public bool IsUnderWaterSurface()
+    {
+        Debug.Log("surface");
+        return Physics.Raycast(
+            _waterOrigin.position,
+            Vector3.up,
+            _waterRayDistance,
+            _waterLayer,
+            QueryTriggerInteraction.Collide
+        );
+    }*/
 
     public bool IsCeiling()
     {
@@ -111,10 +129,6 @@ public class Raycasting : MonoBehaviour
             {
                 interact.Interact();
             }
-            /*else if (_interactHit.collider.TryGetComponent(out IPushable pushable))
-            {
-                pushable.Pushing();
-            }*/
         }
     }
 
@@ -131,29 +145,29 @@ public class Raycasting : MonoBehaviour
         }
     }
 
-   /* private void OnDrawGizmos()
-    {
-        bool isGrounded = false;
-        bool isInteractable = false;
-        bool isPushing = false;
-        bool isCeiling = false;
+    /* private void OnDrawGizmos()
+     {
+         bool isGrounded = false;
+         bool isInteractable = false;
+         bool isPushing = false;
+         bool isCeiling = false;
 
-        Gizmos.color = isGrounded ? Color.green : Color.red;
-        Gizmos.DrawLine(_groundRay.origin, _groundRay.origin + _groundRay.direction * _groundRayDistance);
+         Gizmos.color = isGrounded ? Color.green : Color.red;
+         Gizmos.DrawLine(_groundRay.origin, _groundRay.origin + _groundRay.direction * _groundRayDistance);
 
-        _interactRay = new Ray(_interactOrigin.position, transform.forward);
-        Gizmos.color = isInteractable ? Color.blue : Color.red;
-        Gizmos.DrawLine(_interactRay.origin, _interactRay.origin + _interactRay.direction * _interactRayDistance);
+         _interactRay = new Ray(_interactOrigin.position, transform.forward);
+         Gizmos.color = isInteractable ? Color.blue : Color.red;
+         Gizmos.DrawLine(_interactRay.origin, _interactRay.origin + _interactRay.direction * _interactRayDistance);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(_interactHit.point, _intRadius);
+         Gizmos.color = Color.blue;
+         Gizmos.DrawWireSphere(_interactHit.point, _intRadius);
 
-        Gizmos.color = isPushing ? Color.green : Color.red;
-        Gizmos.DrawLine(_pushingRay.origin, _pushingRay.origin + _pushingRay.direction * _pushingRayDistance);
+         Gizmos.color = isPushing ? Color.green : Color.red;
+         Gizmos.DrawLine(_pushingRay.origin, _pushingRay.origin + _pushingRay.direction * _pushingRayDistance);
 
-        Gizmos.color = isCeiling ? Color.red : Color.green;
-        Gizmos.DrawRay(_ceilingOrigin.position + transform.forward * 0.3f, Vector3.up * _ceilingRayDistance);
-        Gizmos.DrawRay(_ceilingOrigin.position, Vector3.up * _ceilingRayDistance);
-        Gizmos.DrawRay(_ceilingOrigin.position + -transform.forward * 0.3f, Vector3.up * _ceilingRayDistance);
-    }*/
+         Gizmos.color = isCeiling ? Color.red : Color.green;
+         Gizmos.DrawRay(_ceilingOrigin.position + transform.forward * 0.3f, Vector3.up * _ceilingRayDistance);
+         Gizmos.DrawRay(_ceilingOrigin.position, Vector3.up * _ceilingRayDistance);
+         Gizmos.DrawRay(_ceilingOrigin.position + -transform.forward * 0.3f, Vector3.up * _ceilingRayDistance);
+     }*/
 }

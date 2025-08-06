@@ -14,6 +14,12 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float detectionDistance = 5f;
     [SerializeField] protected float _updateNodeDistance = 0.75f;
 
+    [Header("Audio")]
+    [SerializeField] protected AudioClip _idleClip;
+    [SerializeField] protected AudioClip _activeClip;
+    [SerializeField] protected Vector2 _pitchRange = new Vector2(0.9f, 1.1f);
+    protected AudioSource _audioSource;
+
     protected Transform[] _aiNodes;
     protected Transform _actualNode;
     protected float _distanceToPlayer, _distanceToNode;
@@ -26,6 +32,7 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     protected virtual void Start()
@@ -51,18 +58,26 @@ public abstract class Enemy : MonoBehaviour
 
         if (_distanceToPlayer <= detectionDistance * detectionDistance && _player.IsAlive)
         {
+            PlaySound(_activeClip);
+            //Bark();
             Act();
         }
         else
         {
+            PlaySound(_idleClip);
+            //Growl();
             Idle();
         }
     }
 
-    protected abstract void Act();
+    protected virtual void Act()
+    {
+
+    }    
 
     protected virtual void Idle()
     {
+
         if (_agent.destination != _actualNode.position)
         {
             _agent.SetDestination(_actualNode.position);
@@ -99,6 +114,38 @@ public abstract class Enemy : MonoBehaviour
             while (actual == newNode);
 
             return newNode;
+        }
+    }
+
+    protected void PlaySound(AudioClip clip)
+    {
+        if (_audioSource == null || clip == null) return;
+
+        if (_audioSource.clip != clip || !_audioSource.isPlaying)
+        {
+            _audioSource.clip = clip;
+            _audioSource.pitch = Random.Range(_pitchRange.x, _pitchRange.y);
+            _audioSource.Play();
+        }
+    }
+
+    protected void Growl()
+    {
+        if (_audioSource != null && _idleClip != null && !_audioSource.isPlaying)
+        {
+            _audioSource.clip = _idleClip;
+            _audioSource.pitch = Random.Range(_pitchRange.x, _pitchRange.y);
+            _audioSource.Play();
+        }
+    }
+
+    protected void Bark()
+    {
+        if (_audioSource != null && _activeClip != null && !_audioSource.isPlaying)
+        {
+            _audioSource.clip = _activeClip;
+            _audioSource.pitch = Random.Range(_pitchRange.x, _pitchRange.y);
+            _audioSource.Play();
         }
     }
 }

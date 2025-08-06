@@ -42,7 +42,14 @@ public class CameraFollower : MonoBehaviour
 
         _target = GameManager.Instance.Player.transform;
 
-        transform.position = GameManager.Instance.ActualCheckpoint;
+        if (GameManager.Instance.ActualCheckpoint != Vector3.zero)
+        {
+            transform.position = GameManager.Instance.ActualCheckpoint;
+        }
+        else
+        {
+            transform.position = _target.position;
+        }
     }
 
     private void Update()

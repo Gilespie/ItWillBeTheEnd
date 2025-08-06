@@ -3,26 +3,36 @@ using UnityEngine;
 
 public class FallingRock : MonoBehaviour
 {
-    [SerializeField] private float _damage = 60f;
-    private bool _isOnce = false;
-    private float _velocityMagnitude;
-    private Rigidbody _rb;
+    [SerializeField] private Timer _timer;
+    [SerializeField] private float _damage = 600f;
+    [SerializeField] private string _triggerName = "onFall";
+    private Animator _animator;
 
-    private void Awake()
+    private void OnEnable()
     {
-        _rb = GetComponent<Rigidbody>();
+        Timer.OnTimeOut += SetTrigger;
+    }
+    private void Start()
+    {
+        _animator = GetComponent<Animator>();
+        _animator.enabled = false;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnDisable()
     {
-        if (_isOnce) return;
+        Timer.OnTimeOut -= SetTrigger;
+    }
 
-        if (collision.gameObject.TryGetComponent(out Player player))
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out Player player))
         {
-            _velocityMagnitude = _rb.velocity.magnitude;
-            _damage *= _velocityMagnitude;
             player.TakeDamage(_damage);
-            _isOnce = true;
         }
+    }
+
+    public void SetTrigger()
+    {
+        _animator.SetTrigger(_triggerName);
     }
 }
