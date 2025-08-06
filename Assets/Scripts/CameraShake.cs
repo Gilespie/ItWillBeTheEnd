@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraShake : MonoBehaviour
 {
@@ -11,10 +12,19 @@ public class CameraShake : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded; // Подписка
         }
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded; // Отписка
         }
     }
 
@@ -28,6 +38,19 @@ public class CameraShake : MonoBehaviour
     private void Start()
     {
         _camera = GameManager.Instance.Camera;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        TryAssignCamera();
+    }
+
+    private void TryAssignCamera()
+    {
+        if (GameManager.Instance != null)
+        {
+            _camera = GameManager.Instance.Camera;
+        }
     }
 
     public void ActiveShake()
