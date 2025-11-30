@@ -1,29 +1,29 @@
 using UnityEngine;
 
 
-public class FallingRock : MonoBehaviour
+public class FallingCeiling : MonoBehaviour
 {
-    [SerializeField] private float _damage = 600f;
-    [SerializeField] private string _triggerName = "onFall";
-    private Animator _animator;
+    [SerializeField] float _damage = 600f;
+    [SerializeField] string _triggerName = "onFall";
+    Animator _animator;
 
-    private void OnEnable()
+    void OnEnable()
     {
         Timer.OnTimeOut += SetTrigger;
     }
 
-    private void Start()
+    void Start()
     {
         _animator = GetComponent<Animator>();
         _animator.enabled = false;
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         Timer.OnTimeOut -= SetTrigger;
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent(out Player player))
         {

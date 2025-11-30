@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CameraShake : MonoBehaviour
 {
@@ -17,8 +16,6 @@ public class CameraShake : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        
     }
 
     [Header("Shake Intensity")]
