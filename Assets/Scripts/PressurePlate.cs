@@ -22,6 +22,7 @@ public class PressurePlate : MonoBehaviour
     {
         if (other.TryGetComponent(out Rigidbody rb))
         {
+            Debug.Log(rb.gameObject.name);
             _rigidMass.Add(rb);
             RecalculateWeight();
         }

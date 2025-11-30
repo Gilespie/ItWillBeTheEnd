@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Player
   - MainPlayer
-  - lb_bird
   - Stone
   layers:
   - Default

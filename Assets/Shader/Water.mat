@@ -14,7 +14,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 2
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Noise_Texture_2:
-        m_Texture: {fileID: 2800000, guid: 3d7bfbc364206dd41a92c11cabd8f36b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 77cfbb42743144e46b0f06fbb99b639f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -46,18 +46,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Foam_Distance: 0.96
-    - _Metallic: 0
-    - _Noise_Scale: 0.24
+    - _Foam_Distance: 0.86
+    - _Metallic: 0.26
+    - _Noise_Scale: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Refraction: 0.021
-    - _Smoothness: 0.73
-    - _Transparency: 0.38
+    - _Refraction: 0
+    - _Smoothness: 1
+    - _Transparency: 0.51
     - _Wave_Speed: 0.01
     m_Colors:
-    - _Foam_Color: {r: 0.5801887, g: 1, b: 0.81587225, a: 0.5686275}
-    - _Water_Color: {r: 0.29521182, g: 0.5774776, b: 0.5849056, a: 0.6509804}
+    - _Foam_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _NormalMapSpeed: {r: 0, g: -0.05, b: 0, a: 0}
+    - _NormalMap_Tiling: {r: 10, g: 10, b: 0, a: 0}
+    - _Water_Color: {r: 0.01720572, g: 0, b: 1, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &2490189419767720270
 MonoBehaviour:

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : Destructable
@@ -85,6 +86,8 @@ public class Player : Destructable
     private float _maxFallSpeed = 0f;
     private float _fallDamage = 0f;
     private bool _isEndGame = false;
+    private bool _wasInAir = false;
+    private bool _wasSwimming = false;
 
     private float _currentSpeed = 0f;
     private Vector3 _direction;
@@ -133,15 +136,7 @@ public class Player : Destructable
     {
         base.Update();
 
-        /*if (!_isSwimming && _inWaterZone && _headPoint.position.y < WaterZone._boundY)
-        {
-            EnterWater();
-        }
-
-        if (_isSwimming && _inWaterZone && _headPoint.position.y > WaterZone._boundY)
-        {
-            ExitWater();
-        }*/
+        CalculateFallDamage();
 
         if (!_isSwimming && _inWaterZone && _headPoint.position.y < WaterZone._boundY)
         {
@@ -167,8 +162,6 @@ public class Player : Destructable
         }
 
         HandleGroundChecks();
-
-        CalculateFallDamage();
 
         HandleInput();
 
@@ -257,8 +250,6 @@ public class Player : Destructable
 
         if (_isSlope)
             SlopeRotateMesh();
-
-        CalculateFallDamage();
 
         // Обновление направления движения в зависимости от наклона
         if (_isSlope)
@@ -354,17 +345,18 @@ public class Player : Destructable
 
     private void CalculateFallDamage()
     {
+        if (!_isGrounded && _isSwimming)
+        {
+            _maxFallSpeed = 0f;
+            return;
+        }
+
         if (!_isGrounded && !_isSwimming)
         {
             if (_rb.velocity.y < _maxFallSpeed)
             {
                 _maxFallSpeed = _rb.velocity.y;
             }
-        }
-        else
-        {
-            _maxFallSpeed = 0;
-            _wasGround = false;
         }
 
         if (_isGrounded && !_wasGround)
@@ -378,13 +370,6 @@ public class Player : Destructable
             _maxFallSpeed = 0f;
         }
 
-/*        if ()
-        {
-            Debug.Log("fall in water");
-            
-            return;
-        }*/
-
         _wasGround = _isGrounded;
     }
 
@@ -393,12 +378,6 @@ public class Player : Destructable
         Vector3 moveDir = (transform.right * dir.x + transform.forward * dir.z).normalized;
         _rb.MovePosition(_rb.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
     }
-
-    /*private void SwimPlayer(Vector3 dir)
-    {
-        Vector3 moveDir = (transform.right * dir.x + transform.up * dir.y + transform.forward * dir.z).normalized;
-        _rb.MovePosition(_rb.position + moveDir * _swimSpeed * Time.fixedDeltaTime);
-    }*/
 
     private void SwimPlayer(Vector3 dir)
     {

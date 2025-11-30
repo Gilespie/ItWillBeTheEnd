@@ -5,7 +5,7 @@ public class Earthquake : MonoBehaviour
     [SerializeField] private AudioClip[] _clips;
     [SerializeField] private ParticleSystem[] _dusts;
     [SerializeField] private Rigidbody[] _rbs;
-    [SerializeField] private float _timeToQuake = 15;
+    [SerializeField] private float _timeToQuake = 15f;
     [SerializeField] private float _force = 2f;
     private AudioSource _audioSource;
     private float _currentTimer = 0f;
@@ -20,7 +20,7 @@ public class Earthquake : MonoBehaviour
     private void Start()
     {
         _currentTimer = _timeToQuake;
-        Shockwaves();
+        //Shockwaves();
     }
 
     private void Update()
@@ -50,10 +50,13 @@ public class Earthquake : MonoBehaviour
             dust.Play();
         }
 
-        foreach(var rb in _rbs)
-        {
-            rb.AddForce(new Vector3(Random.Range(-1f, 1), 0f, Random.Range(-1f, 1)) * _force, ForceMode.Impulse);
-        }
+        
+            foreach (var rb in _rbs)
+            {
+                if (rb != null)
+                rb.AddForce(new Vector3(Random.Range(-1f, 1), 0f, Random.Range(-1f, 1)) * _force, ForceMode.Impulse);
+            }
+        
 
         CameraShake.Instance.ActiveShake();
     }

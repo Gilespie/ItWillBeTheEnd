@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class FallingRock : MonoBehaviour
 {
-    [SerializeField] private Timer _timer;
     [SerializeField] private float _damage = 600f;
     [SerializeField] private string _triggerName = "onFall";
     private Animator _animator;
@@ -12,6 +11,7 @@ public class FallingRock : MonoBehaviour
     {
         Timer.OnTimeOut += SetTrigger;
     }
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
