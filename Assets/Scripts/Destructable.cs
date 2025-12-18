@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public abstract class Destructable : MonoBehaviour
 {
@@ -49,7 +50,7 @@ public abstract class Destructable : MonoBehaviour
         }
     }
 
-    protected virtual void DeactivatePlayer()
+    protected virtual void DeactivatePlayer(params object[] parameters)
     {
         _isAlive = false;
         this.enabled = false;

@@ -7,20 +7,13 @@ public class CameraPointFollow : MonoBehaviour
     [SerializeField] private Transform _lookTarget;
     [SerializeField] private Vector3 _offset;
     [SerializeField] private float _lerpRate = 3f;
-    [SerializeField] private float _xLimit = 0f;
-    [SerializeField] private float _yLimit = 0f;
     [SerializeField] private float _zPosMax = -15f;
     [SerializeField] private float _zPosMin = -11f;
-    private Vector3 _currentPosition;
-    private Vector3 _desiredPosition;
-
-    [SerializeField] private float _transitionTime = 1f;
-    [SerializeField] private float _delayTime = 8f;
 
     private Vector3 _shakeOffset;
-    private Vector3 _defaultOffset;
 
     private Transform _fixedPoint = null;
+    bool _zoomed = false;
 
     private void Awake()
     {
@@ -30,12 +23,8 @@ public class CameraPointFollow : MonoBehaviour
     private void Start()
     {
         _target = GameManager.Instance.PointFollower.transform;
-        _lerpRate = 1000;
-        _currentPosition = _target.position + _offset;
-        transform.position = _currentPosition;
-
+        transform.position = _target.position + _offset;
         _lookTarget = _target;
-        _lerpRate = 18;
 
         if (GameManager.Instance.ActualCheckpoint != Vector3.zero)
         {
@@ -49,13 +38,44 @@ public class CameraPointFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        Vector3 targetPos;
+
         if (_fixedPoint != null)
+        {
+            targetPos = _fixedPoint.position;
+        }
+        else
+        {
+            targetPos = _target.position + _offset + _shakeOffset;
+            targetPos.z = _zoomed ? _zPosMin : _zPosMax;
+        }
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            targetPos,
+            Time.deltaTime * _lerpRate
+        );
+
+        if (_lookTarget != null)
+        {
+            Vector3 direction = _lookTarget.position - transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                targetRotation,
+                Time.deltaTime * 5f
+            );
+        }
+
+        /*if (_fixedPoint != null)
         {
             
             transform.position = Vector3.MoveTowards(transform.position,
                 _fixedPoint.position,
                 _lerpRate * Time.fixedDeltaTime);
+            *//*transform.position = Vector3.Lerp(transform.position,
+                _fixedPoint.position,
+                _lerpRate * Time.fixedDeltaTime);*//*
         }
         else
         {
@@ -68,6 +88,11 @@ public class CameraPointFollow : MonoBehaviour
                 _currentPosition,
                 _lerpRate * Time.fixedDeltaTime
             );
+            *//*transform.position = Vector3.Lerp(
+                transform.position,
+                _currentPosition,
+                _lerpRate * Time.fixedDeltaTime
+            );*//*
         }
 
         if (_lookTarget != null)
@@ -76,6 +101,18 @@ public class CameraPointFollow : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 3f);
         }
+
+        if(_zoomed)
+        {
+            _currentPosition = _target.position + _offset + _shakeOffset;
+            _currentPosition.z = _zPosMin;
+
+            transform.position = Vector3.Lerp(
+                transform.position,
+                _currentPosition,
+                _lerpRate * Time.fixedDeltaTime
+            );
+        }*/
     }
 
     public void SetPointView(Transform point)
@@ -92,48 +129,16 @@ public class CameraPointFollow : MonoBehaviour
     {
         _fixedPoint = null;
         _lookTarget = _target;
+        _zoomed = false;
+    }
+
+    public void SetZPos()
+    {
+        _zoomed = true;
     }
 
     public void SetShakeOffset(Vector3 offset)
     {
         _shakeOffset = offset;
-    }
-
-    public void ChangeOffsetAndReturn(Vector3 newOffset)
-    {
-        StartCoroutine(SmoothOffsetChange(newOffset));
-    }
-
-    private IEnumerator SmoothOffsetChange(Vector3 newOffset)
-    {
-        _defaultOffset = _offset;
-
-        Vector3 startOffset = _offset;
-
-        float elapsed = 0f;
-
-        while (elapsed < _transitionTime)
-        {
-            _offset = Vector3.Lerp(startOffset, newOffset, elapsed / _transitionTime);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        _offset = newOffset;
-
-        yield return new WaitForSeconds(_delayTime);
-
-        elapsed = 0f;
-
-        while (elapsed < _transitionTime)
-        {
-            _offset = Vector3.Lerp(newOffset, _defaultOffset, elapsed / _transitionTime);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        _offset = _defaultOffset;
-
-        yield return null;
     }
 }

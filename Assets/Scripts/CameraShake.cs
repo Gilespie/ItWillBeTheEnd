@@ -5,12 +5,12 @@ public class CameraShake : MonoBehaviour
 {
     public static CameraShake Instance;
 
-    private void Awake()
+    void Awake()
     {
         if(Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -19,15 +19,16 @@ public class CameraShake : MonoBehaviour
     }
 
     [Header("Shake Intensity")]
-    [SerializeField, Range(1f, 10f)] private float _force = 5f;
-    [SerializeField] private float _shakeDuration = 1.5f;
-    [SerializeField] private float _speedTransition = 0.1f;
-    private Vector3 _shakeOffset;
-    private CameraPointFollow _cameraPoint;
+    [SerializeField, Range(1f, 10f)] float _force = 5f;
+    [SerializeField] float _shakeDuration = 1.5f;
+    [SerializeField] float _speedTransition = 0.1f;
+    Vector3 _shakeOffset;
+    CameraPointFollow _cameraPoint;
 
-    private void Start()
+    void Start()
     {
         _cameraPoint = GameManager.Instance.CameraPoint;
+        Debug.Log(_cameraPoint + " camera from gamemanager");
     }
 
     public void ActiveShake()
@@ -35,7 +36,7 @@ public class CameraShake : MonoBehaviour
         StartCoroutine(ShakeCamera(_force, _shakeDuration));
     }
 
-    public IEnumerator ShakeCamera(float force, float duration)
+    IEnumerator ShakeCamera(float force, float duration)
     {
         _shakeOffset = Vector3.zero;
         float elapsed = 0.0f;
@@ -48,7 +49,7 @@ public class CameraShake : MonoBehaviour
 
             _cameraPoint.SetShakeOffset(_shakeOffset);
 
-            elapsed += Time.deltaTime;
+            elapsed += Time.fixedDeltaTime;
 
             yield return null;
         }

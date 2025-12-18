@@ -3,21 +3,19 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    public event Action OnCheckpoint;
+    Collider _collider;
 
-    private Collider _collider;
-
-    private void Awake()
+    void Awake()
     {
         _collider = GetComponent<Collider>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<Player>())
         {
             GameManager.Instance.ActualCheckpoint = transform.position;
-            OnCheckpoint?.Invoke();
+            EventManager.Trigger(EventType.OnCheckpoint);
             _collider.enabled = false;
         }
     }

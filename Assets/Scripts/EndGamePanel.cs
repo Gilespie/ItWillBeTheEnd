@@ -12,15 +12,15 @@ public class EndGamePanel : MonoBehaviour
 
     private void OnEnable()
     {
-        Player.OnEndGame += ShowPanel;
+        EventManager.Subscribe(EventType.OnEndGame, ShowPanel);
     }
 
     private void OnDisable()
     {
-        Player.OnEndGame -= ShowPanel;
+        EventManager.Unsubscribe(EventType.OnEndGame, ShowPanel);
     }
 
-    private void ShowPanel()
+    private void ShowPanel(params object[] parameters)
     {
         _panel.SetActive(true);
     }

@@ -2,18 +2,23 @@ using UnityEngine;
 
 public class PushableBox : MonoBehaviour, IPushable
 {
-    [SerializeField]private Player _player;
-    [SerializeField] private float _standMass = 50f;
-    [SerializeField] private float _moveMass = 0.5f;
-    private Rigidbody _rb;
+    [SerializeField] Player _player;
+    [SerializeField] float _standDrag = 5f;
+    [SerializeField] float _moveDrag = 0f;
+    [SerializeField] float _standMass = 50f;
+    [SerializeField] float _moveMass = 0.5f;
+    Rigidbody _rb;
 
-    private void Awake()
+    void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.mass = _standMass;
+
+        //_rb.drag = _standDrag;
+        //_rb.mass = _standMass;
     }
 
-    private void Start()
+    void Start()
     {
         _player = FindObjectOfType<Player>();
     }
@@ -35,6 +40,8 @@ public class PushableBox : MonoBehaviour, IPushable
         FixedJoint joint = gameObject.AddComponent<FixedJoint>();
         joint.connectedBody = _player.GetComponent<Rigidbody>();
         _rb.mass = _moveMass;
+
+        //_rb.drag = _moveDrag;
     }
 
     public void StopMoving()
@@ -42,5 +49,7 @@ public class PushableBox : MonoBehaviour, IPushable
         FixedJoint joint = gameObject.GetComponent<FixedJoint>();
         Destroy(joint);
         _rb.mass = _standMass;
+
+        //_rb.drag = _standDrag;
     }
 }

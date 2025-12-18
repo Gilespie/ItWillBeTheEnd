@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : Destructable
 {
-    public static event Action OnEndGame;
     [Header("Reference")]
     [SerializeField] private Transform _mesh;
 
@@ -111,7 +109,7 @@ public class Player : Destructable
 
     private void OnEnable()
     {
-        AirManager.OnFinishOxygen += DeactivatePlayer;
+        EventManager.Subscribe(EventType.OnFinishOxygen, DeactivatePlayer);
     }
 
     protected override void Start()
@@ -194,7 +192,7 @@ public class Player : Destructable
 
     private void OnDisable()
     {
-        AirManager.OnFinishOxygen -= DeactivatePlayer;
+        EventManager.Unsubscribe(EventType.OnFinishOxygen, DeactivatePlayer);
     }
 
     public void ResetPlayer()
@@ -251,7 +249,6 @@ public class Player : Destructable
         if (_isSlope)
             SlopeRotateMesh();
 
-        // Обновление направления движения в зависимости от наклона
         if (_isSlope)
         {
             _direction.x = 0f;
@@ -304,7 +301,7 @@ public class Player : Destructable
     public void SlopeMovement(Vector3 dir)
     {
         Vector3 moveDir = (transform.forward * dir.z).normalized;
-        _rb.MovePosition(transform.position + moveDir  * _currentSpeed * Time.fixedDeltaTime);
+        _rb.MovePosition(transform.position + moveDir * _currentSpeed * Time.fixedDeltaTime);
     }
 
     public float ChangeSpeed(float speed)
@@ -453,7 +450,7 @@ public class Player : Destructable
         _rotationTransform.enabled = false;
     }
 
-    protected override void DeactivatePlayer()
+    protected override void DeactivatePlayer(params object[] parameters)
     {
         if (_isOnce) return;
 
@@ -469,7 +466,7 @@ public class Player : Destructable
         if (_isEndGame)
         {
             _spawner.SpawnParticle(transform);
-            OnEndGame?.Invoke();
+            EventManager.Trigger(EventType.OnEndGame);
         }
         else if(!_isOnce)
         {

@@ -13,10 +13,12 @@ public class Elevator : MonoBehaviour
     private float _elapsedPercetage = 0f;
     private Rigidbody _rb;
     private bool _isMoving = false;
+    Animator _animator;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -38,7 +40,6 @@ public class Elevator : MonoBehaviour
             _isMoving = false;
             _rb.MovePosition(_targetWaypoint.position);
         }
-
     }
 
     private void FixedUpdate()
@@ -81,5 +82,11 @@ public class Elevator : MonoBehaviour
     private void SetStartPosition(Transform target)
     {
         _rb.MovePosition(target.position);
+    }
+
+    public void OnFallElevator()
+    {
+        _animator.enabled = true;
+        this.enabled = false;
     }
 }

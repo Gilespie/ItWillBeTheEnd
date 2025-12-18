@@ -9,7 +9,7 @@ public class FallingCeiling : MonoBehaviour
 
     void OnEnable()
     {
-        Timer.OnTimeOut += SetTrigger;
+        EventManager.Subscribe(EventType.OnTimeOut,SetTrigger);
     }
 
     void Start()
@@ -20,7 +20,7 @@ public class FallingCeiling : MonoBehaviour
 
     void OnDisable()
     {
-        Timer.OnTimeOut -= SetTrigger;
+        EventManager.Unsubscribe(EventType.OnTimeOut, SetTrigger);
     }
 
     void OnTriggerEnter(Collider other)
@@ -31,7 +31,7 @@ public class FallingCeiling : MonoBehaviour
         }
     }
 
-    public void SetTrigger()
+    public void SetTrigger(params object[] parameters)
     {
         _animator.SetTrigger(_triggerName);
     }

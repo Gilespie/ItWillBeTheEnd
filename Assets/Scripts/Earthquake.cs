@@ -1,29 +1,29 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Earthquake : MonoBehaviour
 {
-    [SerializeField] private AudioClip[] _clips;
-    [SerializeField] private ParticleSystem[] _dusts;
-    [SerializeField] private Rigidbody[] _rbs;
-    [SerializeField] private float _timeToQuake = 15f;
-    [SerializeField] private float _force = 2f;
-    private AudioSource _audioSource;
-    private float _currentTimer = 0f;
-    private int _randomClipIndex = 0;
-    private float _randomPitch = 0f;
+    [SerializeField] AudioClip[] _clips;
+    [SerializeField] ParticleSystem[] _dusts;
+    [SerializeField] float _timeToQuake = 15f;
+    [SerializeField] VisualEffect[] _dustVFX;
+    AudioSource _audioSource;
+    float _currentTimer = 0f;
+    int _randomClipIndex = 0;
+    float _randomPitch = 0f;
 
-    private void Awake()
+    void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
     }
 
-    private void Start()
+    void Start()
     {
         _currentTimer = _timeToQuake;
         //Shockwaves();
     }
 
-    private void Update()
+    void Update()
     {
         _currentTimer -= Time.deltaTime;
         
@@ -34,10 +34,11 @@ public class Earthquake : MonoBehaviour
         }
     }
 
-    private void Shockwaves()
+    public void Shockwaves()
     {
         _randomClipIndex = Random.Range( 0, _clips.Length);
         _randomPitch = Random.Range(0.5f, 1f);
+        EventManager.Trigger(EventType.OnExplosion);
 
         if (_audioSource != null)
         {
@@ -50,13 +51,10 @@ public class Earthquake : MonoBehaviour
             dust.Play();
         }
 
-        
-            foreach (var rb in _rbs)
-            {
-                if (rb != null)
-                rb.AddForce(new Vector3(Random.Range(-1f, 1), 0f, Random.Range(-1f, 1)) * _force, ForceMode.Impulse);
-            }
-        
+        foreach (var dust in _dustVFX)
+        {
+            dust.SendEvent(EventType.OnExplosion.ToString());
+        }
 
         CameraShake.Instance.ActiveShake();
     }

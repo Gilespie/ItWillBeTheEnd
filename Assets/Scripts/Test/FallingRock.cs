@@ -7,7 +7,7 @@ public class FallingRock : MonoBehaviour
 
     void Start()
     {
-        _animator = GetComponentInChildren<Animator>();
+        _animator = GetComponent<Animator>();
         _animator.enabled = false;
     }
 

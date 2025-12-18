@@ -2,29 +2,23 @@ using UnityEngine;
 
 public class Lamp : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
-    private Light _light;
+    //[SerializeField] Rigidbody _rb;
+    
 
-    private void Start()
+    /*public void TakeImpulse(float magnitude)
     {
-        _light = GetComponentInChildren<Light>();
-    }
-
-    public void TakeImpulse(float magnitude)
-    {
-        _rb.AddForce(_rb.position *  magnitude, ForceMode.Impulse);
-    }
+        if(_rb != null) _rb.AddForce(_rb.position *  magnitude, ForceMode.Impulse);
+    }*/
 
     public void ActivateLamp(bool active)
     {
         if (active)
         {
-            _light.enabled = true;
+            this.enabled = true;
         }
         else
         {
-            _light.enabled = false;
-        }
-            
+            this.enabled = false;
+        }  
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class RocketSpawner : MonoBehaviour
 {
@@ -27,10 +28,11 @@ public class RocketSpawner : MonoBehaviour
         while(_isLoop)
         {
             _randomIndex = Random.Range(2, _targets.Length);
+            _targets[_randomIndex].GetComponent<DecalProjector>().enabled = true;
             GameObject rocket = Instantiate(_rocketPrefab, _spawnPosition.position, Quaternion.identity);
             rocket.GetComponent<Rocket>().SetTarget(_targets[_randomIndex]);
             yield return new WaitForSeconds(_timeToSpawn);
-
+            
             yield return null;
         }
 

@@ -52,10 +52,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _Intensity: 0.015
-    - _NoiseScale: 16.93
+    - _NoiseScale: 24.58
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _Speed: {r: 0, g: -0.1, b: 0, a: 0}
-    - _Tiling: {r: 4, g: 1, b: 0, a: 0}
+    - _Tiling: {r: 4, g: 4, b: 0, a: 0}
   m_BuildTextureStacks: []

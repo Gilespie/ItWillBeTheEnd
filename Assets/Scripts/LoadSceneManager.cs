@@ -26,6 +26,7 @@ public class LoadSceneManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Image _loadingBG;
     [SerializeField] private float _fadeTime = 0.5f;
+    [SerializeField] private float _loadingSpeed = 0.3f;
     [SerializeField] private TextMeshProUGUI _stateText;
     [SerializeField] private Slider _sliderProgress;
     private bool _isLoading = false;
@@ -59,37 +60,52 @@ public class LoadSceneManager : MonoBehaviour
         while (t < 1.0f)
         {
             t += Time.deltaTime / _fadeTime;
-
-            _loadingBG.color = new Color(0.0f, 0.0f, 0.0f, Mathf.Lerp(0.0f, 1.0f, t));
-
+            _loadingBG.color = new Color(0f, 0f, 0f, Mathf.Lerp(0f, 1f, t));
             yield return null;
         }
 
-        _loadingBG.color = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+        _loadingBG.color = new Color(0f, 0f, 0f, 1f);
 
         _sliderProgress.gameObject.SetActive(true);
 
         _stateText.enabled = true;
-        _stateText.text = $"Loading...";
+        _stateText.text = "Loading...";
 
         AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName);
-
         asyncOp.allowSceneActivation = false;
+
+        float fakeProgress = 0f;
 
         while (asyncOp.progress < 0.9f)
         {
-            _sliderProgress.value = asyncOp.progress / 0.9f;
+            float target = asyncOp.progress / 0.9f;
+
+            fakeProgress = Mathf.MoveTowards(
+                fakeProgress,
+                target,
+                Time.deltaTime * _loadingSpeed
+            );
+
+            _sliderProgress.value = fakeProgress;
             yield return null;
         }
 
-        _stateText.text = $"Press any key to continue.";
-
-        while (!Input.anyKey)
+        while (fakeProgress < 1f)
         {
+            fakeProgress = Mathf.MoveTowards(
+                fakeProgress,
+                1f,
+                Time.deltaTime * _loadingSpeed
+            );
+
+            _sliderProgress.value = fakeProgress;
             yield return null;
         }
 
         asyncOp.allowSceneActivation = true;
+
+        while (!asyncOp.isDone)
+            yield return null;
 
         _stateText.enabled = false;
         _sliderProgress.gameObject.SetActive(false);
@@ -99,13 +115,11 @@ public class LoadSceneManager : MonoBehaviour
         while (t < 1.0f)
         {
             t += Time.deltaTime / _fadeTime;
-
-            _loadingBG.color = new Color(0.0f, 0.0f, 0.0f, Mathf.Lerp(1.0f, 0.0f, t));
-
+            _loadingBG.color = new Color(0f, 0f, 0f, Mathf.Lerp(1f, 0f, t));
             yield return null;
         }
 
-        _loadingBG.color = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        _loadingBG.color = new Color(0f, 0f, 0f, 0f);
 
         _isLoading = false;
     }
