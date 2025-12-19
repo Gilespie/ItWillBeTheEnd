@@ -20,7 +20,7 @@ public class FallingRock : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out Player player))
         {
-            player.TakeDamage(_damage);
+            player.InstantKill();
         }
     }
 }

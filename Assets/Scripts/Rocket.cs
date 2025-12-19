@@ -67,7 +67,7 @@ public class Rocket : MonoBehaviour
 
             if (dest != null)
             {
-                dest.TakeDamage(_damage);
+                dest.InstantKill();
 
                 Rigidbody[] rb = col.GetComponentsInChildren<Rigidbody>();
 

@@ -27,7 +27,7 @@ public class FallingCeiling : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent(out Player player))
         {
-            player.TakeDamage(_damage);
+            player.InstantKill();
         }
     }
 

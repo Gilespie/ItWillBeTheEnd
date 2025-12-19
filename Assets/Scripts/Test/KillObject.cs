@@ -22,7 +22,7 @@ public class KillObject : MonoBehaviour
 
             if (destruct != null)
             {
-                destruct.TakeDamage(damageAmount);
+                destruct.InstantKill();
                 Debug.Log($" амень ударил игрока со скоростью {currentSpeed}, нанесено {damageAmount} урона!");
             }
 

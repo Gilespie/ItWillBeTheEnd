@@ -3,13 +3,12 @@ using UnityEngine.AI;
 
 public abstract class Enemy : MonoBehaviour
 {
-    //наследовать энеми от дестрактибл
     [Header("Animations")]
     [SerializeField] protected string _nameIdle = "Vert"; 
     [SerializeField] protected string _nameRun = "State"; 
 
     [Header("Enemy Settings")]
-    [SerializeField] protected float damage = 100f;
+    //[SerializeField] protected float damage = 100f;
     [SerializeField] protected float attackDistance = 2f;
     [SerializeField] protected float detectionDistance = 5f;
     [SerializeField] protected float _updateNodeDistance = 0.75f;
@@ -25,7 +24,7 @@ public abstract class Enemy : MonoBehaviour
     protected float _distanceToPlayer, _distanceToNode;
     protected Animator _animator;
     protected Rigidbody _rb;
-    protected Destructable _player;
+    protected Player _player;
     protected Vector3 _direction;
     protected NavMeshAgent _agent;
 
@@ -94,7 +93,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected void DealDamage(Destructable destructable)
     {
-        destructable.TakeDamage(damage);
+        destructable.InstantKill();
     }
 
     private Transform GetNewNode(Transform actual = null)

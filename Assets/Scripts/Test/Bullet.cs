@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
     {
         if(other.TryGetComponent(out Destructable destructable))
         {
-            destructable.TakeDamage(_damage);
+            destructable.InstantKill();
             Destroy(gameObject);
         }
     }

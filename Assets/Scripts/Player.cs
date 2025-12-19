@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -26,7 +25,6 @@ public class Player : Destructable
     [SerializeField] private string _slopeBoolName = "isSliding";
 
     [Header("Physics")]
-    [SerializeField] private float gravity = -20f;
     [SerializeField] private Raycasting _raycast;
     [SerializeField] private Ragdoll _ragdoll;
     [SerializeField] private RotationTransform _rotationTransform;
@@ -95,10 +93,8 @@ public class Player : Destructable
     private CapsuleCollider _col;
     private Animator _animator;
 
-    protected override void Awake()
+    void Awake()
     {
-        Physics.gravity = new(0, gravity, 0);
-
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
         _animator = GetComponentInChildren<Animator>();
@@ -107,15 +103,13 @@ public class Player : Destructable
         GameManager.Instance.Player = this;
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         EventManager.Subscribe(EventType.OnFinishOxygen, DeactivatePlayer);
     }
 
-    protected override void Start()
+    void Start()
     {
-        base.Start();
-
         _defaultRotation = _mesh.rotation;
 
         foreach (var particle in _bubleParticles)
@@ -123,17 +117,15 @@ public class Player : Destructable
             particle.Stop();
         }
 
-        if (GameManager.Instance.ActualCheckpoint == Vector3.zero)
+        if (GameManager.Instance.ActualCheckpoint == Vector3.zero || GameManager.Instance != null)
             GameManager.Instance.ActualCheckpoint = transform.position;
         else
             transform.position = GameManager.Instance.ActualCheckpoint;
     }
 
 
-    protected override void Update()
+    void Update()
     {
-        base.Update();
-
         CalculateFallDamage();
 
         if (!_isSwimming && _inWaterZone && _headPoint.position.y < WaterZone._boundY)
@@ -168,10 +160,8 @@ public class Player : Destructable
         HandleSpeed();
     }
 
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-
+    void FixedUpdate()
+    { 
         if (!_isAlive) return;
 
         if (_isSwimming)
@@ -361,7 +351,7 @@ public class Player : Destructable
             if (_maxFallSpeed < _fallDamageThreshold)
             {
                 _fallDamage = Mathf.Abs(_maxFallSpeed + _fallDamageThreshold) * _fallDamageMultiplier;
-                TakeDamage(_fallDamage);
+                InstantKill();
             }
 
             _maxFallSpeed = 0f;
@@ -450,12 +440,11 @@ public class Player : Destructable
         _rotationTransform.enabled = false;
     }
 
-    protected override void DeactivatePlayer(params object[] parameters)
+    void DeactivatePlayer(params object[] parameters)
     {
         if (_isOnce) return;
 
-        base.DeactivatePlayer();
-
+        _isAlive = false;
         _rb.isKinematic = true;
         _col.enabled = false;
         _rotationTransform.enabled = false;
@@ -474,6 +463,7 @@ public class Player : Destructable
             _spawner.SpawnParticle(transform);
             _isOnce = true;
         }
+        this.enabled = false;
     }
 
     private IEnumerator GameOverPanel()
@@ -506,17 +496,25 @@ public class Player : Destructable
         _isEndGame = true;
     }
 
-/*    private void OnDrawGizmos()
+    public override void InstantKill(params object[] parameters)
     {
-        if (_headPoint == null) return;
+        base.InstantKill(parameters);
 
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(
-            _headPoint.position,
-            _headPoint.position + Vector3.up * _waterCheckDistance
-        );
+        EventManager.Trigger(EventType.OnDead, _isAlive);
+        DeactivatePlayer();
+    }
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(_headPoint.position, _headPoint.position + Vector3.up * _waterCheckDistance);
-    }*/
+    /*    private void OnDrawGizmos()
+        {
+            if (_headPoint == null) return;
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(
+                _headPoint.position,
+                _headPoint.position + Vector3.up * _waterCheckDistance
+            );
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(_headPoint.position, _headPoint.position + Vector3.up * _waterCheckDistance);
+        }*/
 }

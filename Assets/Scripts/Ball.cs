@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] private float _damage = 100f;
+    //[SerializeField] private float _damage = 100f;
     [SerializeField] private GameObject _hitPrefab;
-    [SerializeField] private Player _player;
+    //[SerializeField] private Player _player;
     private Rigidbody _rb;
 
     private void Awake()
@@ -16,9 +14,9 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent<Player>(out _player))
+        if (collision.gameObject.TryGetComponent(out IDamageable dmgeable))
         {
-            _player.TakeDamage(_damage);
+            dmgeable.InstantKill();
         }
     }
 }

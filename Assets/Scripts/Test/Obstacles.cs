@@ -10,7 +10,7 @@ public class Obstacles : MonoBehaviour
         Debug.Log(collision.gameObject.name);
         if (dest != null)
         {
-            dest.TakeDamage(_damage);
+            dest.InstantKill();
         }
     }
 }

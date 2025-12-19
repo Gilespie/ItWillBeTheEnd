@@ -71,7 +71,7 @@ public class Airplane : MonoBehaviour
     {
         if (collision.collider.TryGetComponent(out Player player))
         {
-            player.TakeDamage(1000f);
+            player.InstantKill();
         }
     }
 }

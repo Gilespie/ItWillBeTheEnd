@@ -10,7 +10,7 @@ public class KillZone : MonoBehaviour
 
         if (destruct != null)
         {
-            destruct.TakeDamage(damageAmount);
+            destruct.InstantKill();
         }
     }
 }
