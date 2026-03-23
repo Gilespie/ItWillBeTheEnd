@@ -13,7 +13,6 @@ public class WagoonMovement : MonoBehaviour
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _audioClip;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -51,6 +50,6 @@ public class WagoonMovement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.TryGetComponent(out Player player))
-            player.TakeDamage(1000f);
+            player.InstantKill();
     }
 }

@@ -36,6 +36,7 @@ public class Raycasting : MonoBehaviour
 
     private float _yPos;
     public float YPos => _yPos;
+
     public bool IsGrounded()
     {
         _groundRay = new Ray(_groundOrigin.position, -transform.up);

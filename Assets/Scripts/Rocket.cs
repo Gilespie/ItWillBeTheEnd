@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Rocket : MonoBehaviour
 {
-    [Header("Settings)")]
+    [Header("Settings")]
     [SerializeField] private float _speedFly = 55f;
     [SerializeField] private float _radius = 5f;
     [SerializeField] private float _damage = 500f;
@@ -46,6 +47,7 @@ public class Rocket : MonoBehaviour
 
             CameraShake.Instance.ActiveShake();
 
+            _target.GetComponent<DecalProjector>().enabled = false;
             Destroy(gameObject);
         }
     }
@@ -65,7 +67,7 @@ public class Rocket : MonoBehaviour
 
             if (dest != null)
             {
-                dest.TakeDamage(_damage);
+                dest.InstantKill();
 
                 Rigidbody[] rb = col.GetComponentsInChildren<Rigidbody>();
 
@@ -74,12 +76,10 @@ public class Rocket : MonoBehaviour
                     rb2.AddExplosionForce(_forceExplosion, centre, _radius, _forceUpExplosion, ForceMode.Impulse);
                 }
             }
-
-            break;
         }
     }
 
-   /* private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _radius);

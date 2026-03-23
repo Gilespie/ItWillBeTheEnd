@@ -59,4 +59,19 @@ public class GameManager : MonoBehaviour
         get { return _camera; }
         set { _camera = value; }
     }
+
+    private CameraPointFollow _cameraPoint;
+
+    public CameraPointFollow CameraPoint
+    {
+        get { return _cameraPoint; }
+        set { _cameraPoint = value; }
+    }
+
+    private PointFollower _pointFollower;
+    public PointFollower PointFollower
+    {
+        get { return _pointFollower; }
+        set { _pointFollower = value; }
+    }
 }

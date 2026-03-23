@@ -2,29 +2,30 @@ using UnityEngine;
 
 public class Lift : MonoBehaviour
 {
-    [SerializeField] private Transform[] _points; // 0 = старт, 1 = конец
-    [SerializeField] private float _moveDuration = 4f; // время движения
-    [SerializeField] private float _pitchBase = 0.6f;
-    [SerializeField] private float _pitchMultiplier = 1.5f;
+    [SerializeField] Transform[] _points; // 0 = старт, 1 = конец
+    [SerializeField] float _moveDuration = 4f; 
+    [SerializeField] float _pitchBase = 0.6f;
+    [SerializeField] float _pitchMultiplier = 1.5f;
 
-    private Rigidbody _rb;
-    private AudioSource _audioSource;
+    Rigidbody _rb;
+    AudioSource _audioSource;
 
-    private bool _isMoving = false;
-    private float _elapsedTime = 0f;
-    private int _currentPointIndex = 0;
+    bool _isMoving = false;
+    float _elapsedTime = 0f;
+    int _currentPointIndex = 0;
 
-    private Vector3 _startPos;
-    private Vector3 _endPos;
+    Vector3 _startPos;
+    Vector3 _endPos;
 
-    private void Awake()
+    void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+        
         transform.position = _points[0].position;
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         if (!_isMoving) return;
 

@@ -17,7 +17,6 @@ public class Acceleration : MonoBehaviour
         if (other.gameObject.TryGetComponent(out Player player))
         {
             player.SetSpeedMultiplier(1f);
-            
         }
     }
 }

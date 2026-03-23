@@ -1,30 +1,39 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Birds : MonoBehaviour
 {
-    private ParticleSystem _particleSystem;
-    private AudioSource _audioSource;
-    private ParticleSystem.MainModule _main;
+    [SerializeField] float _delayToActivate;
+    [SerializeField] AudioClip _clip;
+    VisualEffect _vfx;
+    AudioSource _audioSource;
 
-    private void Start()
+    void OnEnable()
+    {
+        RocketExplosion.OnExplosed += OnBirdsStart;
+    }
+
+    void Start()
     {
         _audioSource = GetComponentInChildren<AudioSource>();
-        _particleSystem = GetComponentInChildren<ParticleSystem>();
-        _main = _particleSystem.main;
-        IdleBirds(true, 0,0);
+        _audioSource.clip = _clip;
+        _vfx = GetComponent<VisualEffect>();
+        _vfx.Stop();
     }
 
-    public void StartBirdEvent()
+    void OnDisable()
     {
-        IdleBirds(false, 7,13);
+        RocketExplosion.OnExplosed -= OnBirdsStart;
+    }
+
+    public void OnBirdsStart()
+    {
+        Invoke(nameof(BirdFly), _delayToActivate);
+    }
+
+    void BirdFly()
+    {
         _audioSource.Play();
-    }
-
-    public void IdleBirds(bool isLoop, float startSpeedMin, float startSpeedMax)
-    {
-        _particleSystem.Clear();
-        _main.loop = isLoop;
-        _main.startSpeed = new ParticleSystem.MinMaxCurve(startSpeedMin,startSpeedMax);
-        _particleSystem.Play();
+        _vfx.Play();
     }
 }

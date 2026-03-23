@@ -1,18 +1,16 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CameraShake : MonoBehaviour
 {
     public static CameraShake Instance;
 
-    private void Awake()
+    void Awake()
     {
         if(Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded; // Подписка
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -20,37 +18,17 @@ public class CameraShake : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded; // Отписка
-        }
-    }
-
     [Header("Shake Intensity")]
-    [SerializeField, Range(1f, 10f)] private float _force = 5f;
-    [SerializeField] private float _shakeDuration = 1.5f;
-    [SerializeField] private float _speedTransition = 0.1f;
-    private Vector3 _shakeOffset;
-    private CameraFollower _camera;
+    [SerializeField, Range(1f, 10f)] float _force = 5f;
+    [SerializeField] float _shakeDuration = 1.5f;
+    [SerializeField] float _speedTransition = 0.1f;
+    Vector3 _shakeOffset;
+    CameraPointFollow _cameraPoint;
 
-    private void Start()
+    void Start()
     {
-        _camera = GameManager.Instance.Camera;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        TryAssignCamera();
-    }
-
-    private void TryAssignCamera()
-    {
-        if (GameManager.Instance != null)
-        {
-            _camera = GameManager.Instance.Camera;
-        }
+        _cameraPoint = GameManager.Instance.CameraPoint;
+        Debug.Log(_cameraPoint + " camera from gamemanager");
     }
 
     public void ActiveShake()
@@ -58,7 +36,7 @@ public class CameraShake : MonoBehaviour
         StartCoroutine(ShakeCamera(_force, _shakeDuration));
     }
 
-    public IEnumerator ShakeCamera(float force, float duration)
+    IEnumerator ShakeCamera(float force, float duration)
     {
         _shakeOffset = Vector3.zero;
         float elapsed = 0.0f;
@@ -69,14 +47,13 @@ public class CameraShake : MonoBehaviour
 
             _shakeOffset = Vector3.Lerp(_shakeOffset, offset, _speedTransition);
 
-            _camera.SetShakeOffset(_shakeOffset);
+            _cameraPoint.SetShakeOffset(_shakeOffset);
 
-            elapsed += Time.deltaTime;
+            elapsed += Time.fixedDeltaTime;
 
             yield return null;
         }
 
-        _camera.SetShakeOffset(Vector3.zero);
+        _cameraPoint.SetShakeOffset(Vector3.zero);
     }
-
 }

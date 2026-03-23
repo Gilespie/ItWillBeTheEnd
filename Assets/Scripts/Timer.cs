@@ -1,9 +1,7 @@
-using System;
 using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    public static event Action OnTimeOut;
     [SerializeField] private float _maxTimer = 30f;
     private float _currentTime = 0f;
     public float CurrentTime => _currentTime;
@@ -26,7 +24,7 @@ public class Timer : MonoBehaviour
         {
             _isStarted = false;
             _currentTime = 0f;
-            OnTimeOut?.Invoke();
+            EventManager.Trigger(EventType.OnTimeOut);
             _isDone = true;
         }
     }

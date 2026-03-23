@@ -39,7 +39,7 @@ public class WaterZone : MonoBehaviour
         }
         else if (other.TryGetComponent(out Rigidbody rb))
         {
-            rb.drag = _dragInWater;
+            rb.linearDamping = _dragInWater;
         }
     }
 
@@ -53,12 +53,12 @@ public class WaterZone : MonoBehaviour
 
             if (player.TryGetComponent(out Rigidbody rb))
             {
-                rb.drag = _dragInAir;
+                rb.linearDamping = _dragInAir;
             }
         }
         else if (other.TryGetComponent(out Rigidbody rb))
         {
-            rb.drag = _dragInAir;
+            rb.linearDamping = _dragInAir;
         }
     }
 
@@ -74,7 +74,7 @@ public class WaterZone : MonoBehaviour
     private IEnumerator SlowFallInWater(Rigidbody rb)
     {
         float timer = 0f;
-        Vector3 initialVelocity = rb.velocity;
+        Vector3 initialVelocity = rb.linearVelocity;
 
         while (timer < slowDuration)
         {
@@ -82,13 +82,13 @@ public class WaterZone : MonoBehaviour
             float t = timer / slowDuration;
 
             float newY = Mathf.Lerp(initialVelocity.y, 0f, t * slowFallPower * Time.deltaTime);
-            rb.velocity = new Vector3(rb.velocity.x, newY, rb.velocity.z);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, newY, rb.linearVelocity.z);
 
             yield return null;
         }
 
-        Vector3 finalVelocity = rb.velocity;
+        Vector3 finalVelocity = rb.linearVelocity;
         finalVelocity.y = 0f;
-        rb.velocity = finalVelocity;
+        rb.linearVelocity = finalVelocity;
     }
 }

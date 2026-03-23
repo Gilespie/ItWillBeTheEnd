@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Tower : MonoBehaviour
 {
+    [SerializeField] private float _delayToActivate;
     [SerializeField] private Light[] _lights;
     private AudioSource _audioSource;
 
@@ -10,9 +12,23 @@ public class Tower : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public void TurnOff()
+    private void OnEnable()
     {
-        Debug.Log("");
+        RocketExplosion.OnExplosed += OnTurnOff;
+    }
+
+    private void OnDisable()
+    {
+        RocketExplosion.OnExplosed -= OnTurnOff;
+    }
+
+    public void OnTurnOff()
+    {
+        Invoke(nameof(TurnOff), _delayToActivate);
+    }
+
+    void TurnOff()
+    {
         _audioSource.Play();
 
         foreach (Light light in _lights)

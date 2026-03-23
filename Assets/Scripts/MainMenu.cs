@@ -1,11 +1,27 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject _mainMenuPanel;
-    [SerializeField] private GameObject _settingsPanel;
-    [SerializeField] private GameObject _controlsPanel;
-    [SerializeField] private GameObject _creditsPanel;
+    [SerializeField] string _startLevelName = "";
+    [SerializeField] GameObject _mainMenuPanel;
+    [SerializeField] GameObject _settingsPanel;
+    //[SerializeField] GameObject _controlsPanel;
+    [SerializeField] GameObject _creditsPanel;
+    [SerializeField] Button _playButton;
+    [SerializeField] Button _settingsButton;
+    //[SerializeField] Button _controlButton;
+    [SerializeField] Button _creditsButton;
+    [SerializeField] Button _exitButton;
+
+    void Start()
+    {
+        _playButton.onClick.AddListener(() => LoadSceneManager.Instance.LoadScene(_startLevelName));
+        _settingsButton.onClick.AddListener(ShowSettings);
+        //_controlButton.onClick.AddListener(ShowControls);
+        _creditsButton.onClick.AddListener(ShowCredits);
+        _exitButton.onClick.AddListener(QuitGame);
+    }
 
     public void QuitGame()
     {
@@ -25,17 +41,17 @@ public class MainMenu : MonoBehaviour
         _mainMenuPanel.SetActive(true);
     }
 
-    public void ShowControls()
+    /*public void ShowControls()
     {
         _mainMenuPanel.SetActive(false);
         _controlsPanel.SetActive(true);
-    }
+    }*/
 
-    public void CloseControls()
+    /*public void CloseControls()
     {
         _controlsPanel.SetActive(false);
         _mainMenuPanel.SetActive(true);
-    }
+    }*/
 
     public void ShowSettings()
     {

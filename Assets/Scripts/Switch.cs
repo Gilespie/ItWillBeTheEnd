@@ -12,7 +12,6 @@ public class Switch : MonoBehaviour, IInteractable
     [SerializeField] private Light _light;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private MeshRenderer _meshRenderer;
-    [SerializeField] private float _autoResetDelay = 0f;
     private Animator _animator;
     private bool _isActive = false;
     private int _count = 0;
@@ -48,11 +47,6 @@ public class Switch : MonoBehaviour, IInteractable
         ActivateLamp(_isActive);
         _event?.Invoke();
         _count++;
-
-        if (_autoResetDelay > 0)
-        {
-            Invoke(nameof(ResetSwitch), _autoResetDelay);
-        }
     }
 
     private void PlaySound(AudioClip clip1, AudioClip clip2)

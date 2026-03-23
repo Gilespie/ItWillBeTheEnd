@@ -4,7 +4,6 @@ using UnityEngine.Rendering;
 
 public class AirManager : MonoBehaviour
 {
-    public static event Action OnFinishOxygen;
     [SerializeField] private float _maxOxygen = 10f;
     [SerializeField] private AudioLowPassFilter _filter;
     [SerializeField] private Collider _headCollider;
@@ -35,7 +34,7 @@ public class AirManager : MonoBehaviour
 
             if (_currentOxygen <= 0)
             {
-                OnFinishOxygen?.Invoke();
+                EventManager.Trigger(EventType.OnFinishOxygen);
             }
         }
     }

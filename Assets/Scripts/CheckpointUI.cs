@@ -4,16 +4,12 @@ using UnityEngine.UI;
 public class CheckpointUI : MonoBehaviour
 {
     [SerializeField] private Image _saveIcon;
-    [SerializeField] private Checkpoint[] _points;
     [SerializeField] private AudioClip _clip;
     private Animation _animation;
 
     private void OnEnable()
     {
-        for (int i = 0; i < _points.Length; i++)
-        {
-            _points[i].OnCheckpoint += OnCheckpoint;
-        }
+        EventManager.Subscribe(EventType.OnCheckpoint, OnCheckpoint);
     }
 
     private void Start()
@@ -24,13 +20,10 @@ public class CheckpointUI : MonoBehaviour
 
     private void OnDisable()
     {
-        for (int i = 0; i < _points.Length; i++)
-        {
-            _points[i].OnCheckpoint -= OnCheckpoint;
-        }
+        EventManager.Unsubscribe(EventType.OnCheckpoint, OnCheckpoint);
     }
 
-    private void OnCheckpoint()
+    private void OnCheckpoint(params object[] parameters)
     {
         _animation.Stop();
         _animation.Play();

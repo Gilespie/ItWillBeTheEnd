@@ -1,19 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SliderAction : MonoBehaviour
 {
-    [SerializeField] private Slider _masterSlider;
-    [SerializeField] private Slider _musicSlider;
-    [SerializeField] private Slider _sfxSlider;
-    [SerializeField] private Slider _uiSlider;
+    [SerializeField] Slider _masterSlider;
+    [SerializeField] Slider _musicSlider;
+    [SerializeField] Slider _voiceSlider;
+    [SerializeField] Slider _sfxSlider;
+    [SerializeField] Slider _uiSlider;
 
-    private void Start()
+    void Start()
     {
         _masterSlider.value = AudioManager.Instance.InitMasterVol;
         _musicSlider.value = AudioManager.Instance.InitMusicVol;
+        _voiceSlider.value = AudioManager.Instance.InitVoiceVol;
         _sfxSlider.value = AudioManager.Instance.InitSFXVol;
         _uiSlider.value = AudioManager.Instance.InitUIVol;
     }
@@ -36,5 +36,10 @@ public class SliderAction : MonoBehaviour
     public void SetUIVolume(float value)
     {
         AudioManager.Instance.SetUIVolume(value);
+    }
+
+    public void SetVoiceVolume(float value)
+    {
+        AudioManager.Instance.SetVoiceVolume(value);
     }
 }
