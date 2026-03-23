@@ -6,10 +6,16 @@ public class SwimmMovement : MovementAdvance
     {
         Vector3 direction = dir;
 
-        if (direction.sqrMagnitude > 0.001f)
-        {
-            _direction = direction.normalized * _speedMovement * Time.fixedDeltaTime;
-            _rbMove.MovePosition(_rbMove.position + _direction);
-        }
+        float targetSpeed = direction.sqrMagnitude > 0.01f ? _speedMovement : 0f;
+
+        float accel = targetSpeed > _currentSpeed ? _acceleration : _deceleration;
+
+        _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, accel * Time.fixedDeltaTime);
+
+        Vector3 velocity = direction.normalized * _currentSpeed;
+
+        _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
+
+        Rotate(direction);
     }
 }

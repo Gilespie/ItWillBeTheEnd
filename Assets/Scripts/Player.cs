@@ -459,8 +459,8 @@ public class Player : Destructable
         }
         else if(!_isOnce)
         {
-            StartCoroutine(GameOverPanel());
             _spawner.SpawnParticle(transform);
+            StartCoroutine(GameOverPanel());
             _isOnce = true;
         }
         this.enabled = false;
