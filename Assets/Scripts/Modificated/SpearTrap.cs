@@ -26,7 +26,7 @@ public class SpearTrap : MonoBehaviour
         transform.position = contact.point + penetrationOffset;
 
         transform.SetParent(collision.transform);
-        _rb.velocity = Vector3.zero;
+        _rb.linearVelocity = Vector3.zero;
 
         IDamageable damageable = collision.gameObject.GetComponentInParent<IDamageable>();
 

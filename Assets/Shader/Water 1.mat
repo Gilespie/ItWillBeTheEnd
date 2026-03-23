@@ -14,16 +14,18 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _EMISSION
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
   - DepthOnly
   - SHADOWCASTER
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -51,8 +53,10 @@ Material:
     - _DepthColor: 10
     - _DepthDistance: 9.1
     - _DstBlend: 10
+    - _DstBlendAlpha: 10
     - _FoamAmount: 0
     - _FoamCutoff: -1.31
+    - _Intencity: 0.52
     - _Metallic: 0
     - _Noise: 200
     - _Noise_1: 220
@@ -64,6 +68,7 @@ Material:
     - _Refraction: 0.034
     - _Smoothness: 1
     - _SrcBlend: 5
+    - _SrcBlendAlpha: 1
     - _Surface: 1
     - _Transparency: 1
     - _VertexNoiseScale: 100
@@ -83,6 +88,7 @@ Material:
     - _VertexSpeed: {r: 0.04, g: 0, b: 0, a: 0}
     - _Water_Color: {r: 0.022027401, g: 0.5188679, b: 0.45190817, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &203767966126085219
 MonoBehaviour:
   m_ObjectHideFlags: 11
@@ -95,4 +101,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 7
+  version: 10

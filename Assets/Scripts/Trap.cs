@@ -13,7 +13,7 @@ public class Trap : MonoBehaviour
         if(collision.gameObject.TryGetComponent(out Destructable player))
         {
             player.InstantKill();
-            player.gameObject.GetComponentInParent<Rigidbody>().AddForceAtPosition(this.GetComponent<Rigidbody>().velocity * _impulse, collision.contacts[0].point, ForceMode.Impulse);
+            player.gameObject.GetComponentInParent<Rigidbody>().AddForceAtPosition(this.GetComponent<Rigidbody>().linearVelocity * _impulse, collision.contacts[0].point, ForceMode.Impulse);
             _isActive = true;
         }
     }

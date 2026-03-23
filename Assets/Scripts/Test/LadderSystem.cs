@@ -57,7 +57,7 @@ public class LadderSystem : MonoBehaviour
     public void SetOnLadder(bool value)
     {
         _isOnLadder = value;
-        _rigidbody.useGravity = !value; // Если на лестнице — гравитация выкл
-        _rigidbody.velocity = Vector3.zero; // Сброс скорости при цеплянии/отцеплении
+        _rigidbody.useGravity = !value; // пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+        _rigidbody.linearVelocity = Vector3.zero; // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }
 }

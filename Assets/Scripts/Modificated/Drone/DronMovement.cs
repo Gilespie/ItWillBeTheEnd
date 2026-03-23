@@ -29,7 +29,7 @@ public class DronMovement : MonoBehaviour
 
             _rb.AddForce(transform.forward * speed * Time.fixedDeltaTime, ForceMode.Force);
 
-            if (_rb.velocity.magnitude < _maxSpeedLimit)
+            if (_rb.linearVelocity.magnitude < _maxSpeedLimit)
             {
                 _rb.AddForce(transform.forward * speed, ForceMode.Force);
             }

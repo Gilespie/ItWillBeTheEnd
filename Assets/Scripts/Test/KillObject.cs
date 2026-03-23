@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class KillObject : MonoBehaviour
 {
-    [SerializeField] private float speedThreshold = 2f; // Порог скорости
-    [SerializeField] private float damageAmount = 20f; // Урон
+    [SerializeField] private float speedThreshold = 2f; // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    [SerializeField] private float damageAmount = 20f; // пїЅпїЅпїЅпїЅ
 
     private Rigidbody rb;
 
@@ -14,7 +14,7 @@ public class KillObject : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        float currentSpeed = rb.velocity.magnitude;
+        float currentSpeed = rb.linearVelocity.magnitude;
 
         if (currentSpeed > speedThreshold)
         {
@@ -23,7 +23,7 @@ public class KillObject : MonoBehaviour
             if (destruct != null)
             {
                 destruct.InstantKill();
-                Debug.Log($"Камень ударил игрока со скоростью {currentSpeed}, нанесено {damageAmount} урона!");
+                Debug.Log($"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ {currentSpeed}, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ {damageAmount} пїЅпїЅпїЅпїЅпїЅ!");
             }
 
         }

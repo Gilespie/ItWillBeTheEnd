@@ -28,7 +28,7 @@ public class Player : Destructable
     [SerializeField] private Raycasting _raycast;
     [SerializeField] private Ragdoll _ragdoll;
     [SerializeField] private RotationTransform _rotationTransform;
-    [SerializeField] private PhysicMaterial _physicsMaterial;
+    [SerializeField] private PhysicsMaterial _physicsMaterial;
 
     [Header("Parameters")]
     [SerializeField] private float _speedMultiplier = 1f;
@@ -279,7 +279,7 @@ public class Player : Destructable
     public void SlopeRotateMesh()
     {
         Vector3 slopeNormal = _raycast.Normal;
-        Vector3 forward = _rb.velocity;
+        Vector3 forward = _rb.linearVelocity;
 
         Quaternion slopeTilt = Quaternion.FromToRotation(Vector3.up, slopeNormal);
         Vector3 adjustedForward = Vector3.ProjectOnPlane(forward, slopeNormal).normalized;
@@ -340,9 +340,9 @@ public class Player : Destructable
 
         if (!_isGrounded && !_isSwimming)
         {
-            if (_rb.velocity.y < _maxFallSpeed)
+            if (_rb.linearVelocity.y < _maxFallSpeed)
             {
-                _maxFallSpeed = _rb.velocity.y;
+                _maxFallSpeed = _rb.linearVelocity.y;
             }
         }
 
