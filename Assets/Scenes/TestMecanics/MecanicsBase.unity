@@ -1370,7 +1370,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1100934535}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1eb94a61eb6e7be41866ae1a20a32251, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4162,7 +4162,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1885762084
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -16792,7 +16792,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2376034102767613756}
-  m_Material: {fileID: 13400000, guid: 1eb94a61eb6e7be41866ae1a20a32251, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
