@@ -15,7 +15,5 @@ public class SwimmMovement : MovementAdvance
         Vector3 velocity = direction.normalized * _currentSpeed;
 
         _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
-
-        Rotate(direction);
     }
 }

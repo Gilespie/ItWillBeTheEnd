@@ -15,8 +15,6 @@ public class SprintMovement : MovementAdvance
         Vector3 velocity = direction.normalized * _currentSpeed;
 
         _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
-
-        Rotate(direction);
     }
 
     public override void Jump()

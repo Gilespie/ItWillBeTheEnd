@@ -13,16 +13,22 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] ClimbingRaycast _climbingRaycast;
     [SerializeField] Rigidbody _rb;
     [SerializeField] MovementAdvance[] _movements;//0 - walk, 1 - sprint, 2 - crouch, 3 - swim 
+    [SerializeField] CharacterRotator _characterRotator;
+    [SerializeField] CharacterColliderResizer _characterColliderResizer;
     MovementAdvance _currentMovement;
     bool _isJumped = false;
     bool _isCrouching = false;
-    bool _isClimbing = false;
+    //bool _isClimbing = false;
     bool _isSprinting = false;
     bool _isGrab = false;
 
+    void Awake()
+    {
+        _characterColliderResizer.InitDefault();
+    }
+
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
         ChangeMovement(_movements[0]);
     }
 
@@ -62,7 +68,7 @@ public class Character : MonoBehaviour, IDamageable
         TryCrouching();
 
         _currentMovement.Advance(_inputController.Direction);
-
+        _characterRotator.Rotate(_inputController.Direction);
     }
 
     public void InstantKill(params object[] parameters)
@@ -83,6 +89,8 @@ public class Character : MonoBehaviour, IDamageable
         _currentMovement = newMovement;
         _currentMovement.Initialize(_rb);
         _currentMovement.SetSpeed(prevSpeed);
+
+        _characterRotator.Initialize(_rb);
     }
 
     void TryJump()
@@ -100,5 +108,6 @@ public class Character : MonoBehaviour, IDamageable
         if (!_groundRaycast.IsRaycasting(-Vector3.up)) return;
      
         _animationController.SetBool(AnimParams.Crouch, _isCrouching);
+        _characterColliderResizer.SetSize(_isCrouching ? 1f : 2f, _isCrouching ? new Vector3(0, 0.5f, 0) : new Vector3(0, 1f, 0));
     }
 }
