@@ -9,9 +9,6 @@ public abstract class MovementAdvance : MonoBehaviour
     [SerializeField] protected float _acceleration = 10f;
     [SerializeField] protected float _deceleration = 10f;
 
-    [Header("Rotation")]
-    [SerializeField] protected float _speedRotDefault = 10f;
-
     [Header("Jump")]
     [SerializeField] protected float _jumpForce = 5f;
 
@@ -31,18 +28,6 @@ public abstract class MovementAdvance : MonoBehaviour
     public virtual void SetSpeed(float speed)
     {
         _currentSpeed = speed;
-    }
-
-    public virtual void Rotate(Vector3 dir)
-    {
-        if (dir.sqrMagnitude < 0.0001f)
-            return;
-
-        Quaternion targetRotation = Quaternion.LookRotation(dir);
-
-        Quaternion smoothRotation = Quaternion.Slerp(_rb.rotation, targetRotation, _speedRotDefault * Time.fixedDeltaTime);
-
-        _rb.MoveRotation(smoothRotation);
     }
 
     public virtual void Jump()

@@ -12,22 +12,34 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] InteractRaycast _interactRaycast;
     [SerializeField] ClimbingRaycast _climbingRaycast;
     [SerializeField] Rigidbody _rb;
-    [SerializeField] MovementAdvance[] _movements;//0 - walk, 1 - sprint, 2 - crouch, 3 - swim 
+    [SerializeField] MovementAdvance[] _movements;//0 - walk, 1 - sprint, 2 - crouch, 3 - swim, 4 - slope 
+    [SerializeField] CharacterRotator _characterRotator;
+    [SerializeField] CharacterColliderResizer _characterColliderResizer;
+    [SerializeField] FallDamage _fallDamage;
     MovementAdvance _currentMovement;
     bool _isJumped = false;
     bool _isCrouching = false;
-    bool _isClimbing = false;
+    //bool _isClimbing = false;
     bool _isSprinting = false;
+    bool _isSwimming = false;
     bool _isGrab = false;
+
+    void Awake()
+    {
+        _characterColliderResizer.InitDefault();
+
+        _fallDamage.OnFalled += HandleFallDeath;
+    }
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
         ChangeMovement(_movements[0]);
     }
 
     void Update()
     {
+        _fallDamage.Tick(_groundRaycast.IsRaycasting(-Vector3.up), _isSwimming, _rb.linearVelocity.y);
+
         _inputController.ArtificialUpdate();
 
         _groundRaycast.IsRaycasting(-Vector3.up);
@@ -45,7 +57,11 @@ public class Character : MonoBehaviour, IDamageable
 
     void FixedUpdate()
     {
-        if (_isCrouching)
+        if (_slopeRaycast.IsRaycasting(-Vector3.up))
+        {
+            ChangeMovement(_movements[4]);
+        }
+        else if (_isCrouching)
         {
             ChangeMovement(_movements[2]);
         }
@@ -62,7 +78,17 @@ public class Character : MonoBehaviour, IDamageable
         TryCrouching();
 
         _currentMovement.Advance(_inputController.Direction);
+        _characterRotator.Rotate(_inputController.Direction);
+    }
 
+    void OnDestroy()
+    {
+        _fallDamage.OnFalled -= HandleFallDeath;
+    }
+
+    void HandleFallDeath()
+    {
+        InstantKill();
     }
 
     public void InstantKill(params object[] parameters)
@@ -83,6 +109,8 @@ public class Character : MonoBehaviour, IDamageable
         _currentMovement = newMovement;
         _currentMovement.Initialize(_rb);
         _currentMovement.SetSpeed(prevSpeed);
+
+        _characterRotator.Initialize(_rb);
     }
 
     void TryJump()
@@ -100,5 +128,13 @@ public class Character : MonoBehaviour, IDamageable
         if (!_groundRaycast.IsRaycasting(-Vector3.up)) return;
      
         _animationController.SetBool(AnimParams.Crouch, _isCrouching);
+        _characterColliderResizer.SetSize(_isCrouching ? 1f : 2f, _isCrouching ? new Vector3(0, 0.5f, 0) : new Vector3(0, 1f, 0));
+    }
+
+    void SlideCharacter()
+    {
+        if(!_slopeRaycast.IsRaycasting(-Vector3.up)) return;
+
+
     }
 }
