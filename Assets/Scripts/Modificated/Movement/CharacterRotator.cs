@@ -3,8 +3,8 @@ using UnityEngine;
 public class CharacterRotator : MonoBehaviour
 {
     [Header("Rotation")]
-    [SerializeField] private float _speedRotDefault = 10f;
-    private Rigidbody _rb;
+    [SerializeField] protected float _speedRotDefault = 10f;
+    protected Rigidbody _rb;
 
     public virtual void Initialize(Rigidbody move)
     {
