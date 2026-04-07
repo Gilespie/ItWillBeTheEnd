@@ -6,9 +6,19 @@ public class InteractRaycast : AbstractRaycast
 
     public override bool IsRaycasting(Vector3 direction)
     {
-        _ray = new Ray(_originPoint.position, direction);
+        _ray = new Ray(_originPoint.position, transform.forward);
 
         return _isHitted = Physics.SphereCast(_ray, _intRadius, out _hit, _rayDistance, _affectedLayer);
+    }
+
+    public void InteractPress()
+    {
+        if (!_isHitted) return;
+
+        if (_hit.collider.TryGetComponent(out IInteractable interactable))
+        {
+            interactable.Interact();
+        }
     }
 
     private new void OnDrawGizmos()

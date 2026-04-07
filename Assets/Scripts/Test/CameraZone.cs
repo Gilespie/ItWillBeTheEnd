@@ -18,7 +18,7 @@ public class CameraZone : MonoBehaviour
     {
         if (_isOnce && _alreadyTriggered) return;
 
-        if (other.GetComponent<Player>() != null)
+        if (other.GetComponent<Character>() != null)
         {
             if (_isStatic)
             {
@@ -44,7 +44,7 @@ public class CameraZone : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Player>() != null)
+        if (other.GetComponent<Character>() != null)
         {
             _camera.ResetToFollow();
         }

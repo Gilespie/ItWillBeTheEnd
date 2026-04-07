@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.VFX;
 
 public class Rocket : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Rocket : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject[] _explosions;
+    [SerializeField] private VisualEffect _explosionVFX;
     [SerializeField] private AudioClip _flyClip;
     private Transform _target;
     private Rigidbody _rb;
@@ -42,12 +44,12 @@ public class Rocket : MonoBehaviour
         {
             Explosion(collision.contacts[0].point);
 
-            Instantiate(_explosions[0], collision.contacts[0].point, _explosions[0].transform.rotation);
-            Instantiate(_explosions[1], collision.contacts[0].point, _explosions[1].transform.rotation);
+            //Instantiate(_explosions[0], collision.contacts[0].point, _explosions[0].transform.rotation);
+            //Instantiate(_explosions[1], collision.contacts[0].point, _explosions[1].transform.rotation);
+            Instantiate(_explosionVFX, collision.contacts[0].point, _explosionVFX.transform.rotation);
+            //CameraShake.Instance.ActiveShake();
 
-            CameraShake.Instance.ActiveShake();
-
-            _target.GetComponent<DecalProjector>().enabled = false;
+            //_target.GetComponent<DecalProjector>().enabled = false;
             Destroy(gameObject);
         }
     }

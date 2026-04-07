@@ -3,15 +3,32 @@ using UnityEngine;
 public class CharacterRotator : MonoBehaviour
 {
     [Header("Rotation")]
-    [SerializeField] protected float _speedRotDefault = 10f;
-    protected Rigidbody _rb;
+    [SerializeField] private float _speedRot = 10f;
+    [SerializeField] private Transform _mesh;
+    public Transform Mesh => _mesh;
+    private SlopeRaycast _slopeRaycast;
+    bool _isActive = true;
 
-    public virtual void Initialize(Rigidbody move)
+    public void Initialize(SlopeRaycast slopeRaycast)
     {
-        _rb = move;
+        _slopeRaycast = slopeRaycast;
     }
 
-    public virtual void Rotate(Vector3 dir)
+    public void Rotate(Vector3 dir, Vector3 velocity)
+    {
+        if (!_isActive) return;
+
+        if (_slopeRaycast != null && _slopeRaycast.IsRaycasting(-Vector3.up))
+        {
+            RotateOnSlope(velocity);
+        }
+        else
+        {
+            RotateDefault(dir);
+        }
+    }
+
+    private void RotateDefault(Vector3 dir)
     {
         dir.y = 0f;
 
@@ -20,8 +37,25 @@ public class CharacterRotator : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(dir);
 
-        Quaternion smoothRotation = Quaternion.Slerp(_rb.rotation, targetRotation, _speedRotDefault * Time.fixedDeltaTime);
+        _mesh.rotation = Quaternion.Slerp(_mesh.rotation, targetRotation, _speedRot * Time.fixedDeltaTime);
+    }
 
-        _rb.MoveRotation(smoothRotation);
+    private void RotateOnSlope(Vector3 velocity)
+    {
+        Vector3 slopeNormal = _slopeRaycast.Normal;
+
+        if (velocity.sqrMagnitude < 0.01f)
+            return;
+
+        Vector3 adjustedForward = Vector3.ProjectOnPlane(velocity, slopeNormal).normalized;
+
+        Quaternion targetRotation = Quaternion.LookRotation(adjustedForward, slopeNormal);
+
+        _mesh.rotation = Quaternion.Slerp(_mesh.rotation, targetRotation, Time.fixedDeltaTime * _speedRot);
+    }
+
+    public void ToggleComponent()
+    {
+        _isActive = !_isActive;
     }
 }

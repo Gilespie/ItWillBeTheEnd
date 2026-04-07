@@ -141,7 +141,7 @@ public class Raycasting : MonoBehaviour
         {
             if (_pushingHit.collider.TryGetComponent(out IPushable pushable))
             {
-                pushable.Pushing();
+               // pushable.Pushing();
             }
         }
     }

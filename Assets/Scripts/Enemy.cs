@@ -24,7 +24,7 @@ public abstract class Enemy : MonoBehaviour
     protected float _distanceToPlayer, _distanceToNode;
     protected Animator _animator;
     protected Rigidbody _rb;
-    protected Player _player;
+    protected Character _player;
     protected Vector3 _direction;
     protected NavMeshAgent _agent;
 
@@ -91,7 +91,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    protected void DealDamage(Destructable destructable)
+    protected void DealDamage(IDamageable destructable)
     {
         destructable.InstantKill();
     }

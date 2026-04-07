@@ -3,14 +3,17 @@ using UnityEngine;
 public class InputDisabler : MonoBehaviour
 {
     [SerializeField] CharacterInputController _characterInput;
+    [SerializeField] CharacterRotator _characterRotator;
 
     public void DisableControl()
     {
-        _characterInput.enabled = false;
+        _characterInput.ToggleComponent();
+        _characterRotator.ToggleComponent();
     }
 
     public void EnableControl()
     {
-        _characterInput.enabled = true;
+        _characterInput.ToggleComponent();
+        _characterRotator.ToggleComponent();
     }
 }

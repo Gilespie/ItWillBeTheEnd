@@ -9,11 +9,9 @@ public class FallDamage : MonoBehaviour
     private float _fallDamage = 0f;
     private bool _wasGrounded = false;
 
-    public System.Action OnFalled;
-
-    public void Tick(bool isGrounded, bool isSwimming, float velocityY)
+    public void Tick(bool isGrounded, bool isSwimming, bool isSlope, float velocityY)
     {
-        if (!isGrounded && isSwimming)
+        if (isSwimming)
         {
             _maxFallSpeed = 0f;
             return;
@@ -21,8 +19,9 @@ public class FallDamage : MonoBehaviour
 
         if (!isGrounded && !isSwimming)
         {
-            if (velocityY < _maxFallSpeed)
-                _maxFallSpeed = velocityY;
+            if (!isSlope && velocityY < _maxFallSpeed) _maxFallSpeed = velocityY;
+
+            //Debug.Log($"Current fall speed: {velocityY}, Max fall speed: {_maxFallSpeed}");
         }
 
         if (isGrounded && !_wasGrounded)
@@ -31,9 +30,9 @@ public class FallDamage : MonoBehaviour
             {
                 _fallDamage = Mathf.Abs(_maxFallSpeed + _fallDamageThreshold) * _fallDamageMultiplier;
 
-                Debug.Log($"Fall damage: {_fallDamage}");
+                //Debug.Log($"Fall damage: {_fallDamage}");
 
-                EventManager.Trigger(EventType.OnFalled, _fallDamage);
+                EventManager.Trigger(EventType.OnFalled);
             }
 
             _maxFallSpeed = 0f;

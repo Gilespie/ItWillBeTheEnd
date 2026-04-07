@@ -20,9 +20,9 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    private Player _player;
+    private Character _player;
 
-    public Player Player
+    public Character Player
     {
         get { return _player; }
         set { _player = value; }

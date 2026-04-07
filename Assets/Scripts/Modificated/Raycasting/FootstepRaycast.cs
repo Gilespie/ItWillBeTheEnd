@@ -30,7 +30,7 @@ public class FootstepRaycast : MonoBehaviour
         }
         else
         {
-            _isHit=false;
+            _isHit = false;
 
             if (_currentMaterial != MaterialType.None)
             {

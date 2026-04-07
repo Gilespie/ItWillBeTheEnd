@@ -100,7 +100,7 @@ public class Player : Destructable
         _animator = GetComponentInChildren<Animator>();
         _audioSource = GetComponent<AudioSource>();
 
-        GameManager.Instance.Player = this;
+        //GameManager.Instance.Player = this;
     }
 
     void OnEnable()

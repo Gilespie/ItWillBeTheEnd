@@ -5,7 +5,7 @@ public class FireworksController : MonoBehaviour
     [SerializeField] AudioClip _clip;
     [SerializeField] AudioSource _source;
 
-    void Start()
+    public void StartEvent()
     {
         Invoke(nameof(PlaySound), 3f);
     }

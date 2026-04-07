@@ -9,6 +9,7 @@ public class CameraPointFollow : MonoBehaviour
     [SerializeField] private float _lerpRate = 3f;
     [SerializeField] private float _zPosMax = -15f;
     [SerializeField] private float _zPosMin = -11f;
+    [SerializeField] private bool _isStaticZ = false;
 
     private Vector3 _shakeOffset;
 
@@ -22,7 +23,7 @@ public class CameraPointFollow : MonoBehaviour
 
     private void Start()
     {
-        _target = GameManager.Instance.PointFollower.transform;
+        //_target = GameManager.Instance.Player.transform;
         transform.position = _target.position + _offset;
         _lookTarget = _target;
 
@@ -47,7 +48,9 @@ public class CameraPointFollow : MonoBehaviour
         else
         {
             targetPos = _target.position + _offset + _shakeOffset;
-            targetPos.z = _zoomed ? _zPosMin : _zPosMax;
+
+            if(_isStaticZ) targetPos.z = _zoomed ? _zPosMin : _zPosMax;
+
         }
 
         transform.position = Vector3.MoveTowards(

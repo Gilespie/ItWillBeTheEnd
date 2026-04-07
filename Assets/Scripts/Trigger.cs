@@ -16,7 +16,7 @@ public class Trigger : MonoBehaviour
     {
         if (_isOnce)
         {
-            if (other.GetComponent<Player>())
+            if (other.GetComponent<Character>())
             {
                 _actions?.Invoke();
                 _collider.enabled = false;
@@ -24,7 +24,7 @@ public class Trigger : MonoBehaviour
         }
         else
         {
-            if (other.GetComponent<Player>())
+            if (other.GetComponent<Character>())
             {
                 _actions?.Invoke();
             }

@@ -9,6 +9,7 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] KeyCode _sprintKey = KeyCode.LeftShift;
     [SerializeField] KeyCode _crouchKey = KeyCode.LeftControl;
     [SerializeField] KeyCode _interactKey = KeyCode.E;
+    [SerializeField] KeyCode _pushingKey = KeyCode.F;
     [SerializeField] KeyCode _slowTimeKey = KeyCode.T;
     [SerializeField] KeyCode _ragdollKey = KeyCode.R;
 
@@ -24,6 +25,9 @@ public class CharacterInputController : MonoBehaviour
     bool _isInteracting = false;
     public bool IsInteracting => _isInteracting;
 
+    bool _isPushing = false;
+    public bool IsPushing => _isPushing;
+
     bool _isRagdoll = false;
     public bool IsRagdoll => _isRagdoll;
 
@@ -33,8 +37,12 @@ public class CharacterInputController : MonoBehaviour
     Vector3 _direction;
     public Vector3 Direction => _direction;
 
-    public void ArtificialUpdate()
+    bool _isActive = true;
+
+    void Update()
     {
+        if (!_isActive) return;
+
         _direction = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Jump"), Input.GetAxis("Vertical"));
 
         switch (_typeInput)
@@ -46,7 +54,10 @@ public class CharacterInputController : MonoBehaviour
                 if(Input.GetKeyDown(_slowTimeKey)) _isSlowTime = !_isSlowTime;
 
                 _isJumping = Input.GetKeyDown(_jumpKey);
+                //if(Input.GetKeyDown(_interactKey)) _isInteracting = !_isInteracting;
                 _isInteracting = Input.GetKeyDown(_interactKey);
+
+                _isPushing = Input.GetKey(_pushingKey);
                 break;
 
             case TypeOfInput.Holding:
@@ -55,7 +66,14 @@ public class CharacterInputController : MonoBehaviour
 
                 _isJumping = Input.GetKeyDown(_jumpKey);
                 _isInteracting = Input.GetKey(_interactKey);
+                _isPushing = Input.GetKey(_pushingKey);
                 break;
         }
+    }
+
+    public void ToggleComponent()
+    {
+        _isActive = !_isActive;
+        _direction = Vector3.zero;
     }
 }

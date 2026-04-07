@@ -1,4 +1,5 @@
 public interface IPushable
 {
-    void Pushing();  
+    bool CanPush(PushingRaycast interactor);
+    void Pushing(PushingRaycast interactor);
 }

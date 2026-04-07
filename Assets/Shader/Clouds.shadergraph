@@ -747,6 +747,7 @@
     "m_OutputNode": {
         "m_Id": ""
     },
+    "m_SubDatas": [],
     "m_ActiveTargets": [
         {
             "m_Id": "4fdba8a078ab4243871bb6c67ba717ab"
@@ -2054,6 +2055,9 @@
     "m_AlphaClip": false,
     "m_CastShadows": true,
     "m_ReceiveShadows": true,
+    "m_DisableTint": false,
+    "m_AdditionalMotionVectorMode": 0,
+    "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
     "m_SupportVFX": true
@@ -2788,7 +2792,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "MoveOffset",
+    "m_Name": "Move Offset",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -4211,7 +4215,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "MoveOffset",
+    "m_Name": "Move Offset",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {

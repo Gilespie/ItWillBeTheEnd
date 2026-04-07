@@ -52,6 +52,7 @@ Material:
     - _DepthColor: 10
     - _DepthDistance: 46
     - _DstBlend: 10
+    - _DstBlendAlpha: 10
     - _FoamAmount: 0
     - _FoamCutoff: -1.31
     - _Intencity: 0.18
@@ -66,6 +67,7 @@ Material:
     - _Refraction: 0.034
     - _Smoothness: 1
     - _SrcBlend: 5
+    - _SrcBlendAlpha: 1
     - _Surface: 1
     - _Transparency: 0.88
     - _VertexNoiseScale: 100
