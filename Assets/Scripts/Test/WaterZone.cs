@@ -81,6 +81,7 @@ public class WaterZone : MonoBehaviour
         
         if(other.TryGetComponent(out Character character))
         {
+            character.SetWaterZone(null);
 
             if (character.TryGetComponent(out Rigidbody characterRB))
             {
