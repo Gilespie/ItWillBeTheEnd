@@ -8,6 +8,7 @@ public class CharacterRotator : MonoBehaviour
     public Transform Mesh => _mesh;
     private SlopeRaycast _slopeRaycast;
     bool _isActive = true;
+    private Vector3 _lastSwimForward = Vector3.forward;
 
     public void Initialize(SlopeRaycast slopeRaycast)
     {
@@ -18,7 +19,7 @@ public class CharacterRotator : MonoBehaviour
     {
         if (!_isActive) return;
 
-        if (_slopeRaycast != null && _slopeRaycast.IsRaycasting(-Vector3.up))
+        if (_slopeRaycast.IsRaycasting(-Vector3.up))
         {
             RotateOnSlope(velocity);
         }
@@ -52,6 +53,40 @@ public class CharacterRotator : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(adjustedForward, slopeNormal);
 
         _mesh.rotation = Quaternion.Slerp(_mesh.rotation, targetRotation, Time.fixedDeltaTime * _speedRot);
+    }
+
+    public void RotateSwimming(Vector3 dir)
+    {
+        if (dir.sqrMagnitude > 0.0001f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(dir.normalized);
+
+            _mesh.rotation = Quaternion.Slerp(
+                _mesh.rotation,
+                targetRotation,
+                _speedRot * Time.fixedDeltaTime
+            );
+
+            Vector3 flatDir = new Vector3(dir.x, 0f, dir.z);
+
+            if (flatDir.sqrMagnitude > 0.0001f)
+            {
+                _lastSwimForward = flatDir.normalized;
+            }
+        }
+        else
+        {
+            if (_lastSwimForward.sqrMagnitude < 0.0001f)
+                return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(_lastSwimForward);
+
+            _mesh.rotation = Quaternion.Slerp(
+                _mesh.rotation,
+                targetRotation,
+                _speedRot * Time.fixedDeltaTime
+            );
+        }
     }
 
     public void ToggleComponent()

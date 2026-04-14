@@ -92,6 +92,7 @@ public class Player : Destructable
     private Rigidbody _rb;
     private CapsuleCollider _col;
     private Animator _animator;
+    private WaterZone _currentWater;
 
     void Awake()
     {
@@ -128,12 +129,12 @@ public class Player : Destructable
     {
         CalculateFallDamage();
 
-        if (!_isSwimming && _inWaterZone && _headPoint.position.y < WaterZone._boundY)
+        if (!_isSwimming && _inWaterZone && _headPoint.position.y < _currentWater.BoundY)
         {
             EnterWater();
         }
 
-        if (_isSwimming && _headPoint.position.y >= WaterZone._boundY && _raycast.IsGrounded())
+        if (_isSwimming && _headPoint.position.y >= _currentWater.BoundY && _raycast.IsGrounded())
         {
             ExitWater();
         }
@@ -189,6 +190,12 @@ public class Player : Destructable
     {
         transform.position = GameManager.Instance.ActualCheckpoint;
     }
+
+    public void SetWaterZone(WaterZone water)
+    {
+        _currentWater = water;
+    }
+
 
     private void HandleInput()
     {
@@ -370,7 +377,7 @@ public class Player : Destructable
     {
         Vector3 swimDir = Vector3.zero;
 
-        if (_headPoint.position.y >= WaterZone._boundY && dir.y > 0f)
+        if (_headPoint.position.y >= _currentWater.BoundY && dir.y > 0f)
         {
             dir.y = 0f;
         }

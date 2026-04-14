@@ -3,6 +3,7 @@ using UnityEngine;
 public class ClimbingRaycast : AbstractRaycast
 {
     [SerializeField] float _maxHeight = 2f;
+    public Vector3 LedgePoint;
 
     public override bool IsRaycasting(Vector3 direction)
     {
@@ -10,7 +11,14 @@ public class ClimbingRaycast : AbstractRaycast
 
         if (Physics.Raycast(_ray, out _hit, _rayDistance, _affectedLayer))
         {
-            return _isHitted = true;
+            Vector3 topPoint = _hit.point + Vector3.up * _maxHeight;
+
+            if (Physics.Raycast(topPoint, Vector3.down, out RaycastHit ledgeHit, _maxHeight))
+            {
+                LedgePoint = ledgeHit.point;
+
+                return _isHitted = true;
+            }
         }
 
         return _isHitted = false;
@@ -25,5 +33,7 @@ public class ClimbingRaycast : AbstractRaycast
         {
             Gizmos.DrawLine(_hit.point, _hit.point + Vector3.up * _maxHeight);
         }
+
+        Gizmos.DrawSphere(LedgePoint, 0.1f);
     }
 }

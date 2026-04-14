@@ -107,7 +107,7 @@ MonoBehaviour:
     x: 359
     y: -492
     width: 795
-    height: 2260
+    height: 2261
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2466,7 +2466,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Line, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"start":{"x":-28.066919326782228,"y":0.0,"z":-0.0000033339160836476369},"end":{"x":50.0,"y":0.0,"z":0.0}}'
+      m_SerializableObject: '{"start":{"x":-15.0,"y":0.0,"z":0.0},"end":{"x":30.0,"y":0.0,"z":0.0}}'
     m_Space: 0
   m_Property:
     name: line

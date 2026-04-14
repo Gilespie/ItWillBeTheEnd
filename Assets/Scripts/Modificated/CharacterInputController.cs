@@ -39,6 +39,8 @@ public class CharacterInputController : MonoBehaviour
 
     bool _isActive = true;
 
+    public float VerticalSwim => Input.GetAxis("Jump") > 0 ? 1 : (Input.GetKey(KeyCode.LeftControl) ? -1 : 0);
+
     void Update()
     {
         if (!_isActive) return;

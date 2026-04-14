@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PointFollower : MonoBehaviour
 {
-    [SerializeField] private Player _player;
+    [SerializeField] private Character _player;
     [SerializeField] private const float _zConstant = -5f;
     [SerializeField] private float _lerpSpeed = 5f;
     [SerializeField] private Vector3 _offset;

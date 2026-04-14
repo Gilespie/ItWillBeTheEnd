@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class WaterZone : MonoBehaviour
 {
@@ -8,18 +9,12 @@ public class WaterZone : MonoBehaviour
     [SerializeField] private float _dragInAir = 1f;
     [SerializeField] private float slowDuration = 1.0f;
     [SerializeField] private float slowFallPower = 8f;
+    [SerializeField] private Volume _volume;
+    [SerializeField] private Collider _collider;
 
     [Header("Splash Effect")]
     [SerializeField] private GameObject _splashPrefab;
-
-    private Collider _collider;
-    public static float _boundY;
-
-    private void Start()
-    {
-        _collider = GetComponent<Collider>();
-        _boundY = _collider.bounds.max.y;
-    }
+    public float BoundY => _collider.bounds.max.y;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -27,19 +22,36 @@ public class WaterZone : MonoBehaviour
 
         SpawnSplashes(other.transform.position);
 
+        if (other.TryGetComponent(out AirManager air))
+        {
+            air.SetVolume(_volume);
+            air.SetWaterZone(this);
+        }
+
         if (other.TryGetComponent(out Player player))
         {
             player.SetInWaterZone(true);
+            player.SetWaterZone(this);
 
-            if (player.TryGetComponent(out Rigidbody rb))
+            if (player.TryGetComponent(out Rigidbody playerRB))
             {
-                StartCoroutine(SlowFallInWater(rb));
-                //rb.drag = _dragInWater;
+                StartCoroutine(SlowFallInWater(playerRB));
             }
         }
-        else if (other.TryGetComponent(out Rigidbody rb))
+        
+        if (other.TryGetComponent(out Rigidbody rb))
         {
             rb.linearDamping = _dragInWater;
+        }
+        
+        if(other.TryGetComponent(out Character character))
+        {
+            character.SetWaterZone(this);
+
+            if (character.TryGetComponent(out Rigidbody characterRB))
+            {
+                characterRB.linearDamping = _dragInWater;
+            }
         }
     }
 
@@ -47,18 +59,33 @@ public class WaterZone : MonoBehaviour
     {
         if (other == null) return;
 
+        if (other.TryGetComponent(out AirManager air))
+        {
+            air.SetVolume(null);
+        }
+
         if (other.TryGetComponent(out Player player))
         {
             player.SetInWaterZone(false);
 
-            if (player.TryGetComponent(out Rigidbody rb))
+            if (player.TryGetComponent(out Rigidbody playerRB))
             {
-                rb.linearDamping = _dragInAir;
+                playerRB.linearDamping = _dragInAir;
             }
         }
-        else if (other.TryGetComponent(out Rigidbody rb))
+        
+        if (other.TryGetComponent(out Rigidbody rb))
         {
             rb.linearDamping = _dragInAir;
+        }
+        
+        if(other.TryGetComponent(out Character character))
+        {
+
+            if (character.TryGetComponent(out Rigidbody characterRB))
+            {
+                characterRB.linearDamping = _dragInAir;
+            }
         }
     }
 

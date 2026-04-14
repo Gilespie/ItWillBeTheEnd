@@ -32,6 +32,7 @@ public abstract class MovementAdvance : MonoBehaviour
 
     public virtual void Jump()
     {
-        _rb.AddForce(Vector3.up * _jumpForce, ForceMode.Acceleration);
+        //_rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
+        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, _jumpForce, _rb.linearVelocity.z);
     }
 }

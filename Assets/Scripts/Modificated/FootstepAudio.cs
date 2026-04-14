@@ -41,7 +41,6 @@ public class FootstepAudio : MonoBehaviour
         if (_materialAudioMap.TryGetValue(_currentMaterial, out var clip) && clip != null)
         {
             _audioSource.PlayOneShot(_materialAudioMap[_currentMaterial]);
-            Debug.Log("Play step sound: " + _currentMaterial);
         }
     }
 }
