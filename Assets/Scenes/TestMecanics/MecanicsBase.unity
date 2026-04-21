@@ -9527,7 +9527,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -11921,7 +11921,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -24272,7 +24272,7 @@ PrefabInstance:
     - target: {fileID: 4605571361021904148, guid: c50b0a6eb1953924aa537c564361fe6f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 95.96
+      value: 104.04
       objectReference: {fileID: 0}
     - target: {fileID: 4605571361021904148, guid: c50b0a6eb1953924aa537c564361fe6f,
         type: 3}
@@ -24282,7 +24282,7 @@ PrefabInstance:
     - target: {fileID: 4605571361021904148, guid: c50b0a6eb1953924aa537c564361fe6f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.03
+      value: 1.29
       objectReference: {fileID: 0}
     - target: {fileID: 4605571361021904148, guid: c50b0a6eb1953924aa537c564361fe6f,
         type: 3}
@@ -24367,7 +24367,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6410467107526386658, guid: c50b0a6eb1953924aa537c564361fe6f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 917225768}
+      addedObject: {fileID: 917225772}
   m_SourcePrefab: {fileID: 100100000, guid: c50b0a6eb1953924aa537c564361fe6f, type: 3}
 --- !u!1001 &719989831
 PrefabInstance:
@@ -25789,10 +25789,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 7604493035383091575}
-  _lerpSpeed: 5
-  _offset: {x: 0, y: 3, z: 0}
+  _zConstant: 0
+  _lerpSpeed: 9.95
+  _offset: {x: 0, y: 1, z: 0}
   _isBobEnable: 1
-  _bobSpeed: 3.5
+  _bobSpeed: 2
   _bobIntensity: 0.05
 --- !u!4 &775376720
 Transform:
@@ -25803,7 +25804,7 @@ Transform:
   m_GameObject: {fileID: 775376718}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.851851, y: -40.891865, z: 102.7132}
+  m_LocalPosition: {x: -4.44, y: 7.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -27705,7 +27706,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -29126,7 +29127,13 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 718345006}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &917225768
+--- !u!4 &917225770 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4605571361021904148, guid: c50b0a6eb1953924aa537c564361fe6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 718345006}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &917225772
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29135,23 +29142,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 917225767}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f339559f3ddcc4b4b84ae6c264976da6, type: 3}
+  m_Script: {fileID: 11500000, guid: 252304fde15f3ff48b343541814ed476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 1171603155}
-  _cameraPos: {fileID: 0}
-  _cameraView: {fileID: 0}
-  _isStatic: 0
-  _isStaticPos: 0
-  _isOtherTargetView: 0
-  _isZPosition: 1
-  _isOnce: 0
---- !u!4 &917225770 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4605571361021904148, guid: c50b0a6eb1953924aa537c564361fe6f,
-    type: 3}
-  m_PrefabInstance: {fileID: 718345006}
-  m_PrefabAsset: {fileID: 0}
+  _isOnce: 1
+  _actions:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1876330440}
+        m_TargetAssemblyTypeName: Buildboard, Assembly-CSharp
+        m_MethodName: ActivateBuildBoard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _actionsStay:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &917946964
 GameObject:
   m_ObjectHideFlags: 0
@@ -42286,7 +42298,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -42718,8 +42730,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c7997267fce104e8d2cdc158f33a18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 6478944641418707031}
-  _lookTarget: {fileID: 6478944641418707031}
+  _target: {fileID: 775376720}
+  _lookTarget: {fileID: 775376720}
   _offset: {x: 0, y: 3, z: -10}
   _lerpRate: 15
   _zPosMax: -10
@@ -55714,7 +55726,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -62481,32 +62493,32 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: ed24a1bc8214f7b45913e13c3e633c93,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.67296
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ed24a1bc8214f7b45913e13c3e633c93,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.67296
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ed24a1bc8214f7b45913e13c3e633c93,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 0.67296
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ed24a1bc8214f7b45913e13c3e633c93,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 127.9
+      value: 124.05
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ed24a1bc8214f7b45913e13c3e633c93,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 16.8
+      value: 12.235
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ed24a1bc8214f7b45913e13c3e633c93,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 45.3
+      value: 37.942
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ed24a1bc8214f7b45913e13c3e633c93,
         type: 3}
@@ -69812,7 +69824,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -122094,7 +122106,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.26
+  m_Radius: 0.2
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}

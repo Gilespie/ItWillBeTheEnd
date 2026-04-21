@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 public class Buildboard : MonoBehaviour
@@ -10,7 +9,7 @@ public class Buildboard : MonoBehaviour
     [SerializeField] float _delayBetweenWaves = 5f;
     Coroutine _coroutine;
 
-    private void Update()
+    /*private void Update()
     {
         if (_coroutine != null) return;
 
@@ -18,6 +17,13 @@ public class Buildboard : MonoBehaviour
         {
             _coroutine = StartCoroutine(WaveRoutine());
         }
+    }*/
+
+    public void ActivateBuildBoard()
+    {
+        if (_coroutine != null) return;
+
+        _coroutine = StartCoroutine(WaveRoutine());
     }
     
     IEnumerator WaveRoutine()
