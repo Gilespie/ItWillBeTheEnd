@@ -57,7 +57,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 46.53, y: 10, z: 12.7}
+  m_Size: {x: 19.59, y: 5, z: 11.41}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7932419284498010779
 MonoBehaviour:
@@ -75,6 +75,8 @@ MonoBehaviour:
   _dragInAir: 1
   slowDuration: 4
   slowFallPower: 3810
+  _volume: {fileID: 5063529950438175986}
+  _collider: {fileID: 4989937908873735410}
   _splashPrefab: {fileID: 5581565758341039060, guid: 583c2e72a4fb624449d4aeb548485969,
     type: 3}
 --- !u!114 &-1630609112250945207
@@ -116,8 +118,8 @@ Transform:
   m_GameObject: {fileID: 4395297082729838465}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.52, y: 5, z: 0}
-  m_LocalScale: {x: 0.062307995, y: 0.61, z: -0.009664103}
+  m_LocalPosition: {x: 0, y: 2.46, z: 1.5886}
+  m_LocalScale: {x: 0.0138973445, y: 0.61, z: -0.004377129}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3114848990327465707}
@@ -147,6 +149,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -844,7 +849,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 77.62, y: 22.47, z: 29.96}
+    m_Scale: {x: 77.6, y: 9.72, z: 15.6}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -4946,6 +4951,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4984,13 +4992,15 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
-  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
+  m_UseCustomVertexStreams: 0
   m_VertexStreams: 00010304
+  m_UseCustomTrailVertexStreams: 0
+  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -5027,7 +5037,7 @@ Transform:
   m_GameObject: {fileID: 5959026303967720851}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.330017, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5052,7 +5062,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 50, y: 10, z: 30}
+  m_Size: {x: 20, y: 10, z: 15.79}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5063529950438175986
 MonoBehaviour:
@@ -5099,8 +5109,8 @@ Transform:
   m_GameObject: {fileID: 6527022958926728698}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 7.46, y: -0.0588, z: -6.01}
-  m_LocalScale: {x: 3.2518, y: 1, z: 0.9882}
+  m_LocalPosition: {x: 0.123, y: 0.0117, z: -2.88}
+  m_LocalScale: {x: 1.9775755, y: 1, z: 0.49718136}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3114848990327465707}
@@ -5130,6 +5140,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

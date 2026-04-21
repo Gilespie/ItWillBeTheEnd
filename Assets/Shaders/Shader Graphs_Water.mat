@@ -39,13 +39,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.71
+    - _Alpha: 1
     - _Divide: 10.13
     - _Metalic: 1
     - _NoiseScale1: 400
     - _NoiseScale2: 450
     - _NoiseScale3: 500
-    - _NormalStrenght: 1.87
+    - _NormalStrenght: 1
     - _Power: 0.5
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -53,10 +53,13 @@ Material:
     - _WaveIntensity: 2
     m_Colors:
     - _Color1: {r: 0.30660376, g: 1, b: 1, a: 1}
-    - _Color2: {r: 0, g: 0.17257518, b: 0.39622638, a: 1}
+    - _Color2: {r: 0.2713154, g: 0.4284782, b: 0.6320754, a: 1}
     - _Offset1: {r: 0.005, g: -0.005, b: 0, a: 0}
     - _Offset2: {r: -0.001, g: 0.001, b: 0, a: 0}
     - _Offset3: {r: 0.005, g: 0.005, b: 0, a: 0}
+    - _Tiling1: {r: 2, g: 1, b: 0, a: 0}
+    - _Tiling2: {r: 1, g: 1, b: 0, a: 0}
+    - _Tiling3: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &3961401708223324477

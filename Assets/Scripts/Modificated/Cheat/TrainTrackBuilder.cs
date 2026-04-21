@@ -6,7 +6,7 @@ public class TrainTrackBuilder : MonoBehaviour
     [SerializeField] TrainWaypoint[] _waypoints;
     int _currentWaypointIndex = 0;
 
-    void Update()
+    void Start()
     {
         _waypoints = transform.GetComponentsInChildren<TrainWaypoint>();
     }

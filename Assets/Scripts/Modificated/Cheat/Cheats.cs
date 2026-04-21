@@ -14,7 +14,9 @@ public class Cheats : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.K))
         {
-            _drone.enabled = !_drone.enabled;
+            _drone.gameObject.SetActive(!_drone.gameObject.activeSelf);
         }
+
+        
     }
 }

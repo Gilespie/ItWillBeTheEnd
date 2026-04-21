@@ -13,7 +13,7 @@ public class Train : MonoBehaviour
     [SerializeField] float _speedRot = 2f;
     float _currentSpeed = 0f;
 
-    private void Update()
+    /*private void Update()
     {
         if (_isAutopilot)
         {
@@ -23,14 +23,16 @@ public class Train : MonoBehaviour
         {
             HandleInput();
         }
-    }
+    }*/
 
     void FixedUpdate()
     {
         if (_isAutopilot)
         {
+            IncrementSpeed();
             ApplyDrag();
-            MoveTrainAutopilot();
+            MoveTrain();
+            //MoveTrainAutopilot();
         }
         else
         {
@@ -39,7 +41,7 @@ public class Train : MonoBehaviour
         }
     }
 
-    void HandleInput()
+    /*void HandleInput()
     {
         if (Input.GetKey(KeyCode.W))
         {
@@ -49,7 +51,7 @@ public class Train : MonoBehaviour
         {
             DecrementSpeed();
         }
-    }
+    }*/
 
     public void IncrementSpeed()
     {
@@ -79,7 +81,7 @@ public class Train : MonoBehaviour
         _rb.linearVelocity = direction * _currentSpeed;
     }
 
-    void MoveTrainAutopilot()
+    /*void MoveTrainAutopilot()
     {
         Vector3 targetPos = _trainTrackBuilder.GetCurrentWaypoint().position;
         Vector3 direction = (targetPos - transform.position).normalized;
@@ -88,9 +90,9 @@ public class Train : MonoBehaviour
 
         Quaternion targetRot = Quaternion.LookRotation(direction);
         _rb.MoveRotation(Quaternion.Slerp(_rb.rotation, targetRot, _speedRot * Time.deltaTime));
-    }
+    }*/
 
-    void CheckWaypoint()
+    /*void CheckWaypoint()
     {
         float distanceSqrt = (_trainTrackBuilder.GetCurrentWaypoint().position - transform.position).sqrMagnitude;
 
@@ -98,7 +100,7 @@ public class Train : MonoBehaviour
         {
             _trainTrackBuilder.NextWaypoint();
         }
-    }
+    }*/
 
     public void SetAutopilot()
     {

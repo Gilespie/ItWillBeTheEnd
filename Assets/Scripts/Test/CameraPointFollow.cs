@@ -1,8 +1,10 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class CameraPointFollow : MonoBehaviour
 {
+    [Header("Camera Follow Settings")]
     [SerializeField] private Transform _target;
     [SerializeField] private Transform _lookTarget;
     [SerializeField] private Vector3 _offset;
@@ -10,6 +12,12 @@ public class CameraPointFollow : MonoBehaviour
     [SerializeField] private float _zPosMax = -15f;
     [SerializeField] private float _zPosMin = -11f;
     [SerializeField] private bool _isStaticZ = false;
+
+    [Header("Camera underwater effect")]
+    [SerializeField] private AudioLowPassFilter _filter;
+    [SerializeField] private AudioSource _audioSource;
+    private Volume _currentUnderwaterVolume;
+    private WaterZone _currentWaterZone;
 
     private Vector3 _shakeOffset;
 
@@ -116,6 +124,36 @@ public class CameraPointFollow : MonoBehaviour
                 _lerpRate * Time.fixedDeltaTime
             );
         }*/
+    }
+
+    public void SetVolume(Volume volume)
+    {
+        _currentUnderwaterVolume = volume;
+    }
+
+    public void SetWaterZone(WaterZone zone)
+    {
+        _currentWaterZone = zone;
+    }
+
+    public void EnterWater()
+    {
+        if (_currentUnderwaterVolume != null)
+            _currentUnderwaterVolume.enabled = true;
+
+        _filter.enabled = true;
+        _audioSource.enabled = true;
+    }
+
+    public void ExitWater()
+    {
+        if (_currentUnderwaterVolume != null)
+            _currentUnderwaterVolume.enabled = false;
+
+        _currentUnderwaterVolume = null;
+
+        _filter.enabled = false;
+        _audioSource.enabled = false;
     }
 
     public void SetPointView(Transform point)

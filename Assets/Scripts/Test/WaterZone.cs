@@ -24,8 +24,14 @@ public class WaterZone : MonoBehaviour
 
         if (other.TryGetComponent(out AirManager air))
         {
-            air.SetVolume(_volume);
             air.SetWaterZone(this);
+        }
+
+        if(other.TryGetComponent(out CameraPointFollow camera))
+        {
+            camera.SetWaterZone(this);
+            camera.SetVolume(_volume);
+            camera.EnterWater();
         }
 
         if (other.TryGetComponent(out Player player))
@@ -59,9 +65,11 @@ public class WaterZone : MonoBehaviour
     {
         if (other == null) return;
 
-        if (other.TryGetComponent(out AirManager air))
+        if (other.TryGetComponent(out CameraPointFollow camera))
         {
-            air.SetVolume(null);
+            //camera.SetWaterZone(this);
+            //camera.SetVolume(_volume);
+            camera.ExitWater();
         }
 
         if (other.TryGetComponent(out Player player))
