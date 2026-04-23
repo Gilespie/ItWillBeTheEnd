@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +13,7 @@ public class Switch : MonoBehaviour, IInteractable
     [SerializeField] private Light _light;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private MeshRenderer _meshRenderer;
+    [SerializeField] private float _resetDelay = 10f;
     private Animator _animator;
     private bool _isActive = false;
     private int _count = 0;
@@ -23,6 +25,7 @@ public class Switch : MonoBehaviour, IInteractable
         ActivateLamp(_isActive);
     }
 
+    [ContextMenu("Interact")]
     public void Interact()
     {
         switch (_interactMode)
@@ -42,10 +45,11 @@ public class Switch : MonoBehaviour, IInteractable
     {
         _isActive = !_isActive;
         _light.color = _isActive ? _colorOn : _colorOff;
-        _animator.SetBool("isActive", _isActive);
+        //_animator.SetBool("isActive", _isActive);
         PlaySound(_sfxOn, _sfxOff);
         ActivateLamp(_isActive);
         _event?.Invoke();
+        StartCoroutine(ResetRoutine()); 
         _count++;
     }
 
@@ -74,5 +78,11 @@ public class Switch : MonoBehaviour, IInteractable
         {
             _meshRenderer.material.SetColor("_EmissionColor", _colorOff);
         }
+    }
+
+    IEnumerator ResetRoutine()
+    {
+        yield return new WaitForSeconds(_resetDelay);
+        ResetSwitch();
     }
 }

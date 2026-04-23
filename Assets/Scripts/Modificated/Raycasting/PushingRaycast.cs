@@ -15,10 +15,7 @@ public class PushingRaycast : AbstractRaycast
 
         if (_hit.collider.TryGetComponent(out IPushable pushable))
         {
-                if (pushable.CanPush(this))
-                {
-                    pushable.Pushing(this);
-                }
+            pushable.Pushing(this);
         }
     }
 

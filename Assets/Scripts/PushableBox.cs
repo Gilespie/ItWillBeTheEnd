@@ -2,13 +2,10 @@ using UnityEngine;
 
 public class PushableBox : MonoBehaviour, IPushable
 {
-    
-    [SerializeField] private Transform _pushPoint;
-
-    public bool CanPush(PushingRaycast interactor)
+    /*public bool CanPush(PushingRaycast interactor)
     {
         return true;
-    }
+    }*/
 
     public void Pushing(PushingRaycast interactor)
     {
@@ -18,7 +15,7 @@ public class PushableBox : MonoBehaviour, IPushable
 
         if (pushController != null)
         {
-            pushController.StartPush(this, _pushPoint);
+            pushController.StartPush(this);
         }
     }
 }

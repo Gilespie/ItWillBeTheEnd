@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class PlayerAvatar : MonoBehaviour
 {
@@ -43,15 +42,5 @@ public class PlayerAvatar : MonoBehaviour
     public void DeactiveKinematic()
     {
         _parent.DeactivateRBKinematic();
-    }
-
-    public void TeleportParent()
-    {
-        _parent.TeleportParent();
-    }
-
-    public void ResetClimbing()
-    {
-        _parent.ResetClimbing();
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-
 public class Character : MonoBehaviour, IDamageable
 {
     [SerializeField] bool _isAlive = true;
@@ -23,6 +22,7 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] FallDamage _fallDamage;
     [SerializeField] InputDisabler _inputDisabler;
     [SerializeField] Transform _headPoint;
+    [SerializeField] CharacterView _view;
     MovementAdvance _currentMovement;
     bool _isJumped = false;
     bool _isCrouching = false;
@@ -35,14 +35,11 @@ public class Character : MonoBehaviour, IDamageable
     bool _isGrab = false;
     bool _isFalling = false;
     bool _isPushingNow = false;
-    bool _isClimbing = false;
-    bool _isClimbingNow = false;
     bool _inWaterZone = false;
+    bool _isOnAir = false;
 
     PushableBox _currentBox;
     public PushableBox CurrentBox => _currentBox;
-    Transform _currentPushPoint;
-    Vector3 _climbPos;
     WaterZone _currentWaterZone;
 
 
@@ -70,8 +67,7 @@ public class Character : MonoBehaviour, IDamageable
         _isGround = _groundRaycast.IsRaycasting(-Vector3.up);
         _isSliding = _slopeRaycast.IsRaycasting(-Vector3.up);
         _isGrab = _pushingRaycast.IsRaycasting(_characterRotator.Mesh.forward);
-
-        _isClimbing = _climbRaycast.IsRaycasting(_characterRotator.Mesh.forward);
+        _isOnAir = !_isGround;
 
         if (_currentWaterZone != null)
         {
@@ -86,27 +82,26 @@ public class Character : MonoBehaviour, IDamageable
             }
         }
 
-        if (_inputController.IsJumping && _isClimbing && !_isClimbingNow)
-        {
-            StartClimb();
-        }
-
 
         if (_inputController.IsInteracting && _interactRaycast.IsRaycasting(_characterRotator.Mesh.forward))
         {
             Pressing();
         }
 
-        if (_inputController.IsJumping && _isGround) _isJumped = true;
+        if (_inputController.IsJumping && _isGround && !_isCrouching) 
+            _isJumped = true;
 
         _isCrouching = _inputController.IsCrouching;
         _isSprinting = _inputController.IsSprinting;
 
         
         _animationController.SetFloat(AnimParams.Speed, _currentMovement.CurrentSpeed);
+        _animationController.SetBool(AnimParams.Air, _isOnAir);
 
-        if (_inputController.Direction.sqrMagnitude > 0.1f * 0.1f) _animationController.SetBool(AnimParams.Move, true);
-        else _animationController.SetBool(AnimParams.Move, false);
+        if (_inputController.Direction.sqrMagnitude > 0.1f * 0.1f) 
+            _animationController.SetBool(AnimParams.Move, true);
+        else 
+            _animationController.SetBool(AnimParams.Move, false);
 
         TryStartPush();
 
@@ -185,13 +180,8 @@ public class Character : MonoBehaviour, IDamageable
         EventManager.Unsubscribe(EventType.OnFinishOxygen, InstantKill);
     }
 
-
     void UpdateCollider()
     {
-        /*if (!_isGround && _isFalling)
-        {
-            _characterColliderResizer.SetSize(1f, new Vector3(0, 1.5f, 0)); // воздух
-        }*/
         if (_isCrouching)
         {
             _characterColliderResizer.SetSize(1f, new Vector3(0, 0.5f, 0)); // crouch
@@ -205,19 +195,6 @@ public class Character : MonoBehaviour, IDamageable
     {
         InstantKill();
     }
-
-    /*void DeactivatePlayer(params object[] parameters)
-    {
-        PlayVoice();
-
-   
-        if (!_isOnce)
-        {
-            _spawner.SpawnParticle(transform);
-            StartCoroutine(GameOverPanel());
-        }
-
-    }*/
 
     public void InstantKill(params object[] parameters)
     {
@@ -241,6 +218,8 @@ public class Character : MonoBehaviour, IDamageable
         _ragdoll.ActivateRagdoll();
         _ragdoll.ActivateCollision();
 
+        _view.PlayBloodVFX();
+        //PlayVoice();
         //_spawner.SpawnParticle(transform);
         //StartCoroutine(GameOverPanel());
     }
@@ -263,6 +242,12 @@ public class Character : MonoBehaviour, IDamageable
     void TryJump()
     {
         if (!_isJumped) return;
+
+        if (_isOnAir || _isCrouching)
+        {
+            _isJumped = false;
+            return;
+        }
 
         _animationController.SetTrigger(AnimParams.Jump);
         _currentMovement.Jump();
@@ -333,45 +318,34 @@ public class Character : MonoBehaviour, IDamageable
 
         if (_inputController.IsPushing && _isGrab)
         {
-            _pushingRaycast.InteractPress(); // внутри вызовется StartPush
+            _pushingRaycast.InteractPress();
         }
     }
 
 
-    public void StartPush(PushableBox box, Transform pushPoint)
+    public void StartPush(PushableBox box)
     {
-        /*Debug.Log("Start Pushing");
-        _rb.position = pushPoint.position;
-        transform.forward = box.transform.forward;
-
-        _animationController.SetBool(AnimParams.Push, true);*/
-
         if (_isPushingNow) return;
 
         Debug.Log("Start Pushing");
 
         _isPushingNow = true;
         _currentBox = box;
-        _currentPushPoint = pushPoint;
-        //_characterRotator.ToggleComponent();
-        _rb.position = pushPoint.position;
-        _characterRotator.Mesh.forward = box.transform.right;
+
+        Vector3 dir = (box.transform.position - transform.position).normalized;
+        dir.y = 0f;
+
+        _characterRotator.Mesh.forward = dir;
 
         _animationController.SetBool(AnimParams.Push, true);
     }
 
     public void StopPush()
     {
-        /*Debug.Log("Stop Pushing");
-        _animationController.SetBool(AnimParams.Push, false);*/
-
         if (!_isPushingNow) return;
-
         Debug.Log("Stop Pushing");
-        //_characterRotator.ToggleComponent();
         _isPushingNow = false;
         _currentBox = null;
-        _currentPushPoint = null;
 
         _animationController.SetBool(AnimParams.Push, false);
     }
@@ -380,18 +354,6 @@ public class Character : MonoBehaviour, IDamageable
     {
         yield return new WaitForSeconds(2f);
         _isPressingNow = false;
-    }
-
-    public void StartClimb()
-    {
-        _isClimbingNow = true;
-        _climbPos = _climbRaycast.LedgePoint;
-        _animationController.SetTrigger(AnimParams.Climb);
-    }
-
-    public void ResetClimbing()
-    {
-        _isClimbingNow = false;
     }
 
     public void DeactivateRBKinematic()
@@ -403,10 +365,5 @@ public class Character : MonoBehaviour, IDamageable
     {
         _rb.isKinematic = true;
         _rb.linearVelocity = Vector3.zero;
-    }
-
-    public void TeleportParent()
-    {
-        _rb.position = _climbPos;
     }
 }
