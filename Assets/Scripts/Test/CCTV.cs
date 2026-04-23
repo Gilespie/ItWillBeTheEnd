@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class CCTV : MonoBehaviour
 {
-    [SerializeField] RenderTexture m_Texture;
     [SerializeField] Transform _target;
+    [SerializeField] Transform _cameraBody;
+    [SerializeField] Camera _cam;
 
     private void Update()
     {
         if (_target == null) return;
-        Vector3 direction = _target.position - transform.position;
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        transform.rotation = rotation;
+
+        _cam.transform.LookAt(_target);
+        _cameraBody.transform.LookAt(_target.position);
     }
 }

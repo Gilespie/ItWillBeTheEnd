@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class DronMovement : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class DronMovement : MonoBehaviour
     [SerializeField] float _explosionDistance = 3;
     [SerializeField] LayerMask _damageMask;
 
+    [SerializeField] GameObject _explosiveVFX;
+
     Vector3 _currentTarget;
     Vector3 _lastSeenPosition;
 
@@ -45,7 +48,6 @@ public class DronMovement : MonoBehaviour
         }
         else
         {
-            // если потеряли игрока — идём к последней точке
             if (_lastSeenPosition != Vector3.zero)
             {
                 _currentTarget = _lastSeenPosition;
@@ -153,7 +155,13 @@ public class DronMovement : MonoBehaviour
             }
         }
 
+        SpawnVFX();
         Destroy(gameObject);
+    }
+
+    private void SpawnVFX()
+    {
+        Instantiate(_explosiveVFX, transform.position, Quaternion.identity);
     }
 
     private void OnDrawGizmos()

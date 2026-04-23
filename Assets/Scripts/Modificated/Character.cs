@@ -113,6 +113,8 @@ public class Character : MonoBehaviour, IDamageable
 
     void FixedUpdate()
     {
+        if(!_isAlive) return;
+
         if (_isSwimming)
         {
             ChangeMovement(_movements[3]);
@@ -220,7 +222,6 @@ public class Character : MonoBehaviour, IDamageable
 
         _view.PlayBloodVFX();
         //PlayVoice();
-        //_spawner.SpawnParticle(transform);
         //StartCoroutine(GameOverPanel());
     }
 
@@ -279,11 +280,8 @@ public class Character : MonoBehaviour, IDamageable
         _animationController.SetTrigger(AnimParams.StartSwimm);
 
         ChangeMovement(_movements[3]);
-
-        /*foreach (var particle in _bubleParticles)
-        {
-            particle.Play();
-        }*/
+        
+        _view.PlayBubbleVFX(true);
     }
 
     public void ExitWater()
@@ -294,10 +292,7 @@ public class Character : MonoBehaviour, IDamageable
 
         ChangeMovement(_movements[0]);
 
-        /*foreach (var particle in _bubleParticles)
-        {
-            particle.Stop();
-        }*/
+        _view.PlayBubbleVFX(false);
     }
 
     public void Pressing()

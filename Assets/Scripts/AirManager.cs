@@ -5,6 +5,7 @@ public class AirManager : MonoBehaviour
 {
     [SerializeField] private float _maxOxygen = 10f;
     [SerializeField] private Collider _headCollider;
+    [SerializeField] Material _oxigentFullscreen;
     private bool _isUnderwater = false;
     private float _currentOxygen = 0;
     public float CurrentOxygen => _currentOxygen;
@@ -13,6 +14,7 @@ public class AirManager : MonoBehaviour
     private void Start()
     {
         _currentOxygen = _maxOxygen;
+        _oxigentFullscreen.SetFloat("_Intensity", 1 -  _currentOxygen / _maxOxygen);
     }
 
     private void Update()
@@ -33,6 +35,8 @@ public class AirManager : MonoBehaviour
         if (_isUnderwater)
         {
             _currentOxygen -= Time.deltaTime;
+
+            _oxigentFullscreen.SetFloat("_Intensity", 1 - _currentOxygen / _maxOxygen);
 
             if (_currentOxygen <= 0)
             {
