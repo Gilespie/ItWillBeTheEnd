@@ -22812,12 +22812,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 156.84
+      value: 156.63
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.76
+      value: 9.03
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
@@ -22864,30 +22864,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 4167280743394806330, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.085
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167280743394806330, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.882
+      objectReference: {fileID: 0}
+    - target: {fileID: 8629810120203852069, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.8222297
+      objectReference: {fileID: 0}
     - target: {fileID: 8629810120203852069, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5865
+      value: 2.5762477
       objectReference: {fileID: 0}
     - target: {fileID: 8629810120203852069, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.7318
+      value: 2.1953812
       objectReference: {fileID: 0}
     - target: {fileID: 8629810120203852069, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.06
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 8629810120203852069, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.459
+      value: -0.283
       objectReference: {fileID: 0}
     - target: {fileID: 8629810120203852069, guid: 4e9bfa3d999036b47bba0340b1b7d3f8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.808
+      value: -1.033
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -64303,7 +64318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4b41e0eb4eb7c745b154fb1642d9ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 4785480039332077107}
+  _target: {fileID: 266654912034857427}
   _cameraBody: {fileID: 428645527}
   _cam: {fileID: 1892745466}
 --- !u!1001 &1718163447
@@ -73337,9 +73352,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 17
+  near clip plane: 0.01
+  far clip plane: 50
+  field of view: 15
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
