@@ -24,7 +24,7 @@ MonoBehaviour:
     x: 631
     y: -190
     width: 1711
-    height: 3119
+    height: 3123
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1013,7 +1013,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"obj":{"fileID":2800000,"guid":"276d9e395ae18fe40a9b4988549f2349","type":3}}'
+      m_SerializableObject: '{"obj":{"fileID":2800000,"guid":"348ea8333a427764199124cde8ef953f","type":3}}'
     m_Space: -1
   m_Property:
     name: mainTexture
@@ -4760,7 +4760,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: 
+      m_SerializableObject: '{"obj":{"fileID":2800000,"guid":"8615bd73174dcc94391ae5d8590958bf","type":3}}'
     m_Space: -1
   m_Property:
     name: mainTexture
@@ -6417,7 +6417,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614967}
   - {fileID: 8926484042661614971}
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_MasterSlot: {fileID: 8926484042661614962}
   m_MasterData:
@@ -6426,7 +6426,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.OrientedBox, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"center":{"x":1.350000023841858,"y":2.5656707286834719,"z":0.0},"angles":{"x":0.0,"y":0.0,"z":0.0},"size":{"x":15.300000190734864,"y":0.0,"z":10.0}}'
+      m_SerializableObject: '{"center":{"x":5.3976593017578129,"y":4.736419677734375,"z":-1.0817639827728272},"angles":{"x":0.0,"y":0.0,"z":0.0},"size":{"x":0.5,"y":0.0,"z":12.163528442382813}}'
     m_Space: 0
   m_Property:
     name: Box
@@ -6454,7 +6454,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614965}
   - {fileID: 8926484042661614966}
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_MasterSlot: {fileID: 8926484042661614962}
   m_MasterData:

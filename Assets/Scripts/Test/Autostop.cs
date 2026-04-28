@@ -32,6 +32,7 @@ public class Autostop : MonoBehaviour
     public void ChangeStateImmediatly()
     { 
         _animator.SetBool("isClosing", true);
+        _isClosing = true;
         _timer = 0f;
     }
 
