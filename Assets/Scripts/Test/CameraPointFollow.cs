@@ -8,10 +8,14 @@ public class CameraPointFollow : MonoBehaviour
     [SerializeField] private Transform _target;
     [SerializeField] private Transform _lookTarget;
     [SerializeField] private Vector3 _offset;
-    [SerializeField] private float _lerpRate = 3f;
     [SerializeField] private float _zPosMax = -15f;
     [SerializeField] private float _zPosMin = -11f;
     [SerializeField] private bool _isStaticZ = false;
+
+    [Header("Lerping Settings")]
+    [SerializeField] bool _lerp = false;
+    [SerializeField] float _lerpRate = 3f;
+    [SerializeField] float _moveTowardsRate = 3f;
 
     [Header("Camera underwater effect")]
     [SerializeField] private AudioLowPassFilter _filter;
@@ -21,7 +25,7 @@ public class CameraPointFollow : MonoBehaviour
 
     private Vector3 _shakeOffset;
 
-    private Transform _fixedPoint = null;
+    private Transform _cameraFixedPoint = null;
     bool _zoomed = false;
 
     private void Awake()
@@ -49,9 +53,9 @@ public class CameraPointFollow : MonoBehaviour
     {
         Vector3 targetPos;
 
-        if (_fixedPoint != null)
+        if (_cameraFixedPoint != null)
         {
-            targetPos = _fixedPoint.position;
+            targetPos = _cameraFixedPoint.position;
         }
         else
         {
@@ -61,11 +65,22 @@ public class CameraPointFollow : MonoBehaviour
 
         }
 
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            targetPos,
-            Time.deltaTime * _lerpRate
-        );
+        if(_lerp)
+        {
+            transform.position = Vector3.Lerp(
+                transform.position,
+                targetPos,
+                Time.deltaTime * _lerpRate
+            );
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPos,
+                Time.deltaTime * _moveTowardsRate
+            );
+        }
 
         if (_lookTarget != null)
         {
@@ -158,7 +173,7 @@ public class CameraPointFollow : MonoBehaviour
 
     public void SetPointView(Transform point)
     {
-        _fixedPoint = point;
+        _cameraFixedPoint = point;
     }
 
     public void SetTargetView(Transform target)
@@ -168,7 +183,7 @@ public class CameraPointFollow : MonoBehaviour
 
     public void ResetToFollow()
     {
-        _fixedPoint = null;
+        _cameraFixedPoint = null;
         _lookTarget = _target;
         _zoomed = false;
     }

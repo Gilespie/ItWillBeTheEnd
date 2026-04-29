@@ -88,9 +88,12 @@ public class Character : MonoBehaviour, IDamageable
             Pressing();
         }
 
-        if (_inputController.IsJumping && _isGround && !_isCrouching) 
-            _isJumped = true;
-
+        if (_inputController.IsJumping && _isGround && !_isCrouching)
+        {
+            _animationController.SetTrigger(AnimParams.Jump);
+            _currentMovement.Jump();
+        }    
+            
         _isCrouching = _inputController.IsCrouching;
         _isSprinting = _inputController.IsSprinting;
 
@@ -140,7 +143,7 @@ public class Character : MonoBehaviour, IDamageable
             ChangeMovement(_movements[0]);
         }
 
-        TryJump();
+        //TryJump();
         TryCrouching();
         SlideCharacter();
         UpdateCollider();
@@ -257,7 +260,7 @@ public class Character : MonoBehaviour, IDamageable
 
     void TryCrouching()
     {
-        if (!_groundRaycast.IsRaycasting(-Vector3.up)) return;
+        if (!_isGround) return;
 
         _animationController.SetBool(AnimParams.Crouch, _isCrouching);
     }
