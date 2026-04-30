@@ -34,6 +34,11 @@ public class PlayerAvatar : MonoBehaviour
         _parent.PlayFootStep();
     }*/
 
+    public void PlayJump()
+    {
+        _parent.PlayJump();
+    }
+
     public void ActivateKinematic()
     {
         _parent.ActivateRBKinematic();

@@ -8,6 +8,7 @@ public class Train : MonoBehaviour
     [SerializeField] float _brakeForce = 5f;
     [SerializeField] float _maxLinearSpeed = 10f;
     [SerializeField] float _drag = 2f;
+    [SerializeField] AudioSource _audioSource;
     float _currentSpeed = 0f;
 
     void FixedUpdate()
@@ -23,6 +24,7 @@ public class Train : MonoBehaviour
             ApplyDrag();
             MoveTrain();
         }
+        ChangePitch();
     }
 
     public void IncrementSpeed()
@@ -68,5 +70,11 @@ public class Train : MonoBehaviour
         {
             other.transform.SetParent(null);
         }
+    }
+
+    private void ChangePitch()
+    {
+        var normalizeSpeed = _currentSpeed / _maxLinearSpeed;
+        _audioSource.pitch = Mathf.Lerp(1f, 2f, normalizeSpeed);
     }
 }

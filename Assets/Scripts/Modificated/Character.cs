@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -12,7 +13,6 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] SlopeRaycast _slopeRaycast;
     [SerializeField] InteractRaycast _interactRaycast;
     [SerializeField] PushingRaycast _pushingRaycast;
-    [SerializeField] ClimbingRaycast _climbRaycast;
     [SerializeField] Rigidbody _rb;
     [SerializeField] MovementAdvance[] _movements;//0 - walk, 1 - sprint, 2 - crouch, 3 - swim, 4 - slope, 5 - push
     [SerializeField] CharacterRotator _characterRotator;
@@ -23,8 +23,10 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] InputDisabler _inputDisabler;
     [SerializeField] Transform _headPoint;
     [SerializeField] CharacterView _view;
+
+    [SerializeField] PhysicsMaterial _slideMaterial;
+
     MovementAdvance _currentMovement;
-    bool _isJumped = false;
     bool _isCrouching = false;
     bool _isSliding = false;
     bool _isSprinting = false;
@@ -68,6 +70,8 @@ public class Character : MonoBehaviour, IDamageable
         _isSliding = _slopeRaycast.IsRaycasting(-Vector3.up);
         _isGrab = _pushingRaycast.IsRaycasting(_characterRotator.Mesh.forward);
         _isOnAir = !_isGround;
+
+        ChangePhysicMaterial();
 
         if (_currentWaterZone != null)
         {
@@ -143,7 +147,6 @@ public class Character : MonoBehaviour, IDamageable
             ChangeMovement(_movements[0]);
         }
 
-        //TryJump();
         TryCrouching();
         SlideCharacter();
         UpdateCollider();
@@ -243,26 +246,22 @@ public class Character : MonoBehaviour, IDamageable
         _characterRotator.Initialize(_slopeRaycast);
     }
 
-    void TryJump()
-    {
-        if (!_isJumped) return;
-
-        if (_isOnAir || _isCrouching)
-        {
-            _isJumped = false;
-            return;
-        }
-
-        _animationController.SetTrigger(AnimParams.Jump);
-        _currentMovement.Jump();
-        _isJumped = false;
-    }
-
     void TryCrouching()
     {
         if (!_isGround) return;
 
         _animationController.SetBool(AnimParams.Crouch, _isCrouching);
+    }
+
+    void ChangePhysicMaterial()
+    {
+        if (_isGround)
+        {
+            _col.material = null;
+            return;
+        }
+
+        _col.material = _slideMaterial;
     }
 
     void SlideCharacter()
@@ -363,5 +362,10 @@ public class Character : MonoBehaviour, IDamageable
     {
         _rb.isKinematic = true;
         _rb.linearVelocity = Vector3.zero;
+    }
+
+    public void PlayJump()
+    {
+        _currentMovement.Jump();
     }
 }

@@ -93,7 +93,7 @@ Material:
     - _DstBlendAlpha: 0
     - _IsAlphaClipping: 0
     - _Metallic: 0
-    - _NormalIntensity: 0
+    - _NormalIntensity: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1

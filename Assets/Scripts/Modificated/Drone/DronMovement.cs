@@ -24,6 +24,15 @@ public class DronMovement : MonoBehaviour
     [SerializeField] float _explosionDistance = 3;
     [SerializeField] LayerMask _damageMask;
 
+    [Header("SFX")]
+    [SerializeField] AudioClip _detectClip;
+    [SerializeField] AudioSource _detectAudioSource;
+    [SerializeField] private float _minBeepInterval = 0.1f; 
+    [SerializeField] private float _maxBeepInterval = 2f;
+    [SerializeField] private float _maxBeepDistance = 15f;
+
+    private float _beepTimer;
+
     [SerializeField] GameObject _explosiveVFX;
 
     Vector3 _currentTarget;
@@ -63,6 +72,8 @@ public class DronMovement : MonoBehaviour
         MoveToTarget();
 
         CheckExplosion();
+
+        HandleBeepSound();
     }
 
     private Vector3 GetRandomTarget()
@@ -162,6 +173,27 @@ public class DronMovement : MonoBehaviour
     private void SpawnVFX()
     {
         Instantiate(_explosiveVFX, transform.position, Quaternion.identity);
+    }
+
+    void HandleBeepSound()
+    {
+        if (!_seePlayer) return;
+
+        float distance = Vector3.Distance(transform.position, _player.position);
+
+        // нормализация (0 = близко, 1 = далеко)
+        float t = Mathf.Clamp01(distance / _maxBeepDistance);
+
+        // чем ближе, тем МЕНЬШЕ интервал
+        float interval = Mathf.Lerp(_minBeepInterval, _maxBeepInterval, t);
+
+        _beepTimer -= Time.deltaTime;
+
+        if (_beepTimer <= 0f)
+        {
+            _detectAudioSource.PlayOneShot(_detectClip);
+            _beepTimer = interval;
+        }
     }
 
     private void OnDrawGizmos()
