@@ -4,7 +4,6 @@ public class Lamp : MonoBehaviour
 {
     [SerializeField] Rigidbody _rb;
     
-
     public void TakeImpulse(float magnitude)
     {
         if(_rb != null) _rb.AddForce(_rb.position *  magnitude, ForceMode.Impulse);

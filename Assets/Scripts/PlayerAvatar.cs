@@ -9,11 +9,6 @@ public class PlayerAvatar : MonoBehaviour
         _parent = GetComponentInParent<Character>();    
     }
 
-    /*public void Pushing()
-    {
-        _parent.Pushing();
-    }*/
-
     public void Pressing()
     {
         _parent.Pressing();
@@ -27,11 +22,6 @@ public class PlayerAvatar : MonoBehaviour
     public void DeactivateControl()
     {
         _parent.DeactivateControl();
-    }
-
-    public void PlayFootStep()
-    {
-        _parent.PlayFootStep();
     }*/
 
     public void PlayJump()

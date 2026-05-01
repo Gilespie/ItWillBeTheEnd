@@ -59,19 +59,18 @@ public class Character : MonoBehaviour, IDamageable
     }
 
     void Update()
-    {
+    {  
         if (!_isAlive) return;
 
         _isFalling = _rb.linearVelocity.y < -0.1f;
-
+      
         _fallDamage.Tick(_isGround, _isSwimming, _isSliding, _rb.linearVelocity.y);
+        Debug.Log(_isFalling);
 
         _isGround = _groundRaycast.IsRaycasting(-Vector3.up);
         _isSliding = _slopeRaycast.IsRaycasting(-Vector3.up);
         _isGrab = _pushingRaycast.IsRaycasting(_characterRotator.Mesh.forward);
         _isOnAir = !_isGround;
-
-        
 
         if (_currentWaterZone != null)
         {
@@ -85,7 +84,6 @@ public class Character : MonoBehaviour, IDamageable
                 ExitWater();
             }
         }
-
 
         if (_inputController.IsInteracting && _interactRaycast.IsRaycasting(_characterRotator.Mesh.forward))
         {
@@ -105,9 +103,7 @@ public class Character : MonoBehaviour, IDamageable
             _currentMovement.Jump();
             ChangePhysicMaterial(_slideMaterial);
         }
-
-
-            
+   
         _isCrouching = _inputController.IsCrouching;
         _isSprinting = _inputController.IsSprinting;
 

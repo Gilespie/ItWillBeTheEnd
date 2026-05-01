@@ -17,9 +17,16 @@ public class FallDamage : MonoBehaviour
             return;
         }
 
-        if (!isGrounded && !isSwimming)
+        if (isSlope)
         {
-            if (!isSlope && velocityY < _maxFallSpeed) _maxFallSpeed = velocityY;
+            _maxFallSpeed = 0f;
+            _wasGrounded = isGrounded;
+            return;
+        }
+
+        if (!isGrounded)
+        {
+            if (velocityY < _maxFallSpeed) _maxFallSpeed = velocityY;
         }
 
         if (isGrounded && !_wasGrounded)
@@ -32,7 +39,7 @@ public class FallDamage : MonoBehaviour
 
             _maxFallSpeed = 0f;
         }
-
+        
         _wasGrounded = isGrounded;
     }
 }

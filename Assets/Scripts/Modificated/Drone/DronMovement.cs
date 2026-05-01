@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -13,16 +14,26 @@ public class DronMovement : MonoBehaviour
     Vector3 _currentPosTarget;
 
     [Header("AI")]
+    [SerializeField] private DroneStates _droneStates;
     [SerializeField] private Transform _player;
     [SerializeField] private float _viewDistance = 10f;
+    [SerializeField] private float _fieldOfViewAngle = 90f;
+    [SerializeField] private Transform _eyePoint;
     [SerializeField] private LayerMask _visionMask;
 
-    [Header("Debug")]
+    [Header("AI - Light")]
+    [SerializeField] private Light _droneLight;
+    [SerializeField] private Color _patrolColor = Color.cyan;
+    [SerializeField] private Color _chaseColor = Color.red;
+    [SerializeField] private Color _searchColor = Color.yellow;
+
+    [Header("Explosion")]
     [SerializeField] float _explosionForce = 3000;
     [SerializeField] float _explosionUpForce = 1;
     [SerializeField] float _explosionRadius = 5;
     [SerializeField] float _explosionDistance = 3;
     [SerializeField] LayerMask _damageMask;
+    [SerializeField] GameObject _explosiveVFX;
 
     [Header("SFX")]
     [SerializeField] AudioClip _detectClip;
@@ -33,17 +44,18 @@ public class DronMovement : MonoBehaviour
 
     private float _beepTimer;
 
-    [SerializeField] GameObject _explosiveVFX;
 
     Vector3 _currentTarget;
     Vector3 _lastSeenPosition;
 
     bool _isExploded = false;
+    DroneStates _state = DroneStates.Patrol;
     bool _seePlayer = false;
 
     private void Start()
     {
         _currentTarget = GetRandomTarget();
+        SetLightColor(_patrolColor);
     }
 
     private void FixedUpdate()
@@ -74,6 +86,89 @@ public class DronMovement : MonoBehaviour
         CheckExplosion();
 
         HandleBeepSound();
+    }
+
+    void UpdateState()
+    {
+        bool sees = CanSeePlayer();
+
+        switch (_state)
+        {
+            case DroneStates.Patrol:
+                if (sees) EnterChase();
+                break;
+
+            case DroneStates.Chase:
+                if (sees)
+                {
+                    _lastSeenPosition = _player.position;
+                    _currentTarget = _player.position;
+                }
+                else
+                {
+                    EnterInvestigate();
+                }
+                break;
+
+            case DroneStates.Investigate:
+                if (sees)
+                {
+                    EnterChase();
+                }
+                else if ((transform.position - _lastSeenPosition).sqrMagnitude < _stopDistance * _stopDistance)
+                {
+                    EnterPatrol();
+                }
+                else
+                {
+                    _currentTarget = _lastSeenPosition;
+                }
+                break;
+        }
+    }
+
+    void EnterChase()
+    {
+        _state = DroneStates.Chase;
+        SetLightColor(_chaseColor);
+    }
+
+    void EnterInvestigate()
+    {
+        _state = DroneStates.Investigate;
+        _currentTarget = _lastSeenPosition;
+        SetLightColor(_searchColor);
+    }
+
+    void EnterPatrol()
+    {
+        _state = DroneStates.Patrol;
+        _lastSeenPosition = Vector3.zero;
+        _currentTarget = GetRandomTarget();
+        SetLightColor(_patrolColor);
+    }
+
+    bool CanSeePlayer()
+    {
+        Transform eye = _eyePoint != null ? _eyePoint : transform;
+        Vector3 toPlayer = _player.position - eye.position;
+        float distance = toPlayer.magnitude;
+
+        // дальность
+        if (distance > _viewDistance) return false;
+
+        // угол конуса
+        float angle = Vector3.Angle(transform.forward, toPlayer);
+        if (angle > _fieldOfViewAngle * 0.5f) return false;
+
+        // луч до персонажа — если что-то перекрывает, не видим
+        if (Physics.Raycast(eye.position, toPlayer.normalized, out RaycastHit hit, distance, _visionMask))
+        {
+            // попали в персонажа (или его коллайдер)
+            return hit.transform == _player || hit.transform.IsChildOf(_player);
+        }
+
+        return false;
     }
 
     private Vector3 GetRandomTarget()
@@ -131,9 +226,9 @@ public class DronMovement : MonoBehaviour
             _rb.AddForce(transform.forward * speed, ForceMode.Force);
         }
 
-        float sqrDistance = (_currentTarget - transform.position).sqrMagnitude;
-
-        if (sqrDistance < _stopDistance * _stopDistance)
+        // patrol: когда дошли до случайной точки — выбираем новую
+        if (_state == DroneStates.Patrol &&
+            (_currentTarget - transform.position).sqrMagnitude < _stopDistance * _stopDistance)
         {
             _currentTarget = GetRandomTarget();
         }
@@ -170,6 +265,12 @@ public class DronMovement : MonoBehaviour
         Destroy(gameObject);
     }
 
+    void SetLightColor(Color color)
+    {
+        if (_droneLight != null)
+            _droneLight.color = color;
+    }
+
     private void SpawnVFX()
     {
         Instantiate(_explosiveVFX, transform.position, Quaternion.identity);
@@ -198,11 +299,23 @@ public class DronMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * _viewDistance);
+        // конус обзора
+        Transform eye = _eyePoint != null ? _eyePoint : transform;
+        Gizmos.color = Color.cyan;
+
+        float halfFOV = _fieldOfViewAngle * 0.5f;
+        Quaternion leftRay = Quaternion.AngleAxis(-halfFOV, Vector3.up);
+        Quaternion rightRay = Quaternion.AngleAxis(halfFOV, Vector3.up);
+        Gizmos.DrawRay(eye.position, leftRay * transform.forward * _viewDistance);
+        Gizmos.DrawRay(eye.position, rightRay * transform.forward * _viewDistance);
+        Gizmos.DrawRay(eye.position, transform.forward * _viewDistance);
+
+        // текущая цель
+        Gizmos.color = Color.white;
         Gizmos.DrawSphere(_currentTarget, 0.2f);
 
-        Gizmos.color = Color.green;
+        // радиус взрыва
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _explosionRadius);
     }
 }

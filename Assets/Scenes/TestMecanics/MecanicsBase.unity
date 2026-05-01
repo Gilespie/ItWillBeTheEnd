@@ -271,12 +271,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 2db38dce8e0103b4a9d0168b61f2d4e1,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.2738353
+      value: 1.2679518
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2db38dce8e0103b4a9d0168b61f2d4e1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 258.882
+      value: 259.1949
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2db38dce8e0103b4a9d0168b61f2d4e1,
         type: 3}
@@ -66578,7 +66578,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 77a89c26d70ac6342bd5ea4ffcf3a66e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.68
+      value: 4.258
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77a89c26d70ac6342bd5ea4ffcf3a66e,
         type: 3}
@@ -66906,11 +66906,18 @@ MonoBehaviour:
   _rb: {fileID: 1204315883}
   _maxSpeedLimit: 5
   _stopDistance: 1
+  _droneStates: 0
   _player: {fileID: 6478944641418707031}
   _viewDistance: 10.94
+  _fieldOfViewAngle: 90
+  _eyePoint: {fileID: 0}
   _visionMask:
     serializedVersion: 2
     m_Bits: 128
+  _droneLight: {fileID: 0}
+  _patrolColor: {r: 0, g: 0.8040824, b: 1, a: 1}
+  _chaseColor: {r: 1, g: 0, b: 0, a: 1}
+  _searchColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _explosionForce: 3000
   _explosionUpForce: 1
   _explosionRadius: 5
@@ -136125,7 +136132,7 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 994552223f6ad4640ad1a19573b395a9, type: 3}
   - material: 4
     clip: {fileID: 8300000, guid: 2fe03f691d3e9b74895581684c2795e9, type: 3}
-  _audioSource: {fileID: 0}
+  _audioSource: {fileID: 919132149178076030}
 --- !u!114 &919132149178076032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177282,7 +177289,7 @@ Transform:
   m_GameObject: {fileID: 2376034102767613756}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.77, y: 27.1, z: -1.81}
+  m_LocalPosition: {x: 0.77, y: 27.1, z: -3.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
