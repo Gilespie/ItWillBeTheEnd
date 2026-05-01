@@ -71,7 +71,7 @@ public class Character : MonoBehaviour, IDamageable
         _isGrab = _pushingRaycast.IsRaycasting(_characterRotator.Mesh.forward);
         _isOnAir = !_isGround;
 
-        ChangePhysicMaterial();
+        
 
         if (_currentWaterZone != null)
         {
@@ -92,11 +92,21 @@ public class Character : MonoBehaviour, IDamageable
             Pressing();
         }
 
-        if (_inputController.IsJumping && _isGround && !_isCrouching)
+        ChangePhysicMaterial(null);
+
+        if (_inputController.IsJumping && _isGround && !_isCrouching && _currentMovement.CurrentSpeed < 0.1f)
+        {
+            _animationController.SetTrigger(AnimParams.Jump);
+            ChangePhysicMaterial(_slideMaterial);
+        }    
+        else if(_inputController.IsJumping && _isGround && !_isCrouching && _currentMovement.CurrentSpeed > 0.1f)
         {
             _animationController.SetTrigger(AnimParams.Jump);
             _currentMovement.Jump();
-        }    
+            ChangePhysicMaterial(_slideMaterial);
+        }
+
+
             
         _isCrouching = _inputController.IsCrouching;
         _isSprinting = _inputController.IsSprinting;
@@ -253,20 +263,15 @@ public class Character : MonoBehaviour, IDamageable
         _animationController.SetBool(AnimParams.Crouch, _isCrouching);
     }
 
-    void ChangePhysicMaterial()
+    void ChangePhysicMaterial(PhysicsMaterial mat)
     {
-        if (_isGround)
-        {
-            _col.material = null;
-            return;
-        }
-
-        _col.material = _slideMaterial;
+        _col.material = mat;
     }
 
     void SlideCharacter()
     {
         _animationController.SetBool(AnimParams.Slide, _isSliding);
+        _view.PlayDustVFX(_isSliding);
     }
 
     public void SetWaterZone(WaterZone waterZone)

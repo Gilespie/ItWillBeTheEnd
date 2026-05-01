@@ -4,6 +4,7 @@ public class CharacterView : MonoBehaviour
 {
     [SerializeField] ParticleSystem _bloodVFX;
     [SerializeField] ParticleSystem[] _bubbleVFX;
+    [SerializeField] ParticleSystem _dustVFX;
 
     public void PlayBloodVFX()
     {
@@ -26,5 +27,18 @@ public class CharacterView : MonoBehaviour
                 particle.Stop();
             }
         }
+    }
+
+    public void PlayDustVFX(bool value)
+    {
+        if (value)
+        {
+            _dustVFX.Play();
+        }
+        else
+        {
+            _dustVFX.Stop();
+        }
+
     }
 }

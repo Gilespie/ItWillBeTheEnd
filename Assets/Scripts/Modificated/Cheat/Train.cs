@@ -9,22 +9,33 @@ public class Train : MonoBehaviour
     [SerializeField] float _maxLinearSpeed = 10f;
     [SerializeField] float _drag = 2f;
     [SerializeField] AudioSource _audioSource;
+    [SerializeField] AudioClip _trainSound;
+    [SerializeField] bool _isKinematic = true;
     float _currentSpeed = 0f;
+
 
     void FixedUpdate()
     {
-        if (_isAutopilot)
+        if (_isKinematic)
         {
-            IncrementSpeed();
-            ApplyDrag();
-            MoveTrain();
+            if (_isAutopilot)
+            {
+                IncrementSpeed();
+                ApplyDrag();
+                MoveTrain();
+            }
+            else
+            {
+                ApplyDrag();
+                MoveTrain();
+            }
+            ChangePitch();
         }
         else
         {
-            ApplyDrag();
-            MoveTrain();
+            _rb.isKinematic = false;
         }
-        ChangePitch();
+        
     }
 
     public void IncrementSpeed()
@@ -48,7 +59,8 @@ public class Train : MonoBehaviour
     void MoveTrain()
     {
         Vector3 direction = transform.forward;
-        _rb.linearVelocity = direction * _currentSpeed;
+        //_rb.linearVelocity = direction * _currentSpeed;
+        _rb.MovePosition(_rb.position + direction * _currentSpeed * Time.fixedDeltaTime);
     }
 
     public void SetAutopilot()
@@ -56,7 +68,7 @@ public class Train : MonoBehaviour
         _isAutopilot = true;
     }
 
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if(other.TryGetComponent(out Character character))
         {
@@ -70,7 +82,7 @@ public class Train : MonoBehaviour
         {
             other.transform.SetParent(null);
         }
-    }
+    }*/
 
     private void ChangePitch()
     {

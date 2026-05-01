@@ -14,6 +14,7 @@ public abstract class MovementAdvance : MonoBehaviour
 
     protected Rigidbody _rb;
     protected Vector3 _direction;
+    protected Vector3 _lastDirection;
 
     protected float _currentSpeed;
     public float CurrentSpeed => _currentSpeed;
@@ -32,7 +33,7 @@ public abstract class MovementAdvance : MonoBehaviour
 
     public virtual void Jump()
     {
-        //_rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
-        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, _jumpForce, _rb.linearVelocity.z);
+        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
+        _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
     }
 }
