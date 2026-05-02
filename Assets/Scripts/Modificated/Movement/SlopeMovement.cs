@@ -13,7 +13,5 @@ public class SlopeMovement : MovementAdvance
 
         _direction = transform.forward * dir.z;
         _rb.MovePosition(_rb.position + _direction.normalized * _speedMovement * Time.fixedDeltaTime);
-
-        _rb.maxLinearVelocity = _slopeRaycast.IsRaycasting(-Vector3.up) ? 15f : float.MaxValue;
     }
 }

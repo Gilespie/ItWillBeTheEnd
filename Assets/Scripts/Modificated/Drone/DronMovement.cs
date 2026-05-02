@@ -43,14 +43,11 @@ public class DronMovement : MonoBehaviour
     [SerializeField] private float _maxBeepDistance = 15f;
 
     private float _beepTimer;
-
-
     Vector3 _currentTarget;
     Vector3 _lastSeenPosition;
 
     bool _isExploded = false;
     DroneStates _state = DroneStates.Patrol;
-    bool _seePlayer = false;
 
     private void Start()
     {
@@ -60,31 +57,9 @@ public class DronMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        CheckPlayer();
-
-        if (_seePlayer)
-        {
-            _currentTarget = _player.position;
-            _lastSeenPosition = _player.position;
-        }
-        else
-        {
-            if (_lastSeenPosition != Vector3.zero)
-            {
-                _currentTarget = _lastSeenPosition;
-
-                if ((transform.position - _lastSeenPosition).sqrMagnitude < _stopDistance * _stopDistance)
-                {
-                    _lastSeenPosition = Vector3.zero;
-                    _currentTarget = GetRandomTarget();
-                }
-            }
-        }
-
+        UpdateState();
         MoveToTarget();
-
         CheckExplosion();
-
         HandleBeepSound();
     }
 
@@ -154,17 +129,13 @@ public class DronMovement : MonoBehaviour
         Vector3 toPlayer = _player.position - eye.position;
         float distance = toPlayer.magnitude;
 
-        // дальность
         if (distance > _viewDistance) return false;
 
-        // угол конуса
         float angle = Vector3.Angle(transform.forward, toPlayer);
         if (angle > _fieldOfViewAngle * 0.5f) return false;
 
-        // луч до персонажа — если что-то перекрывает, не видим
         if (Physics.Raycast(eye.position, toPlayer.normalized, out RaycastHit hit, distance, _visionMask))
         {
-            // попали в персонажа (или его коллайдер)
             return hit.transform == _player || hit.transform.IsChildOf(_player);
         }
 
@@ -173,33 +144,8 @@ public class DronMovement : MonoBehaviour
 
     private Vector3 GetRandomTarget()
     {
-        return new Vector3(Random.Range(-10f, 10f), Random.Range(1f ,5f), Random.Range(-10f, 10f));
-    }
-
-    void CheckPlayer()
-    {
-        Vector3 direction = (_player.position - transform.position);
-        float distance = direction.magnitude;
-
-        if (distance > _viewDistance)
-        {
-            _seePlayer = false;
-            return;
-        }
-
-        direction.Normalize();
-
-        // Raycast на видимость
-        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, _viewDistance, _visionMask))
-        {
-            if (hit.transform == _player)
-            {
-                _seePlayer = true;
-                return;
-            }
-        }
-
-        _seePlayer = false;
+        Vector3 pos = transform.position + Random.insideUnitSphere * 5f;
+        return pos;
     }
 
     void CheckExplosion()
@@ -278,14 +224,10 @@ public class DronMovement : MonoBehaviour
 
     void HandleBeepSound()
     {
-        if (!_seePlayer) return;
+        if (_state != DroneStates.Chase) return;
 
         float distance = Vector3.Distance(transform.position, _player.position);
-
-        // нормализация (0 = близко, 1 = далеко)
         float t = Mathf.Clamp01(distance / _maxBeepDistance);
-
-        // чем ближе, тем МЕНЬШЕ интервал
         float interval = Mathf.Lerp(_minBeepInterval, _maxBeepInterval, t);
 
         _beepTimer -= Time.deltaTime;

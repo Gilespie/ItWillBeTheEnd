@@ -74,7 +74,8 @@ Material:
     - _Cull: 0
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _HeightMovement: 1
+    - _HeightMovement: 0.99
+    - _NoiseIntensity: 1
     - _NoiseScale: 1
     - _NormalIntensity: 1
     - _QueueControl: 0

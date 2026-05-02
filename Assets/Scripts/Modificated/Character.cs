@@ -35,7 +35,6 @@ public class Character : MonoBehaviour, IDamageable
     bool _isGround = false;
     bool _isPressingNow = false;
     bool _isGrab = false;
-    bool _isFalling = false;
     bool _isPushingNow = false;
     bool _inWaterZone = false;
     bool _isOnAir = false;
@@ -62,15 +61,14 @@ public class Character : MonoBehaviour, IDamageable
     {  
         if (!_isAlive) return;
 
-        _isFalling = _rb.linearVelocity.y < -0.1f;
-      
         _fallDamage.Tick(_isGround, _isSwimming, _isSliding, _rb.linearVelocity.y);
-        Debug.Log(_isFalling);
 
         _isGround = _groundRaycast.IsRaycasting(-Vector3.up);
         _isSliding = _slopeRaycast.IsRaycasting(-Vector3.up);
         _isGrab = _pushingRaycast.IsRaycasting(_characterRotator.Mesh.forward);
         _isOnAir = !_isGround;
+
+        _rb.maxLinearVelocity = _slopeRaycast.IsRaycasting(-Vector3.up) ? 15f : float.MaxValue;
 
         if (_currentWaterZone != null)
         {
@@ -198,11 +196,11 @@ public class Character : MonoBehaviour, IDamageable
     {
         if (_isCrouching)
         {
-            _characterColliderResizer.SetSize(1f, new Vector3(0, 0.5f, 0)); // crouch
+            _characterColliderResizer.SetSize(1f, new Vector3(0, 0.5f, 0)); 
         }
         else
         {
-            _characterColliderResizer.SetSize(2f, new Vector3(0, 1f, 0)); // обычный
+            _characterColliderResizer.SetSize(2f, new Vector3(0, 1f, 0)); 
         }
     }
     void HandleFallDeath(params object[] arg)

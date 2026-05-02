@@ -46,7 +46,7 @@ Material:
     - _DecalMeshDepthBias: 0
     - _DecalMeshViewBias: 0
     - _DrawOrder: 0
-    - _Intensity: 24.1
+    - _Intensity: 30
     - _NormalAlpha: 0.117
     - _NormalStrenght: 1
     m_Colors:

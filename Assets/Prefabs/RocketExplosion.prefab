@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 5341153353076126632}
   - component: {fileID: 4735976520982011529}
   - component: {fileID: 5128946366572469774}
+  - component: {fileID: -8952885341913379112}
   m_Layer: 0
   m_Name: RocketExplosion
   m_TagString: Untagged
@@ -568,7 +569,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 7926b235e15356245b08553ec703682a, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -577,7 +578,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 100
+  MinDistance: 10
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -653,3 +654,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-8952885341913379112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372261309149600535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6d2e1b4b7a25b248b80895078da3028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSource: {fileID: 5128946366572469774}
+  _delayTime: 2

@@ -14,32 +14,27 @@ public class FallDamage : MonoBehaviour
         if (isSwimming)
         {
             _maxFallSpeed = 0f;
+            Debug.Log("swim return");
             return;
         }
 
-        if (isSlope)
+        if (!isGrounded && !isSwimming)
         {
-            _maxFallSpeed = 0f;
-            _wasGrounded = isGrounded;
-            return;
-        }
-
-        if (!isGrounded)
-        {
-            if (velocityY < _maxFallSpeed) _maxFallSpeed = velocityY;
+            if (!isSlope && velocityY < _maxFallSpeed) _maxFallSpeed = velocityY;
         }
 
         if (isGrounded && !_wasGrounded)
         {
             if (_maxFallSpeed < _fallDamageThreshold)
             {
+                Debug.Log("Fall damage triggered");
                 _fallDamage = Mathf.Abs(_maxFallSpeed + _fallDamageThreshold) * _fallDamageMultiplier;
                 EventManager.Trigger(EventType.OnFalled);
             }
 
             _maxFallSpeed = 0f;
         }
-        
+
         _wasGrounded = isGrounded;
     }
 }
