@@ -50,13 +50,13 @@ Material:
     - _CastShadows: 0
     - _Cull: 0
     - _DepthColor: 10
-    - _DepthDistance: 46
+    - _DepthDistance: 28
     - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _FoamAmount: 0
     - _FoamCutoff: -1.31
     - _Intencity: 0.18
-    - _Metallic: 0.34
+    - _Metallic: 0.55
     - _Noise: 30
     - _Noise_1: 50
     - _Noise_2: 70
@@ -65,11 +65,11 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Refraction: 0.034
-    - _Smoothness: 1
+    - _Smoothness: 0.64
     - _SrcBlend: 5
     - _SrcBlendAlpha: 1
     - _Surface: 1
-    - _Transparency: 0.85
+    - _Transparency: 0.57
     - _VertexNoiseScale: 212.22
     - _WaveIntencity: 0.4
     - _WorkflowMode: 1
@@ -83,7 +83,7 @@ Material:
     - _OffsetSpeed_1: {r: -0.001, g: -0.001, b: 0, a: 0}
     - _OffsetSpeed_2: {r: 0.01, g: 0, b: 0, a: 0}
     - _SurfaceColor: {r: 0.24603951, g: 0.5377358, b: 0.4461369, a: 1}
-    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _Tiling: {r: 2, g: 2, b: 0, a: 0}
     - _VertexSpeed: {r: 0.04, g: 0, b: 0, a: 0}
     - _Water_Color: {r: 0.022027401, g: 0.5188679, b: 0.45190817, a: 0}
   m_BuildTextureStacks: []

@@ -4,6 +4,10 @@ using UnityEngine.VFX;
 
 public class DronMovement : MonoBehaviour
 {
+    [Header("Cutscene")]
+    [SerializeField] bool _isCutsceneDrone = false;
+    [SerializeField] Transform _targetPoint;
+
     [Header("Movement")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
@@ -38,7 +42,7 @@ public class DronMovement : MonoBehaviour
     [Header("SFX")]
     [SerializeField] AudioClip _detectClip;
     [SerializeField] AudioSource _detectAudioSource;
-    [SerializeField] private float _minBeepInterval = 0.1f; 
+    [SerializeField] private float _minBeepInterval = 0.1f;
     [SerializeField] private float _maxBeepInterval = 2f;
     [SerializeField] private float _maxBeepDistance = 15f;
 
@@ -57,10 +61,17 @@ public class DronMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdateState();
-        MoveToTarget();
-        CheckExplosion();
-        HandleBeepSound();
+        if (!_isCutsceneDrone)
+        {
+            UpdateState();
+            MoveToTarget();
+            CheckExplosion();
+            HandleBeepSound();
+        }
+        else
+        {
+            CutsceneDron();
+        }
     }
 
     void UpdateState()
@@ -222,6 +233,22 @@ public class DronMovement : MonoBehaviour
         Instantiate(_explosiveVFX, transform.position, Quaternion.identity);
     }
 
+    void CutsceneDron()
+    {
+        Vector3 dir = (_targetPoint.position - transform.position);
+        float distanceSQRT = dir.sqrMagnitude;
+
+        Quaternion targetRotation = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+
+        _rb.MovePosition(_rb.position + dir.normalized * speed * Time.fixedDeltaTime);
+
+        if(distanceSQRT < _stopDistance * _stopDistance)
+        {
+            Explode();
+        }
+    }
+    
     void HandleBeepSound()
     {
         if (_state != DroneStates.Chase) return;

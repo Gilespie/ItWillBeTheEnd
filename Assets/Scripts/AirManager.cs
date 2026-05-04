@@ -43,6 +43,10 @@ public class AirManager : MonoBehaviour
                 EventManager.Trigger(EventType.OnFinishOxygen);
             }
         }
+        else
+        {
+            _oxigentFullscreen.SetFloat("_Intensity", 1 - _currentOxygen / _maxOxygen);
+        }
     }
 
     public void SetWaterZone(WaterZone zone)

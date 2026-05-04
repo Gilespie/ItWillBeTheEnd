@@ -13,7 +13,7 @@ public class Rocket : MonoBehaviour
     [SerializeField] private LayerMask _player;
 
     [Header("References")]
-    [SerializeField] private GameObject[] _explosions;
+    //[SerializeField] private GameObject[] _explosions;
     [SerializeField] private VisualEffect _explosionVFX;
     [SerializeField] private AudioClip _flyClip;
     private Transform _target;

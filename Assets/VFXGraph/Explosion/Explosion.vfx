@@ -1317,7 +1317,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614609}
   m_ExposedName: Tex2D
   m_Exposed: 1
-  m_Order: 5
+  m_Order: 4
   m_Category: Explosion
   m_Min:
     m_Type:
@@ -1463,7 +1463,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614617}
   m_ExposedName: Gradient
   m_Exposed: 1
-  m_Order: 3
+  m_Order: 2
   m_Category: Explosion
   m_Min:
     m_Type:
@@ -2551,7 +2551,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614789}
   m_ExposedName: ShockwaveTex
   m_Exposed: 1
-  m_Order: 4
+  m_Order: 3
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -2967,7 +2967,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614813}
   m_ExposedName: ShockwaveLifetime
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 1
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -3259,7 +3259,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614823}
   m_ExposedName: DistortionStrenght
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 5
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -3342,7 +3342,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614825}
   m_ExposedName: Alpha
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 7
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -3590,7 +3590,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614839}
   m_ExposedName: Scale
   m_Exposed: 1
-  m_Order: 9
+  m_Order: 8
   m_Category: Explosion
   m_Min:
     m_Type:
@@ -3868,7 +3868,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614854}
   m_ExposedName: Lifetime
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 6
   m_Category: Explosion
   m_Min:
     m_Type:
@@ -4396,7 +4396,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615065}
   m_ExposedName: ShockwaveSize
   m_Exposed: 1
-  m_Order: 18
+  m_Order: 9
   m_Category: Shockwave
   m_Min:
     m_Type:

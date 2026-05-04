@@ -66,7 +66,7 @@ public class Character : MonoBehaviour, IDamageable
         _isGround = _groundRaycast.IsRaycasting(-Vector3.up);
         _isSliding = _slopeRaycast.IsRaycasting(-Vector3.up);
         _isGrab = _pushingRaycast.IsRaycasting(_characterRotator.Mesh.forward);
-        _isOnAir = !_isGround;
+        _isOnAir = !_isGround && !_isSwimming;
 
         _rb.maxLinearVelocity = _slopeRaycast.IsRaycasting(-Vector3.up) ? 15f : float.MaxValue;
 
