@@ -23,7 +23,7 @@ public class GlassPanels : MonoBehaviour
 
                 foreach (var rb in rbs)
                 {
-                    rb.AddExplosionForce(500f, transform.position, 5f);
+                    rb.AddExplosionForce(50f, transform.position, 5f, 3f, ForceMode.Impulse);
                 }
             }
         }

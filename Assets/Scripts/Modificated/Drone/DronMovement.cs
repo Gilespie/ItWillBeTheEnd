@@ -235,6 +235,7 @@ public class DronMovement : MonoBehaviour
 
     void CutsceneDron()
     {
+        SetLightColor(_chaseColor);
         Vector3 dir = (_targetPoint.position - transform.position);
         float distanceSQRT = dir.sqrMagnitude;
 
@@ -247,6 +248,7 @@ public class DronMovement : MonoBehaviour
         {
             Explode();
         }
+        HandleBeepSound();
     }
     
     void HandleBeepSound()

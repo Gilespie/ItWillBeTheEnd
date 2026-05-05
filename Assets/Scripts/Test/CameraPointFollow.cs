@@ -158,6 +158,7 @@ public class CameraPointFollow : MonoBehaviour
 
         _filter.enabled = true;
         _audioSource.enabled = true;
+        Debug.Log("Entered water");
     }
 
     public void ExitWater()
