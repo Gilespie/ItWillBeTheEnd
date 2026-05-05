@@ -743,7 +743,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2528583377314956261}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 105a822654c8abc4bbd9cfd925290dd4, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: bde8e8b3673b7ed41808ec4c5495c7c9, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -758,6 +758,9 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 12
         m_Name: SphereRadius
+        m_Overridden: 1
+      - m_Value: 0.243
+        m_Name: AlphaClip
         m_Overridden: 1
     m_Vector2f:
       m_Array:
@@ -804,6 +807,32 @@ VisualEffect:
           m_PostInfinity: 2
           m_RotationOrder: 4
         m_Name: SmokeSize
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 1000
+            outSlope: 1000
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1000
+            inSlope: 1000
+            outSlope: 1000
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: ShockwaveSize
         m_Overridden: 1
     m_Gradient:
       m_Array:

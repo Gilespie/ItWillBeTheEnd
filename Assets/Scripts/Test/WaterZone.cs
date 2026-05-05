@@ -65,6 +65,11 @@ public class WaterZone : MonoBehaviour
     {
         if (other == null) return;
 
+        if (other.TryGetComponent(out AirManager air))
+        {
+            air.SetWaterZone(null);
+        }
+
         if (other.TryGetComponent(out CameraPointFollow camera))
         {
             //camera.SetWaterZone(this);
