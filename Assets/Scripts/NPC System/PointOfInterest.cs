@@ -1,14 +1,29 @@
 using UnityEngine;
 
+// Ваша структура из прошлого проекта
+[System.Serializable]
+public class CinematicAction
+{
+    public string actionName = "New Action";
+
+    [Header("1. Входная анимация")]
+    public string introState;
+
+    [Header("2. Зацикленная часть")]
+    public string loopState;
+    public int minLoops = 2;
+    public int maxLoops = 5;
+
+    [Header("3. Выходная анимация")]
+    public string outroState;
+}
+
 public class PointOfInterest : MonoBehaviour
 {
     [Header("Настройки точки")]
-    public float waitTimeMin = 5f;
-    public float waitTimeMax = 15f;
+    public float waitTimeMin = 10f;
+    public float waitTimeMax = 30f;
     
-    [Header("Доступные анимации здесь")]
-    public string[] pointAnimations;
-    
-    // Сюда можно добавить переменные для пропсов (кружка кофе, телефон), 
-    // чтобы NPC брал их в руки, приходя сюда.
+    [Header("Сложные составные анимации")]
+    public CinematicAction[] advancedActions; // Теперь тут мощные настройки!
 }

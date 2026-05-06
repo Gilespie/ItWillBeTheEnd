@@ -77399,6 +77399,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
         type: 3}
+      propertyPath: advancedActions.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
       propertyPath: pointAnimations.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -77421,6 +77426,76 @@ PrefabInstance:
         type: 3}
       propertyPath: 'pointAnimations.Array.data[3]'
       value: Terrified
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[0].maxLoops
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[0].minLoops
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[1].maxLoops
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[1].minLoops
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[0].loopState
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[1].loopState
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[0].actionName
+      value: Praying
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[0].introState
+      value: Praying
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[1].actionName
+      value: Terrified
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[1].introState
+      value: Terrified
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[2].actionName
+      value: Reacting Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[2].introState
+      value: Reacting Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[3].actionName
+      value: Reacting Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[3].introState
+      value: Reacting Left
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -150696,6 +150771,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
         type: 3}
+      propertyPath: advancedActions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
       propertyPath: pointAnimations.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -150708,6 +150788,36 @@ PrefabInstance:
         type: 3}
       propertyPath: 'pointAnimations.Array.data[1]'
       value: Waving Two hands
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[0].actionName
+      value: Waving
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[0].introState
+      value: Waving
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[1].actionName
+      value: Waving Two hands
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[1].introState
+      value: Waving Two hands
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[2].actionName
+      value: Reacting Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 8343520228259369854, guid: 33a69a25d92698d4f9c1ac670e752f53,
+        type: 3}
+      propertyPath: advancedActions.Array.data[2].introState
+      value: Reacting Right
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

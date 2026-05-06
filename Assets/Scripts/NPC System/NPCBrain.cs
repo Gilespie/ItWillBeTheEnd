@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public class NPCBrain : MonoBehaviour
 {
     public enum NPCState { Idle, MovingToPOI, PerformingAtPOI, InteractingWithPlayer }
+    private Coroutine _currentActionRoutine;
     
     [Header("Компоненты")]
     public NPCState currentState = NPCState.Idle;
@@ -62,32 +63,22 @@ public class NPCBrain : MonoBehaviour
     private void ArrivedAtPOI()
     {
         currentState = NPCState.PerformingAtPOI;
-        
-        // Устанавливаем случайное время нахождения здесь
         _timer = Random.Range(currentPOI.waitTimeMin, currentPOI.waitTimeMax);
-        
-        // Берем случайную анимацию из САМОЙ ТОЧКИ
-        if (currentPOI.pointAnimations.Length > 0)
-        {
-            int rand = Random.Range(0, currentPOI.pointAnimations.Length);
-            _animator.CrossFade(currentPOI.pointAnimations[rand], 0.25f);
-        }
+    
+        // Запускаем цепочку анимаций
+        PlayNextActionAtPOI();
     }
 
-    // 2. Команда: Игрок подошел (Триггер)
-    public void Command_ReactToPlayer()
+   
+    private void PlayNextActionAtPOI()
     {
-        // Прерываем всё, что NPC делал до этого
-        _agent.isStopped = true; 
-        currentState = NPCState.InteractingWithPlayer;
-
-        // Поворачиваемся к игроку (опционально)
-        
-        // Машем рукой
-        if (greetingAnimations.Length > 0)
+        if (currentPOI != null && currentPOI.advancedActions.Length > 0)
         {
-            int rand = Random.Range(0, greetingAnimations.Length);
-            _animator.CrossFade(greetingAnimations[rand], 0.1f);
+            int rand = Random.Range(0, currentPOI.advancedActions.Length);
+            CinematicAction action = currentPOI.advancedActions[rand];
+        
+            // Обязательно сохраняем ссылку на корутину, чтобы уметь её убивать!
+            _currentActionRoutine = StartCoroutine(PlayCinematicAction(action));
         }
     }
     
@@ -98,5 +89,72 @@ public class NPCBrain : MonoBehaviour
         // Если у него была цель - он продолжит путь
         if (currentPOI != null) Command_GoToPoint(currentPOI);
         else currentState = NPCState.Idle;
+    }
+    private System.Collections.IEnumerator PlayCinematicAction(CinematicAction action)
+    {
+        // 1. Проигрываем Intro
+        if (!string.IsNullOrEmpty(action.introState))
+        {
+            yield return StartCoroutine(PlayStateAndWait(action.introState));
+        }
+
+        // 2. Проигрываем Loop
+        if (!string.IsNullOrEmpty(action.loopState))
+        {
+            int targetLoops = Random.Range(action.minLoops, action.maxLoops + 1);
+            _animator.CrossFadeInFixedTime(action.loopState, 0.25f);
+            yield return new WaitForSeconds(0.25f); 
+
+            float singleLoopLength = _animator.GetCurrentAnimatorStateInfo(0).length;
+            float totalWaitTime = (singleLoopLength * targetLoops) - 0.25f;
+
+            if (totalWaitTime > 0) yield return new WaitForSeconds(totalWaitTime);
+        }
+
+        // 3. Проигрываем Outro
+        if (!string.IsNullOrEmpty(action.outroState))
+        {
+            yield return StartCoroutine(PlayStateAndWait(action.outroState));
+        }
+
+        // 4. Если таймер нахождения в точке еще не вышел, запускаем следующий случайный экшен!
+        if (currentState == NPCState.PerformingAtPOI && _timer > 0)
+        {
+            PlayNextActionAtPOI();
+        }
+    }
+
+// Вспомогательный метод ожидания (из вашего кода)
+    private System.Collections.IEnumerator PlayStateAndWait(string stateName)
+    {
+        _animator.CrossFadeInFixedTime(stateName, 0.25f);
+        yield return new WaitForSeconds(0.25f);
+
+        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        float timeToWait = stateInfo.length - 0.25f;
+
+        if (timeToWait > 0) yield return new WaitForSeconds(timeToWait);
+    }
+    public void Command_ReactToPlayer()
+    {
+        // УБИВАЕМ текущую цепочку анимаций, чтобы NPC всё бросил!
+        if (_currentActionRoutine != null)
+        {
+            StopCoroutine(_currentActionRoutine);
+            _currentActionRoutine = null;
+        }
+
+        _agent.isStopped = true; 
+        currentState = NPCState.InteractingWithPlayer;
+
+        // Машем рукой
+        if (greetingAnimations.Length > 0)
+        {
+            int rand = Random.Range(0, greetingAnimations.Length);
+            _animator.CrossFade(greetingAnimations[rand], 0.1f);
+        }
+    
+        // ПРИМЕЧАНИЕ: Здесь можно использовать тот же PlayStateAndWait, 
+        // чтобы избавиться от Animation Events даже при приветствии!
     }
 }
