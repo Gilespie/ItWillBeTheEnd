@@ -319,10 +319,20 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: bf672325a678b9e478144042957fcdbf, type: 2}
+    - target: {fileID: 4673187562182775900, guid: 7b2b4f0774747eb49b7d812292bfbf94,
+        type: 3}
+      propertyPath: m_SpotAngle
+      value: 143.17001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4673187562539481047, guid: 7b2b4f0774747eb49b7d812292bfbf94,
+        type: 3}
+      propertyPath: m_SpotAngle
+      value: 136.32925
+      objectReference: {fileID: 0}
     - target: {fileID: 4673187562928880542, guid: 7b2b4f0774747eb49b7d812292bfbf94,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4673187562928880543, guid: 7b2b4f0774747eb49b7d812292bfbf94,
         type: 3}
@@ -696,7 +706,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1276604834
 Light:
   m_ObjectHideFlags: 0
