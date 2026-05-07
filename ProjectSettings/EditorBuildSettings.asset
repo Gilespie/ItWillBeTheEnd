@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/BlockingLevel2/Blocking.unity
     guid: 1a4416c7e57ba4541a7c533602ae6469
   - enabled: 1
+    path: Assets/Scenes/Logo/Logo.unity
+    guid: aa6ec823bb02b124fb8e2c97ede2b09a
+  - enabled: 1
     path: Assets/Scenes/TestMecanics/MecanicsBase.unity
     guid: 499f01f3df01da34e940a17a044b2778
   m_configObjects: {}
