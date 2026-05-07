@@ -21,8 +21,6 @@ public class CommonMovement : MovementAdvance
 
         _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);*/
 
-       
-
         Vector3 horizontal = (_lastDirection * _currentSpeed) + extVelocity;
 
         float verticalVelocity = _rb.linearVelocity.y;
