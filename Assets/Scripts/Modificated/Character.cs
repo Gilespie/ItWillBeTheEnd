@@ -25,6 +25,8 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] CharacterView _view;
 
     [SerializeField] PhysicsMaterial _slideMaterial;
+    protected IExternalVelocity _externalVelocityProvider;
+    protected Vector3 _externalVelocity;
 
     MovementAdvance _currentMovement;
     bool _isCrouching = false;
@@ -58,7 +60,7 @@ public class Character : MonoBehaviour, IDamageable
     }
 
     void Update()
-    {  
+    {
         if (!_isAlive) return;
 
         _fallDamage.Tick(_isGround, _isSwimming, _isSliding, _rb.linearVelocity.y);
@@ -88,30 +90,28 @@ public class Character : MonoBehaviour, IDamageable
             Pressing();
         }
 
-        ChangePhysicMaterial(null);
-
         if (_inputController.IsJumping && _isGround && !_isCrouching && _currentMovement.CurrentSpeed < 0.1f)
         {
             _animationController.SetTrigger(AnimParams.Jump);
-            ChangePhysicMaterial(_slideMaterial);
-        }    
-        else if(_inputController.IsJumping && _isGround && !_isCrouching && _currentMovement.CurrentSpeed > 0.1f)
+            //ChangePhysicMaterial(_slideMaterial);
+        }
+        else if (_inputController.IsJumping && _isGround && !_isCrouching && _currentMovement.CurrentSpeed > 0.1f)
         {
             _animationController.SetTrigger(AnimParams.Jump);
             _currentMovement.Jump();
-            ChangePhysicMaterial(_slideMaterial);
+            //ChangePhysicMaterial(_slideMaterial);
         }
-   
+
         _isCrouching = _inputController.IsCrouching;
         _isSprinting = _inputController.IsSprinting;
 
-        
+
         _animationController.SetFloat(AnimParams.Speed, _currentMovement.CurrentSpeed);
         _animationController.SetBool(AnimParams.Air, _isOnAir);
 
-        if (_inputController.Direction.sqrMagnitude > 0.1f * 0.1f) 
+        if (_inputController.Direction.sqrMagnitude > 0.1f * 0.1f)
             _animationController.SetBool(AnimParams.Move, true);
-        else 
+        else
             _animationController.SetBool(AnimParams.Move, false);
 
         TryStartPush();
@@ -124,7 +124,9 @@ public class Character : MonoBehaviour, IDamageable
 
     void FixedUpdate()
     {
-        if(!_isAlive) return;
+        if (!_isAlive) return;
+
+        _externalVelocity = _externalVelocityProvider != null ? _externalVelocityProvider.ExternalVelocity : Vector3.zero;
 
         if (_isSwimming)
         {
@@ -168,7 +170,7 @@ public class Character : MonoBehaviour, IDamageable
             }
         }
 
-        _currentMovement.Advance(dir);
+        _currentMovement.Advance(dir, _externalVelocity);
 
         if (!_isPushingNow)
         {
@@ -196,11 +198,11 @@ public class Character : MonoBehaviour, IDamageable
     {
         if (_isCrouching)
         {
-            _characterColliderResizer.SetSize(1f, new Vector3(0, 0.5f, 0)); 
+            _characterColliderResizer.SetSize(1f, new Vector3(0, 0.5f, 0));
         }
         else
         {
-            _characterColliderResizer.SetSize(2f, new Vector3(0, 1f, 0)); 
+            _characterColliderResizer.SetSize(2f, new Vector3(0, 1f, 0));
         }
     }
     void HandleFallDeath(params object[] arg)
@@ -250,6 +252,11 @@ public class Character : MonoBehaviour, IDamageable
         _characterRotator.Initialize(_slopeRaycast);
     }
 
+    public void SetExternalVelocity(IExternalVelocity velocity)
+    {
+        _externalVelocityProvider = velocity;
+    }
+
     void TryCrouching()
     {
         if (!_isGround) return;
@@ -257,9 +264,14 @@ public class Character : MonoBehaviour, IDamageable
         _animationController.SetBool(AnimParams.Crouch, _isCrouching);
     }
 
-    void ChangePhysicMaterial(PhysicsMaterial mat)
+    public void ChangePhysicMaterial()
     {
-        _col.material = mat;
+        _col.material = _slideMaterial;
+    }
+
+    public void ResetPhysicsMaterial()
+    {
+        _col.material = null;
     }
 
     void SlideCharacter()

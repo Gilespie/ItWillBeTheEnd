@@ -24,7 +24,7 @@ public abstract class MovementAdvance : MonoBehaviour
         _rb = move;
     }
 
-    public abstract void Advance(Vector3 dir);
+    public abstract void Advance(Vector3 dir, Vector3 externalVelocity);
 
     public virtual void SetSpeed(float speed)
     {
@@ -33,7 +33,11 @@ public abstract class MovementAdvance : MonoBehaviour
 
     public virtual void Jump()
     {
-        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
+        /* _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
+         _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);*/
+        /*Vector3 vel = _rb.linearVelocity;
+        vel.y = 0f;
+        _rb.linearVelocity = vel;*/
         _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
     }
 }

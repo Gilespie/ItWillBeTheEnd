@@ -2,12 +2,7 @@ using UnityEngine;
 
 public class PushMovement : MovementAdvance
 {
-    public override void Advance(Vector3 dir)
-    {
-        PushMove(dir);
-    }
-
-    public void PushMove(Vector3 dir)
+    public override void Advance(Vector3 dir,Vector3 extVelocity)
     {
         PushableBox box = _rb.GetComponentInParent<Character>().CurrentBox;
 
@@ -21,11 +16,23 @@ public class PushMovement : MovementAdvance
 
         _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, accel * Time.fixedDeltaTime);
 
-        Vector3 velocity = _direction.normalized * _currentSpeed;
+        /* Vector3 velocity = _direction.normalized * _currentSpeed;
 
-        _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
+         _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
+
+         Rigidbody boxRb = box.GetComponent<Rigidbody>();
+         boxRb.MovePosition(boxRb.position + velocity * Time.fixedDeltaTime);*/
+        
+        Vector3 horizontal = (_direction.normalized * _currentSpeed) + extVelocity;
+        float verticalVelocity = _rb.linearVelocity.y;
+
+        _rb.linearVelocity = new Vector3(horizontal.x, verticalVelocity, horizontal.z);
 
         Rigidbody boxRb = box.GetComponent<Rigidbody>();
-        boxRb.MovePosition(boxRb.position + velocity * Time.fixedDeltaTime);
+
+        if (boxRb != null)
+        {
+            boxRb.MovePosition(boxRb.position + new Vector3(horizontal.x, 0f, horizontal.z) * Time.fixedDeltaTime);
+        }
     }
 }

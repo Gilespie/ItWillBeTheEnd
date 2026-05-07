@@ -17,13 +17,13 @@ public class Earthquake : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    void Start()
+    /*void Start()
     {
         _currentTimer = _timeToQuake;
         //Shockwaves();
-    }
+    }*/
 
-    void Update()
+   /* void Update()
     {
         _currentTimer -= Time.deltaTime;
         
@@ -32,13 +32,13 @@ public class Earthquake : MonoBehaviour
             _currentTimer = _timeToQuake;
             Shockwaves();
         }
-    }
+    }*/
 
     public void Shockwaves()
     {
         _randomClipIndex = Random.Range( 0, _clips.Length);
         _randomPitch = Random.Range(0.5f, 1f);
-        EventManager.Trigger(EventType.OnExplosion);
+        //EventManager.Trigger(EventType.OnExplosion);
 
         if (_audioSource != null)
         {
@@ -46,14 +46,21 @@ public class Earthquake : MonoBehaviour
             _audioSource.PlayOneShot(_clips[_randomClipIndex]);
         }
 
-        foreach(var dust in _dusts)
+        if (_dusts != null)
         {
-            dust.Play();
+            foreach (var dust in _dusts)
+            {
+                dust.Play();
+            }
         }
 
-        foreach (var dust in _dustVFX)
+        if (_dustVFX != null)
         {
-            dust.SendEvent(EventType.OnExplosion.ToString());
+
+            foreach (var dust in _dustVFX)
+            {
+                dust.SendEvent(EventType.OnExplosion.ToString());
+            }
         }
 
         CameraShake.Instance.ActiveShake();

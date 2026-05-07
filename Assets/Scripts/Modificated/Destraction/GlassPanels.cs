@@ -6,6 +6,7 @@ public class GlassPanels : MonoBehaviour
     [SerializeField] Rigidbody _rb;
     [SerializeField] MeshRenderer _mesh;
     [SerializeField] Collider _col;
+    [SerializeField] AudioSource _audioSource;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -14,6 +15,7 @@ public class GlassPanels : MonoBehaviour
             _rb.isKinematic = true;
             _mesh.enabled = false;
             _col.enabled = false;
+            _audioSource.Play();
 
             foreach (var part in _glassParts)
             {

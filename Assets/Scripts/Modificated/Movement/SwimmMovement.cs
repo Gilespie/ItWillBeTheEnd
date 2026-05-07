@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SwimmMovement : MovementAdvance
 {
-    public override void Advance(Vector3 dir)
+    public override void Advance(Vector3 dir, Vector3 extVelocity)
     {
         _direction = dir;
 
@@ -12,8 +12,10 @@ public class SwimmMovement : MovementAdvance
 
         _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, accel * Time.fixedDeltaTime);
 
-        Vector3 velocity = _direction.normalized * _currentSpeed;
+        /*Vector3 velocity = _direction.normalized * _currentSpeed;
 
-        _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
+        _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);*/
+
+        _rb.linearVelocity = _direction.normalized * _currentSpeed;
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CommonMovement : MovementAdvance
 {
-    public override void Advance(Vector3 dir)
+    public override void Advance(Vector3 dir, Vector3 extVelocity)
     {
         _direction = new Vector3(dir.x, 0, dir.z);
 
@@ -17,9 +17,17 @@ public class CommonMovement : MovementAdvance
 
         _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, accel * Time.fixedDeltaTime);
 
-        Vector3 velocity = _lastDirection * _currentSpeed;
+        /*Vector3 velocity = (_lastDirection * _currentSpeed) + _externalVelocity;
 
-        _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);
+        _rb.MovePosition(_rb.position + velocity * Time.fixedDeltaTime);*/
+
+       
+
+        Vector3 horizontal = (_lastDirection * _currentSpeed) + extVelocity;
+
+        float verticalVelocity = _rb.linearVelocity.y;
+
+        _rb.linearVelocity = new Vector3(horizontal.x, verticalVelocity, horizontal.z);
     }
 
     public override void Jump()

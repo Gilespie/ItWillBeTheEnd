@@ -36,6 +36,7 @@ public class BusMovement : MonoBehaviour
     public void StopMoving()
     {
         _isMoving = false;
+        _rb.isKinematic = true;
     }
 
     public void OnCollisionEnter(Collision collision)

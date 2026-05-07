@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Train : MonoBehaviour
+public class Train : MonoBehaviour, IExternalVelocity
 {
     [SerializeField] bool _isAutopilot = false;
     [SerializeField] Rigidbody _rb;
@@ -10,44 +10,31 @@ public class Train : MonoBehaviour
     [SerializeField] float _drag = 2f;
     [SerializeField] AudioSource _audioSource;
     [SerializeField] AudioClip _trainSound;
-    [SerializeField] bool _isKinematic = true;
     float _currentSpeed = 0f;
-
+    public Vector3 ExternalVelocity => _rb.linearVelocity;
 
     void FixedUpdate()
     {
-        if (_isKinematic)
+        if (_isAutopilot)
         {
-            if (_isAutopilot)
-            {
-                IncrementSpeed();
-                ApplyDrag();
-                MoveTrain();
-            }
-            else
-            {
-                ApplyDrag();
-                MoveTrain();
-            }
-            ChangePitch();
+            IncrementSpeed();
         }
-        else
-        {
-            _rb.isKinematic = false;
-        }
-        
+
+        ApplyDrag();
+        MoveTrain();
+        ChangePitch();
     }
 
     public void IncrementSpeed()
     {
         _currentSpeed += _acceleration * Time.fixedDeltaTime;
-
         _currentSpeed = Mathf.Clamp(_currentSpeed, 0, _maxLinearSpeed);
     }
 
     public void DecrementSpeed()
     {
         _currentSpeed -= _brakeForce * Time.fixedDeltaTime;
+        _currentSpeed = Mathf.Clamp(_currentSpeed, 0, _maxLinearSpeed);
     }
 
     void ApplyDrag()
@@ -58,9 +45,8 @@ public class Train : MonoBehaviour
 
     void MoveTrain()
     {
-        Vector3 direction = transform.forward;
-        //_rb.linearVelocity = direction * _currentSpeed;
-        _rb.MovePosition(_rb.position + direction * _currentSpeed * Time.fixedDeltaTime);
+        //_rb.MovePosition(_rb.position + Vector3.right * _currentSpeed * Time.fixedDeltaTime);
+        _rb.linearVelocity = Vector3.right * _currentSpeed;
     }
 
     public void SetAutopilot()
@@ -68,21 +54,27 @@ public class Train : MonoBehaviour
         _isAutopilot = true;
     }
 
-    /*private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out Character character))
+        Character character = other.GetComponentInParent<Character>();
+
+        if (character != null)
         {
-            other.transform.SetParent(transform);
+            character.SetExternalVelocity(this);
+            character.ResetPhysicsMaterial();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out Character character))
+        Character character = other.GetComponentInParent<Character>();
+
+        if (character != null)
         {
-            other.transform.SetParent(null);
+            character.SetExternalVelocity(null);
+            character.ChangePhysicMaterial();
         }
-    }*/
+    }
 
     private void ChangePitch()
     {

@@ -42,16 +42,16 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 1
-    - _AlphaClipping: 0.21
+    - _AlphaClipping: 0.152
     - _AlphaToMask: 1
-    - _Alpha_Intensity: 2.62
+    - _Alpha_Intensity: 2.93
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _CastShadows: 1
     - _Cull: 2
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _FadeIntensity: 0
+    - _FadeIntensity: 0.6
     - _FadeTransition: 1
     - _NormalStrenght: 1
     - _QueueControl: 0
@@ -64,7 +64,7 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
-    - _oseScale: 401.4
+    - _oseScale: 825.46
     m_Colors:
     - _Color: {r: 0.5613208, g: 1, b: 0.9760887, a: 0}
     - _Speed: {r: 0, g: 0.3, b: 0, a: 0}

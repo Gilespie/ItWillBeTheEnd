@@ -23,13 +23,13 @@ public class CameraShake : MonoBehaviour
     [SerializeField] float _shakeDuration = 1.5f;
     [SerializeField] float _speedTransition = 0.1f;
     Vector3 _shakeOffset;
-    CameraPointFollow _cameraPoint;
+    [SerializeField]CameraPointFollow _cameraPoint;
 
-    void Start()
+    /*void Start()
     {
         _cameraPoint = GameManager.Instance.CameraPoint;
         Debug.Log(_cameraPoint + " camera from gamemanager");
-    }
+    }*/
 
     public void ActiveShake()
     {
