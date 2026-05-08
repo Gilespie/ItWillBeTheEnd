@@ -1,45 +1,55 @@
+// PavilionDirector.cs
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PavilionDirector : MonoBehaviour
 {
-    [Header("Управление павильоном")]
-    public GameObject pavilionContent; // Пустой объект, внутри которого лежат все NPC и реквизит
-    
-    [Header("Актеры")]
-    public NPCBrain npcBob;
-    public NPCBrain npcAlice;
+    [Header("Сценарий павильона")]
+    public DirectorRule[] rules;
 
-    [Header("Точки (POI)")]
-    public PointOfInterest fridgePOI;
-    public PointOfInterest bedPOI;
+    private HashSet<TriggerSignal> _subscribedSignals = new HashSet<TriggerSignal>();
 
-    private void Start()
+    private void OnEnable()
     {
-        // Павильон спит, пока игрок не войдет. Экономим ресурсы!
-        pavilionContent.SetActive(false); 
+        foreach (var rule in rules)
+        {
+            if (rule.signal != null && !_subscribedSignals.Contains(rule.signal))
+            {
+                rule.signal.OnFired += HandleSignal;
+                _subscribedSignals.Add(rule.signal);
+            }
+        }
     }
 
-    // 1. Игрок спрыгнул к нам (Вход в павильон)
-    public void OnPlayerEnteredPavilion()
+    private void OnDisable()
     {
-        pavilionContent.SetActive(true);
-        
-        // Раздаем стартовые приказы
-        npcBob.Command_GoToPoint(bedPOI); 
+        foreach (var signal in _subscribedSignals)
+        {
+            if (signal != null)
+            {
+                signal.OnFired -= HandleSignal;
+            }
+        }
+        _subscribedSignals.Clear();
     }
 
-    // 2. Игрок подошел к Телевизору (Реакция на действия)
-    public void OnPlayerTouchedTV()
+    private void HandleSignal(TriggerSignal firedSignal)
     {
-        // Режиссер командует Бобу сменить задачу
-        npcBob.Command_GoToPoint(fridgePOI);
-    }
-
-    // 3. Игрок спрыгнул дальше (Точка невозврата)
-    public void OnPlayerLeftPavilionForever()
-    {
-        // Удаляем всех актеров, реквизит и самого режиссера из памяти!
-        Destroy(pavilionContent);
-        Destroy(gameObject);
+        foreach (var rule in rules)
+        {
+            if (rule.signal == firedSignal && rule.receiver != null)
+            {
+                IDirectorActor actor = rule.receiver.GetComponent<IDirectorActor>();
+                
+                if (actor != null)
+                {
+                    actor.ReceiveCommand(rule.context);
+                }
+                else
+                {
+                    Debug.LogWarning($"[PavilionDirector] Объект {rule.receiver.name} не имеет интерфейса IDirectorActor!");
+                }
+            }
+        }
     }
 }
