@@ -131,6 +131,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 1
     - _IsAlphaClipping: 0
+    - _IsObjectSpace: 0
     - _Metallic: 0
     - _MetallicIntensity: 0.32
     - _Mode: 0
@@ -147,7 +148,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _Tile: 0.73
+    - _Tile: 0.42
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZTest: 4
