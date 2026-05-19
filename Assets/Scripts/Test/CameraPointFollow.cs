@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEngine.GraphicsBuffer;
 
 public class CameraPointFollow : MonoBehaviour
 {
@@ -180,6 +181,19 @@ public class CameraPointFollow : MonoBehaviour
     public void SetTargetView(Transform target)
     {
         _lookTarget = target;
+    }
+
+    public void ActiveChangeViewTargetRoutine(Transform target)
+    {
+        StartCoroutine(ChangeAndReturn(target));
+    }
+
+    IEnumerator ChangeAndReturn(Transform target)
+    {
+        _lookTarget = target;
+        yield return new WaitForSeconds(5f);
+        ResetToFollow();
+        yield return null;
     }
 
     public void ResetToFollow()

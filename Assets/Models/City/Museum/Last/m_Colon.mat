@@ -116,6 +116,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
+    - _IsAbsoluteWorld: 1
     - _Metallic: 0
     - _MetallicIntensity: 0
     - _Mode: 0

@@ -12,6 +12,7 @@ public class CameraZone : MonoBehaviour
     [SerializeField] bool _isOtherTargetView = false;
     [SerializeField] bool _isZPosition = false;
     [SerializeField] bool _isOnce = false;
+    [SerializeField] bool _isCoroutine = false;
     bool _alreadyTriggered;
 
     private void OnTriggerEnter(Collider other)
@@ -39,6 +40,12 @@ public class CameraZone : MonoBehaviour
             }
             if (_isOnce)
                 _alreadyTriggered = true;
+
+            if (_isCoroutine)
+            {
+                _camera.ActiveChangeViewTargetRoutine(_cameraView);
+                GetComponent<BoxCollider>().enabled = false;
+            }
         }
     }
 

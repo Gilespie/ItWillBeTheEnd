@@ -45,8 +45,8 @@ public class Train : MonoBehaviour, IExternalVelocity
 
     void MoveTrain()
     {
-        //_rb.MovePosition(_rb.position + Vector3.right * _currentSpeed * Time.fixedDeltaTime);
-        _rb.linearVelocity = Vector3.right * _currentSpeed;
+        _rb.MovePosition(_rb.position + Vector3.right * _currentSpeed * Time.fixedDeltaTime);
+        //_rb.linearVelocity = Vector3.right * _currentSpeed;
     }
 
     public void SetAutopilot()
@@ -62,6 +62,7 @@ public class Train : MonoBehaviour, IExternalVelocity
         {
             character.SetExternalVelocity(this);
             character.ResetPhysicsMaterial();
+            character.transform.SetParent(transform);
         }
     }
 
@@ -73,6 +74,7 @@ public class Train : MonoBehaviour, IExternalVelocity
         {
             character.SetExternalVelocity(null);
             character.ChangePhysicMaterial();
+            character.transform.SetParent(null);
         }
     }
 
