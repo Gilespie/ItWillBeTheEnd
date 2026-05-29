@@ -14,7 +14,7 @@ public class AirManager : MonoBehaviour
     private void Start()
     {
         _currentOxygen = _maxOxygen;
-        _oxigentFullscreen.SetFloat("_Intensity", 1 -  _currentOxygen / _maxOxygen);
+        //_oxigentFullscreen.SetFloat("_Intensity", 1 -  _currentOxygen / _maxOxygen);
     }
 
     private void Update()
@@ -36,7 +36,7 @@ public class AirManager : MonoBehaviour
         {
             _currentOxygen -= Time.deltaTime;
 
-            _oxigentFullscreen.SetFloat("_Intensity", 1 - _currentOxygen / _maxOxygen);
+            //_oxigentFullscreen.SetFloat("_Intensity", 1 - _currentOxygen / _maxOxygen);
 
             if (_currentOxygen <= 0)
             {
@@ -45,7 +45,7 @@ public class AirManager : MonoBehaviour
         }
         else
         {
-            _oxigentFullscreen.SetFloat("_Intensity", 1 - _currentOxygen / _maxOxygen);
+            //_oxigentFullscreen.SetFloat("_Intensity", 1 - _currentOxygen / _maxOxygen);
         }
     }
 

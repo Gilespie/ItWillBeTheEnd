@@ -6,6 +6,10 @@ public class BusMovement : MonoBehaviour
     [SerializeField] float _speed = 5f;
     [SerializeField] Transform _targetPos;
     [SerializeField] float _stopDistance = 1f;
+
+    [Header("SFX")]
+    [SerializeField] AudioSource[] _audioSource;
+
     bool _isMoving = false;
     float _sqrtDistance = 0f;
 
@@ -13,6 +17,7 @@ public class BusMovement : MonoBehaviour
     {
         _sqrtDistance = (_targetPos.position - transform.position).sqrMagnitude;
     }
+
     void FixedUpdate()
     {
         if (!_isMoving) return;
@@ -21,6 +26,7 @@ public class BusMovement : MonoBehaviour
         if (_sqrtDistance < _stopDistance * _stopDistance)
         {
             StopMoving();
+            gameObject.SetActive(false);
             return;
         }
 
@@ -51,8 +57,14 @@ public class BusMovement : MonoBehaviour
             {
                 rb.AddForce(_rb.linearVelocity * 30f, ForceMode.Impulse);
             }
+        }
+    }
 
-            StopMoving();
+    public void PlaySound()
+    {
+        foreach (var source in _audioSource)
+        {
+            source.Play();
         }
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e7d56677341026e4e83d8900b89fc577
+guid: fe44772bc91c19e49993bddf471a1c2a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,12 +8,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: m_Fence
-    second: {fileID: 2100000, guid: ece10cbae320e7d4280eb28ad60b8504, type: 2}
+    second: {fileID: 2100000, guid: d90d65c20462275499525ba842cb31c6, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: m_FencePlane
-    second: {fileID: 2100000, guid: 826a6163374120b40b4e0ff351b603c9, type: 2}
+      name: m_FenceBar
+    second: {fileID: 2100000, guid: ac16a79ad95fa874a868a5ccc91ffaa3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_FenceRoof
+    second: {fileID: 2100000, guid: b00e35ea717eb794aa8a453ef3febc62, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -43,7 +48,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.5
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -98,7 +103,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 0.5
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

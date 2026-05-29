@@ -183,15 +183,15 @@ public class CameraPointFollow : MonoBehaviour
         _lookTarget = target;
     }
 
-    public void ActiveChangeViewTargetRoutine(Transform target)
+    public void ActiveChangeViewTargetRoutine(Transform target, float timeToView)
     {
-        StartCoroutine(ChangeAndReturn(target));
+        StartCoroutine(ChangeAndReturn(target, timeToView));
     }
 
-    IEnumerator ChangeAndReturn(Transform target)
+    IEnumerator ChangeAndReturn(Transform target, float timeToView)
     {
         _lookTarget = target;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(timeToView);
         ResetToFollow();
         yield return null;
     }

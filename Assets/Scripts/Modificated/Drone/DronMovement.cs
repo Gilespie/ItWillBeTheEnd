@@ -46,6 +46,9 @@ public class DronMovement : MonoBehaviour
     [SerializeField] private float _maxBeepInterval = 2f;
     [SerializeField] private float _maxBeepDistance = 15f;
 
+    [Header("Patrol")]
+    [SerializeField] private Transform[] _patrolPoints;
+    int _currentIndex = 0;  
     private float _beepTimer;
     Vector3 _currentTarget;
     Vector3 _lastSeenPosition;
@@ -55,7 +58,12 @@ public class DronMovement : MonoBehaviour
 
     private void Start()
     {
-        _currentTarget = GetRandomTarget();
+        if (_patrolPoints != null && _patrolPoints.Length > 0)
+        {
+            _currentIndex = Random.Range(0, _patrolPoints.Length);
+            _currentTarget = _patrolPoints[_currentIndex].position;
+        }
+
         SetLightColor(_patrolColor);
     }
 
@@ -110,6 +118,11 @@ public class DronMovement : MonoBehaviour
                     _currentTarget = _lastSeenPosition;
                 }
                 break;
+
+            case DroneStates.Cutscene:
+                EnterChase();
+                _currentTarget = _targetPoint.position;
+                break;
         }
     }
 
@@ -130,7 +143,7 @@ public class DronMovement : MonoBehaviour
     {
         _state = DroneStates.Patrol;
         _lastSeenPosition = Vector3.zero;
-        _currentTarget = GetRandomTarget();
+        _currentTarget = GetNextTarget();
         SetLightColor(_patrolColor);
     }
 
@@ -153,15 +166,29 @@ public class DronMovement : MonoBehaviour
         return false;
     }
 
-    private Vector3 GetRandomTarget()
+    private Vector3 GetNextTarget()
     {
-        Vector3 pos = transform.position + Random.insideUnitSphere * 5f;
-        return pos;
+        if (_patrolPoints == null || _patrolPoints.Length == 0)
+        {
+            return transform.position;
+        }
+
+        _currentIndex = Random.Range(0, _patrolPoints.Length);
+
+        /*if (_currentIndex >= _patrolPoints.Length)
+        {
+            _currentIndex = 0;
+        }*/
+
+        return _patrolPoints[_currentIndex].position;
     }
 
     void CheckExplosion()
     {
         if (_isExploded) return;
+
+        if (!CanSeePlayer())
+            return;
 
         float sqrDistance = (_player.position - transform.position).sqrMagnitude;
 
@@ -187,7 +214,7 @@ public class DronMovement : MonoBehaviour
         if (_state == DroneStates.Patrol &&
             (_currentTarget - transform.position).sqrMagnitude < _stopDistance * _stopDistance)
         {
-            _currentTarget = GetRandomTarget();
+            _currentTarget = GetNextTarget();
         }
     }
 
@@ -235,6 +262,7 @@ public class DronMovement : MonoBehaviour
 
     void CutsceneDron()
     {
+        _state = DroneStates.Chase;
         SetLightColor(_chaseColor);
         Vector3 dir = (_targetPoint.position - transform.position);
         float distanceSQRT = dir.sqrMagnitude;
@@ -248,6 +276,7 @@ public class DronMovement : MonoBehaviour
         {
             Explode();
         }
+
         HandleBeepSound();
     }
     

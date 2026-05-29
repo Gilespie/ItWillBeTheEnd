@@ -40,8 +40,9 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Alpha: 1
+    - _Alpha: 0
     - _Intensity: 50
+    - _IsRGBLight: 0
     m_Colors:
     - _Color: {r: 1, g: 0.9868282, b: 0, a: 0}
   m_BuildTextureStacks: []

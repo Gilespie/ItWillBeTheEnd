@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Tesla : MonoBehaviour
 {
-    /*[SerializeField] Animator animator;
-    [SerializeField] int clip;*/
+    [SerializeField] Animator animator;
+    [SerializeField] int clip;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -13,5 +13,10 @@ public class Tesla : MonoBehaviour
         {
             character.InstantKill();
         }
+    }
+
+    public void PlayAnim()
+    {
+        animator.SetInteger("ClipIndex", clip);
     }
 }

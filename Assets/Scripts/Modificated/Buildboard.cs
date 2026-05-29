@@ -9,20 +9,8 @@ public class Buildboard : MonoBehaviour
     [SerializeField] float _delayBetweenWaves = 5f;
     Coroutine _coroutine;
 
-    /*private void Update()
+    private void Start()
     {
-        if (_coroutine != null) return;
-
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            _coroutine = StartCoroutine(WaveRoutine());
-        }
-    }*/
-
-    public void ActivateBuildBoard()
-    {
-        if (_coroutine != null) return;
-
         _coroutine = StartCoroutine(WaveRoutine());
     }
     

@@ -11,12 +11,12 @@ public class FireworksController : MonoBehaviour
         PlayVFX();
         Invoke(nameof(PlaySound), 3f);
         _source[1].Play();
-        _source[2].Play();
     }
 
     void PlaySound()
     {
         _source[0].Play();
+        _source[2].Play();
     }
 
     void PlayVFX()
@@ -25,5 +25,15 @@ public class FireworksController : MonoBehaviour
         {
             effect.Play();
         }
+    }
+
+    public void StopPlay()
+    {
+        foreach (var effect in _effects)
+        {
+            effect.Stop();
+        }
+
+        _source[0].Stop();
     }
 }

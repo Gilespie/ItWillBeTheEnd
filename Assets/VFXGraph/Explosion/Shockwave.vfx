@@ -1425,7 +1425,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614588}
   m_ExposedName: DistortionStrenght
   m_Exposed: 1
-  m_Order: 0
+  m_Order: 1
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -1508,7 +1508,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614590}
   m_ExposedName: AlphaClip
   m_Exposed: 1
-  m_Order: 0
+  m_Order: 2
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -1591,7 +1591,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614592}
   m_ExposedName: ShockwaveSize
   m_Exposed: 1
-  m_Order: 0
+  m_Order: 3
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -1672,7 +1672,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614594}
   m_ExposedName: ShockwaveTex
   m_Exposed: 1
-  m_Order: 0
+  m_Order: 4
   m_Category: Shockwave
   m_Min:
     m_Type:
@@ -1790,7 +1790,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 35.9
+      m_SerializableObject: 0
     m_Space: -1
   m_Property:
     name: _NoiseScale
@@ -1826,7 +1826,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"x":0.0,"y":0.3199999928474426}'
+      m_SerializableObject: '{"x":0.0,"y":0.0}'
     m_Space: -1
   m_Property:
     name: _SpeedOffset

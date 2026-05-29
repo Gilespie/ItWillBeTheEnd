@@ -1,20 +1,45 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.VFX;
 
 public class ExplosionTest : MonoBehaviour
 {
     [SerializeField] VisualEffect[] effects;
+    [SerializeField] float _delay = 10f;
 
+    private void OnEnable()
+    {
+        PlayEffects();
+        StartCoroutine(ResetRoutine());
+    }
+
+    private void OnDisable()
+    {
+        StopEffects();
+    }
 
     [ContextMenu("Play")]
     public void PlayEffects()
     {
-        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0f, Random.Range(-5f, 5f));
-
         foreach (var effect in effects)
         {
-            effect.gameObject.transform.position = randomPos;
             effect.Play();
         }
+    }
+
+    private void StopEffects()
+    {
+        foreach (var effect in effects)
+        {
+            effect.Stop();
+        }
+    }
+
+    IEnumerator ResetRoutine()
+    {
+        yield return new WaitForSeconds(_delay);
+        gameObject.SetActive(false);
+        yield return null;
     }
 }

@@ -13,9 +13,10 @@ public class Rocket : MonoBehaviour
     [SerializeField] private LayerMask _player;
 
     [Header("References")]
-    //[SerializeField] private GameObject[] _explosions;
-    [SerializeField] private VisualEffect _explosionVFX;
-    [SerializeField] private AudioClip _flyClip;
+    [SerializeField] GameObject _explosionPrefab;
+    [SerializeField] VisualEffect _explosionVFX;
+    [SerializeField] AudioClip _flyClip;
+    [SerializeField] GameObject _mesh;
     private Transform _target;
     private Rigidbody _rb;
     private AudioSource _audiosource;
@@ -44,12 +45,9 @@ public class Rocket : MonoBehaviour
         {
             Explosion(collision.contacts[0].point);
 
-            //Instantiate(_explosions[0], collision.contacts[0].point, _explosions[0].transform.rotation);
-            //Instantiate(_explosions[1], collision.contacts[0].point, _explosions[1].transform.rotation);
             Instantiate(_explosionVFX, collision.contacts[0].point, _explosionVFX.transform.rotation);
             //CameraShake.Instance.ActiveShake();
 
-            //_target.GetComponent<DecalProjector>().enabled = false;
             Destroy(gameObject);
         }
     }

@@ -1,17 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-
 public class RadialRigidbodiesActivation : MonoBehaviour
 {
     [SerializeField] private LayerMask m_ActivationLayer;
     [SerializeField] private float m_Range;
     [SerializeField] private float m_Speed;
-
-    private void Start()
-    {
-        
-    }
 
     private void Update()
     {

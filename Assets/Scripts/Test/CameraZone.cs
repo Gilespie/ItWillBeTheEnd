@@ -6,6 +6,7 @@ public class CameraZone : MonoBehaviour
     [SerializeField] CameraPointFollow _camera;
     [SerializeField] Transform _cameraPos;
     [SerializeField] Transform _cameraView;
+    [SerializeField] float _timeToView = 3f;
 
     [SerializeField] bool _isStatic = false;
     [SerializeField] bool _isStaticPos = false;
@@ -43,14 +44,16 @@ public class CameraZone : MonoBehaviour
 
             if (_isCoroutine)
             {
-                _camera.ActiveChangeViewTargetRoutine(_cameraView);
-                GetComponent<BoxCollider>().enabled = false;
+                _camera.ActiveChangeViewTargetRoutine(_cameraView, _timeToView);
+                //GetComponent<BoxCollider>().enabled = false;
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (_isOnce) return;
+
         if (other.GetComponent<Character>() != null)
         {
             _camera.ResetToFollow();

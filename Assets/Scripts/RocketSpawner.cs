@@ -1,40 +1,60 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class RocketSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject _rocketPrefab;
-    [SerializeField] private Transform _spawnPosition;
-    [SerializeField] private float _timeToSpawn = 3f;
-    [SerializeField] private bool _isLoop = true;
-    [SerializeField] private Transform[] _targets;
-    private int _randomIndex = 0;
+    [Header("Refs")]
+    [SerializeField] GameObject _rocketPrefab;
+    [SerializeField] Transform _spawnPosition;
+    [SerializeField] Transform[] _targets;
+
+    [SerializeField] float _timeToSpawn = 3f;
+    [SerializeField] bool _isLoop = true;
+
+    int _randomIndex = 0;
+    Coroutine _attackRoutine;
 
     private void OnEnable()
     {
-        StartCoroutine(OnAirAttack());
+        if (_isLoop)
+        {
+            _attackRoutine = StartCoroutine(AirAttackLoop());
+        }
+        else
+        {
+            FireSingleRocket();
+        }
     }
 
     private void OnDisable()
     {
-        StopCoroutine(OnAirAttack());
+        if (_attackRoutine != null)
+        {
+            StopCoroutine(_attackRoutine);
+        }
     }
 
-
-    private IEnumerator OnAirAttack()
+    private IEnumerator AirAttackLoop()
     {
-        while(_isLoop)
+        while (true)
         {
-            _randomIndex = Random.Range(0, _targets.Length);
-            //_targets[_randomIndex].GetComponent<DecalProjector>().enabled = true;
-            GameObject rocket = Instantiate(_rocketPrefab, _spawnPosition.position, Quaternion.identity);
-            rocket.GetComponent<Rocket>().SetTarget(_targets[_randomIndex]);
-            yield return new WaitForSeconds(_timeToSpawn);
-            
-            yield return null;
-        }
+            FireSingleRocket();
 
-        yield return null;
+            yield return new WaitForSeconds(_timeToSpawn);
+        }
+    }
+
+    public void FireSingleRocket()
+    {
+        if (_targets == null || _targets.Length == 0)
+            return;
+
+        _randomIndex = Random.Range(0, _targets.Length);
+
+        GameObject rocket = Instantiate(_rocketPrefab, _spawnPosition.position, Quaternion.identity);
+
+        Rocket rocketComponent = rocket.GetComponent<Rocket>();
+
+        rocketComponent.SetTarget(_targets[_randomIndex]);
     }
 }

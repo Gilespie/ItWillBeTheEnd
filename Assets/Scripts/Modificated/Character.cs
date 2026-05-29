@@ -90,12 +90,12 @@ public class Character : MonoBehaviour, IDamageable
             Pressing();
         }
 
-        if (_inputController.IsJumping && _isGround && !_isCrouching && _currentMovement.CurrentSpeed < 0.1f)
+        if (_inputController.IsJumping && _isGround && !_isCrouching && !_isSwimming && _currentMovement.CurrentSpeed < 0.1f)
         {
             _animationController.SetTrigger(AnimParams.Jump);
             //ChangePhysicMaterial(_slideMaterial);
         }
-        else if (_inputController.IsJumping && _isGround && !_isCrouching && _currentMovement.CurrentSpeed > 0.1f)
+        else if (_inputController.IsJumping && _isGround && !_isCrouching && !_isSwimming && _currentMovement.CurrentSpeed > 0.1f)
         {
             _animationController.SetTrigger(AnimParams.Jump);
             _currentMovement.Jump();

@@ -1211,7 +1211,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614609}
   m_ExposedName: Tex2D
   m_Exposed: 1
-  m_Order: 4
+  m_Order: 2
   m_Category: Explosion
   m_Min:
     m_Type:
@@ -1357,7 +1357,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614617}
   m_ExposedName: Gradient
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 1
   m_Category: Explosion
   m_Min:
     m_Type:
@@ -1668,7 +1668,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614839}
   m_ExposedName: Scale
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 4
   m_Category: Explosion
   m_Min:
     m_Type:
@@ -1946,7 +1946,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614854}
   m_ExposedName: Lifetime
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 3
   m_Category: Explosion
   m_Min:
     m_Type:
