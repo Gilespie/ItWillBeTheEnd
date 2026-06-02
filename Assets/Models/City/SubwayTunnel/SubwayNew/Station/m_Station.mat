@@ -135,6 +135,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RotationInDegrees: 0
     - _RoughnessIntensity: 1
     - _Smooth: 1
     - _Smoothness: 1

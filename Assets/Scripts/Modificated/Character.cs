@@ -40,6 +40,7 @@ public class Character : MonoBehaviour, IDamageable
     bool _isPushingNow = false;
     bool _inWaterZone = false;
     bool _isOnAir = false;
+    bool _isFalling = false;
 
     PushableBox _currentBox;
     public PushableBox CurrentBox => _currentBox;
@@ -69,6 +70,10 @@ public class Character : MonoBehaviour, IDamageable
         _isSliding = _slopeRaycast.IsRaycasting(-Vector3.up);
         _isGrab = _pushingRaycast.IsRaycasting(_characterRotator.Mesh.forward);
         _isOnAir = !_isGround && !_isSwimming;
+        _animationController.SetBool(AnimParams.Air, _isOnAir);
+        _animationController.SetBool(AnimParams.IsFalling, _isFalling);
+
+        _isFalling = _rb.linearVelocity.y < -0.5f && !_isGround && !_isSwimming;
 
         _rb.maxLinearVelocity = _slopeRaycast.IsRaycasting(-Vector3.up) ? 15f : float.MaxValue;
 
@@ -107,7 +112,6 @@ public class Character : MonoBehaviour, IDamageable
 
 
         _animationController.SetFloat(AnimParams.Speed, _currentMovement.CurrentSpeed);
-        _animationController.SetBool(AnimParams.Air, _isOnAir);
 
         if (_inputController.Direction.sqrMagnitude > 0.1f * 0.1f)
             _animationController.SetBool(AnimParams.Move, true);

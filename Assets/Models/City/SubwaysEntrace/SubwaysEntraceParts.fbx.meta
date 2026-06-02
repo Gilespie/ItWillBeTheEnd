@@ -3,7 +3,27 @@ guid: 910bb079a1944ac45b00e49a15f95b11
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_GlassCircul.001
+    second: {fileID: 2100000, guid: e96f6d877ceeec34e9eaa22962c1facf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_SubwayEntrace.001
+    second: {fileID: 2100000, guid: 4db140b4db305fa4eb6976620158b138, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_SubwayEntraceFloor.001
+    second: {fileID: 2100000, guid: ea625aa79f43a704abc81bff0ff18557, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: m_SubwayEntraceRoof.001
+    second: {fileID: 2100000, guid: 30d6df7a65e9f5f4589a9b60fca69b10, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -46,7 +66,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -88,7 +108,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.5
+    globalScale: 50
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

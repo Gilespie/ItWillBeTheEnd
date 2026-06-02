@@ -1,5 +1,10 @@
 using System.Collections;
 using UnityEngine;
+public enum TargetMode
+{
+    Random,
+    Sequential
+}
 
 public class RocketSpawner : MonoBehaviour
 {
@@ -11,10 +16,12 @@ public class RocketSpawner : MonoBehaviour
     [SerializeField] float _timeToSpawn = 3f;
     [SerializeField] bool _isLoop = true;
 
-    int _randomIndex = 0;
+    [SerializeField] private TargetMode _targetMode;
+
+    int _currentIndex = 0;
     Coroutine _attackRoutine;
 
-    private void OnEnable()
+    void OnEnable()
     {
         if (_isLoop)
         {
@@ -26,7 +33,7 @@ public class RocketSpawner : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         if (_attackRoutine != null)
         {
@@ -34,7 +41,7 @@ public class RocketSpawner : MonoBehaviour
         }
     }
 
-    private IEnumerator AirAttackLoop()
+    IEnumerator AirAttackLoop()
     {
         while (true)
         {
@@ -44,17 +51,41 @@ public class RocketSpawner : MonoBehaviour
         }
     }
 
-    public void FireSingleRocket()
+    void FireSingleRocket()
     {
-        if (_targets == null || _targets.Length == 0)
-            return;
+        Transform target = GetTarget();
 
-        _randomIndex = Random.Range(0, _targets.Length);
+        if (_targets == null)
+            return;
 
         GameObject rocket = Instantiate(_rocketPrefab, _spawnPosition.position, Quaternion.identity);
 
         Rocket rocketComponent = rocket.GetComponent<Rocket>();
 
-        rocketComponent.SetTarget(_targets[_randomIndex]);
+        rocketComponent.SetTarget(target);
+    }
+
+    Transform GetTarget()
+    {
+        if (_targets == null || _targets.Length == 0)
+            return null;
+
+        switch (_targetMode)
+        {
+            case TargetMode.Random:
+                return _targets[Random.Range(0, _targets.Length)];
+
+            case TargetMode.Sequential:
+                Transform target = _targets[_currentIndex];
+
+                _currentIndex++;
+
+                if (_currentIndex >= _targets.Length)
+                    _currentIndex = 0;
+
+                return target;
+        }
+
+        return null;
     }
 }

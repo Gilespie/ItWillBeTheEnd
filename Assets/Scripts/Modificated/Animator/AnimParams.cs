@@ -13,4 +13,5 @@ public static class AnimParams
     public static readonly int StartSwimm = Animator.StringToHash("onStartSwimming");
     public static readonly int StopSwimm = Animator.StringToHash("onStopSwimming"); 
     public static readonly int Climb = Animator.StringToHash("Climbing");
+    public static readonly int IsFalling = Animator.StringToHash("isFalling");
 }

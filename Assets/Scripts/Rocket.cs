@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
@@ -12,15 +13,21 @@ public class Rocket : MonoBehaviour
     [SerializeField] private float _forceUpExplosion = 5f;
     [SerializeField] private LayerMask _player;
 
+    [SerializeField] float _timeToDeactivate = 5f;
+
     [Header("References")]
     [SerializeField] GameObject _explosionPrefab;
     [SerializeField] VisualEffect _explosionVFX;
     [SerializeField] AudioClip _flyClip;
     [SerializeField] GameObject _mesh;
+    [SerializeField] Collider _col;
+    [SerializeField] ParticleSystem _trailParticle;
     private Transform _target;
     private Rigidbody _rb;
     private AudioSource _audiosource;
     private Vector3 _direction;
+    [SerializeField] bool _isVFX;
+    bool _isExploded;
 
     private void Awake()
     {
@@ -32,6 +39,9 @@ public class Rocket : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_isExploded || _target == null)
+            return;
+
         _direction = (_target.position - transform.position).normalized;
         Quaternion view = Quaternion.LookRotation(_direction);
 
@@ -45,10 +55,19 @@ public class Rocket : MonoBehaviour
         {
             Explosion(collision.contacts[0].point);
 
-            Instantiate(_explosionVFX, collision.contacts[0].point, _explosionVFX.transform.rotation);
+            if(!_isVFX)
+                Instantiate(_explosionPrefab, collision.contacts[0].point, _explosionPrefab.transform.rotation);
+            else
+                Instantiate(_explosionVFX, collision.contacts[0].point, _explosionVFX.transform.rotation);
             //CameraShake.Instance.ActiveShake();
 
-            Destroy(gameObject);
+            _mesh.SetActive(false);
+            _col.enabled = false;
+            _trailParticle.Stop();
+
+            _isExploded = true;
+            StartCoroutine(WaitParticles());
+            //Destroy(gameObject);
         }
     }
 
@@ -77,6 +96,12 @@ public class Rocket : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator WaitParticles()
+    {
+        yield return new WaitForSeconds(_timeToDeactivate);
+        gameObject.SetActive(false);
     }
 
     /*private void OnDrawGizmos()
