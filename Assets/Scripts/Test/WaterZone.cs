@@ -30,7 +30,7 @@ public class WaterZone : MonoBehaviour
         if(other.TryGetComponent(out CameraPointFollow camera))
         {
             camera.SetWaterZone(this);
-            camera.SetVolume(_volume);
+            camera.SetUnderwaterVolume(_volume);
             camera.EnterWater();
         }
 

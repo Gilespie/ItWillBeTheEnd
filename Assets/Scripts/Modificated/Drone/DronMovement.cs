@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -9,7 +10,8 @@ public class DronMovement : MonoBehaviour
     [SerializeField] Transform _targetPoint;
 
     [Header("Movement")]
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float _patrolSpeed = 5f;
+    [SerializeField] private float _chaseSpeed = 8f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float targetChangeInterval = 2f;
     [SerializeField] private Rigidbody _rb;
@@ -20,10 +22,12 @@ public class DronMovement : MonoBehaviour
     [Header("AI")]
     [SerializeField] private DroneStates _droneStates;
     [SerializeField] private Transform _player;
-    [SerializeField] private float _viewDistance = 10f;
-    [SerializeField] private float _fieldOfViewAngle = 90f;
     [SerializeField] private Transform _eyePoint;
+
+    [Header("FOV")]
     [SerializeField] private LayerMask _visionMask;
+    [SerializeField]private float _fovDistance;
+    private float _fovAngle;
 
     [Header("AI - Light")]
     [SerializeField] private Light _droneLight;
@@ -58,6 +62,9 @@ public class DronMovement : MonoBehaviour
 
     private void Start()
     {
+        _fovAngle = _droneLight.spotAngle;
+        _fovDistance = _droneLight.range;
+
         if (_patrolPoints != null && _patrolPoints.Length > 0)
         {
             _currentIndex = Random.Range(0, _patrolPoints.Length);
@@ -149,18 +156,20 @@ public class DronMovement : MonoBehaviour
 
     bool CanSeePlayer()
     {
-        Transform eye = _eyePoint != null ? _eyePoint : transform;
-        Vector3 toPlayer = _player.position - eye.position;
-        float distance = toPlayer.magnitude;
+        float sqrtDistance = (_player.position - _eyePoint.position).sqrMagnitude;
 
-        if (distance > _viewDistance) return false;
-
-        float angle = Vector3.Angle(transform.forward, toPlayer);
-        if (angle > _fieldOfViewAngle * 0.5f) return false;
-
-        if (Physics.Raycast(eye.position, toPlayer.normalized, out RaycastHit hit, distance, _visionMask))
+        if (sqrtDistance < _fovDistance * _fovDistance)
         {
-            return hit.transform == _player || hit.transform.IsChildOf(_player);
+            Vector3 dirToPlayer = (_player.position - _eyePoint.position).normalized;
+            float angleBetweenDronAndPlayer = Vector3.Angle(transform.forward, dirToPlayer);
+
+            if (angleBetweenDronAndPlayer < _fovAngle * 0.5f)
+            {
+                if (!Physics.Linecast(_eyePoint.position, _player.position, _visionMask))
+                {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -202,15 +211,20 @@ public class DronMovement : MonoBehaviour
     {
         Vector3 direction = (_currentTarget - transform.position).normalized;
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        Vector3 flatDirection = _currentTarget - transform.position;
+        flatDirection.y = 0;
+
+        if (direction.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(flatDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        }
 
         if (_rb.linearVelocity.magnitude < _maxSpeedLimit)
         {
-            _rb.AddForce(transform.forward * speed, ForceMode.Force);
+            _rb.AddForce(direction * _patrolSpeed, ForceMode.Force);
         }
 
-        // patrol: когда дошли до случайной точки — выбираем новую
         if (_state == DroneStates.Patrol &&
             (_currentTarget - transform.position).sqrMagnitude < _stopDistance * _stopDistance)
         {
@@ -270,7 +284,7 @@ public class DronMovement : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
 
-        _rb.MovePosition(_rb.position + dir.normalized * speed * Time.fixedDeltaTime);
+        _rb.MovePosition(_rb.position + dir.normalized * _patrolSpeed * Time.fixedDeltaTime);
 
         if(distanceSQRT < _stopDistance * _stopDistance)
         {
@@ -299,20 +313,9 @@ public class DronMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // конус обзора
-        Transform eye = _eyePoint != null ? _eyePoint : transform;
-        Gizmos.color = Color.cyan;
-
-        float halfFOV = _fieldOfViewAngle * 0.5f;
-        Quaternion leftRay = Quaternion.AngleAxis(-halfFOV, Vector3.up);
-        Quaternion rightRay = Quaternion.AngleAxis(halfFOV, Vector3.up);
-        Gizmos.DrawRay(eye.position, leftRay * transform.forward * _viewDistance);
-        Gizmos.DrawRay(eye.position, rightRay * transform.forward * _viewDistance);
-        Gizmos.DrawRay(eye.position, transform.forward * _viewDistance);
-
-        // текущая цель
-        Gizmos.color = Color.white;
-        Gizmos.DrawSphere(_currentTarget, 0.2f);
+        //fov
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(transform.position, transform.forward * _fovDistance);
 
         // радиус взрыва
         Gizmos.color = Color.red;

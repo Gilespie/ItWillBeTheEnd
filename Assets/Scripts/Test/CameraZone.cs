@@ -4,57 +4,70 @@
 public class CameraZone : MonoBehaviour
 {
     [SerializeField] CameraPointFollow _camera;
-    [SerializeField] Transform _cameraPos;
-    [SerializeField] Transform _cameraView;
-    [SerializeField] float _timeToView = 3f;
 
-    [SerializeField] bool _isStatic = false;
-    [SerializeField] bool _isStaticPos = false;
-    [SerializeField] bool _isOtherTargetView = false;
-    [SerializeField] bool _isZPosition = false;
-    [SerializeField] bool _isOnce = false;
-    [SerializeField] bool _isCoroutine = false;
+    [Header("Override Position")]
+    [SerializeField] Transform _overridePositionPoint;
+
+    [Header("Override Look Target")]
+    [SerializeField] Transform _overrideLookTarget;
+
+    [Header("Behaviour Flags")]
+    [SerializeField] bool _overridePositionAndLook = false;
+    [SerializeField] bool _overridePositionOnly = false;
+    [SerializeField] bool _overrideLookOnly = false;
+    [SerializeField] bool _overrideZPosition = false;
+    [SerializeField] bool _isTriggerOnce = false;
+    [SerializeField] bool _isLerpingSpeed = false;
     bool _alreadyTriggered;
+
+    [SerializeField] bool _lookAtTargetTemporarily = false;
+    [SerializeField] float _timeToView = 3f;
+    [SerializeField] float _zPos = -8f;
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_isOnce && _alreadyTriggered) return;
+        if (_isTriggerOnce && _alreadyTriggered) return;
 
-        if (other.GetComponent<Character>() != null)
+        if (other.TryGetComponent(out Character character))
         {
-            if (_isStatic)
+            if (_overridePositionAndLook)
             {
-                _camera.SetPointView(_cameraPos);
-                _camera.SetTargetView(_cameraView);
+                _camera.SetOverridePosition(_overridePositionPoint);
+                _camera.SetTargetView(_overrideLookTarget);
             }
-            if(_isStaticPos)
+            if(_overridePositionOnly)
             {
-                _camera.SetPointView(_cameraPos);
+                _camera.SetOverridePosition(_overridePositionPoint);
             }
-            if (_isOtherTargetView)
+            if (_overrideLookOnly)
             {
-                _camera.SetTargetView(_cameraView);
+                _camera.SetTargetView(_overrideLookTarget);
             }
-            if(_isZPosition)
+            if(_overrideZPosition)
             {
-                _camera.SetZPos();
+                _camera.SetZPos(_zPos);
             }
-            if (_isOnce)
+            if (_isTriggerOnce)
                 _alreadyTriggered = true;
 
-            if (_isCoroutine)
+            if (_lookAtTargetTemporarily)
             {
-                _camera.ActiveChangeViewTargetRoutine(_cameraView, _timeToView);
-                //GetComponent<BoxCollider>().enabled = false;
+                _camera.LookAtTargetTemporary(_overrideLookTarget, _timeToView);
+            }
+
+            if(_isLerpingSpeed)
+            {
+                _camera.ActiveLerpSmoothing(false);
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (_isOnce) return;
+        if (_isTriggerOnce) return;
 
-        if (other.GetComponent<Character>() != null)
+        if (other.TryGetComponent(out Character character))
         {
             _camera.ResetToFollow();
         }
