@@ -13,6 +13,7 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] SlopeRaycast _slopeRaycast;
     [SerializeField] InteractRaycast _interactRaycast;
     [SerializeField] PushingRaycast _pushingRaycast;
+    [SerializeField] CanStandRaycast _canStandUpRaycast;
     [SerializeField] Rigidbody _rb;
     [SerializeField] MovementAdvance[] _movements;//0 - walk, 1 - sprint, 2 - crouch, 3 - swim, 4 - slope, 5 - push
     [SerializeField] CharacterRotator _characterRotator;
@@ -107,7 +108,16 @@ public class Character : MonoBehaviour, IDamageable
             //ChangePhysicMaterial(_slideMaterial);
         }
 
-        _isCrouching = _inputController.IsCrouching;
+        if (_inputController.IsCrouching)
+        {
+            _isCrouching = true;
+        }
+        else
+        {
+            if (_canStandUpRaycast.CanStandUp())
+                _isCrouching = false;
+        }
+
         _isSprinting = _inputController.IsSprinting;
 
 

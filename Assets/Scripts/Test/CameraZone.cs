@@ -16,6 +16,7 @@ public class CameraZone : MonoBehaviour
     [SerializeField] bool _overridePositionOnly = false;
     [SerializeField] bool _overrideLookOnly = false;
     [SerializeField] bool _overrideZPosition = false;
+    [SerializeField] bool _overrideCameraOffset = false;
     [SerializeField] bool _isTriggerOnce = false;
     [SerializeField] bool _isLerpingSpeed = false;
     bool _alreadyTriggered;
@@ -23,7 +24,7 @@ public class CameraZone : MonoBehaviour
     [SerializeField] bool _lookAtTargetTemporarily = false;
     [SerializeField] float _timeToView = 3f;
     [SerializeField] float _zPos = -8f;
-
+    [SerializeField] Vector3 _offset; 
 
     private void OnTriggerEnter(Collider other)
     {
@@ -48,6 +49,12 @@ public class CameraZone : MonoBehaviour
             {
                 _camera.SetZPos(_zPos);
             }
+
+            if (_overrideCameraOffset)
+            {
+                _camera.SetCameraOffset(_offset);
+            }
+
             if (_isTriggerOnce)
                 _alreadyTriggered = true;
 

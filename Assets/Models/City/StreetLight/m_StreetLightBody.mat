@@ -142,7 +142,7 @@ Material:
     - _Metallic: 0
     - _MetallicIntensity: 0
     - _Mode: 0
-    - _NormalIntensity: 1
+    - _NormalIntensity: 0.99
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0

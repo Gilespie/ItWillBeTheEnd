@@ -6,7 +6,7 @@ public class Fireworks : MonoBehaviour
 {
     [SerializeField] VisualEffect _fireworksEffect;
     [SerializeField] float _speedFade = 15f;
-    [SerializeField] Light _light;
+    //[SerializeField] Light _light;
     [SerializeField] private float _emmisiveIntensity = 8f;
 
     private void OnEnable()
@@ -23,7 +23,7 @@ public class Fireworks : MonoBehaviour
     {
         if (args.nameId == Shader.PropertyToID("OnDead"))
         {
-            ChangeLight();
+            //ChangeLight();
             SetColor();
         }
     }
@@ -34,7 +34,7 @@ public class Fireworks : MonoBehaviour
         _fireworksEffect.SetVector4("MainColor", newcolor);
     }
 
-    private void ChangeLight()
+   /* private void ChangeLight()
     {
         _light.color = _fireworksEffect.GetVector4("MainColor");
         _light.intensity = 1f;
@@ -53,5 +53,5 @@ public class Fireworks : MonoBehaviour
             _light.intensity = Mathf.Lerp(startIntensity, 0, t);
             yield return null;
         }
-    }
+    }*/
 }
