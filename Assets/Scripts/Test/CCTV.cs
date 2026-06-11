@@ -4,13 +4,18 @@ public class CCTV : MonoBehaviour
 {
     [SerializeField] Transform _target;
     [SerializeField] Transform _cameraBody;
-    [SerializeField] Camera _cam;
+    [SerializeField] float _rotationSpeed = 5f;
 
     private void Update()
     {
         if (_target == null) return;
 
-        _cam.transform.LookAt(_target);
-        _cameraBody.transform.LookAt(_target.position);
+        Quaternion targetRotation =
+        Quaternion.LookRotation(_target.position - _cameraBody.position);
+
+        _cameraBody.rotation = Quaternion.Slerp(
+        _cameraBody.rotation,
+        targetRotation,
+        _rotationSpeed * Time.deltaTime);
     }
 }

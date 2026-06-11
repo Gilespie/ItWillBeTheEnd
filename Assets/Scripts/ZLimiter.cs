@@ -2,14 +2,16 @@ using UnityEngine;
 
 public class ZLimiter : MonoBehaviour
 {
+    [SerializeField] private Rigidbody _rb;
+
     [Header("Z Limits")]
-    [SerializeField] private float _zPosMin = -10f;
-    [SerializeField] private float _zPosMax = 0f;
-    private Rigidbody _rb;
+    [SerializeField] private float _zPosMin = -5f;
+    [SerializeField] private float _zPosMax = 2.34f;
+    private float _zPosMaxDefault;
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        _zPosMaxDefault = _zPosMax;
     }
 
     private void FixedUpdate()
@@ -19,18 +21,18 @@ public class ZLimiter : MonoBehaviour
 
     private void CheckZPosition()
     {
-
         Vector3 pos = _rb.position;
         pos.z = Mathf.Clamp(pos.z, _zPosMin, _zPosMax);
         _rb.MovePosition(pos);
+    }
 
-       /* if (transform.position.z >= _zPosMax)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, _zPosMax);
-        }
-        if (transform.position.z <= _zPosMin)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, _zPosMin);
-        }*/
+    public void SetZMaxLimit(float value)
+    {
+        _zPosMax = value;
+    }
+
+    public void ResetLimit()
+    {
+        _zPosMax = _zPosMaxDefault;
     }
 }

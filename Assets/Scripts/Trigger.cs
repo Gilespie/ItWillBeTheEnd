@@ -1,43 +1,33 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(BoxCollider))]
 public class Trigger : MonoBehaviour
 {
     [SerializeField] protected bool _isOnce = false;
     [SerializeField] protected UnityEvent _actions;
     [SerializeField] protected UnityEvent _actionsStay;
-    protected Collider _collider;
+    [SerializeField] protected Collider _collider;
 
-    protected virtual void Awake()
+    private void Awake()
     {
-        _collider = GetComponent<Collider>();
+        if (_collider == null) _collider = GetComponent<Collider>();
     }
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (_isOnce)
-        {
-            if (other.GetComponent<Character>())
-            {
-                _actions?.Invoke();
-                _collider.enabled = false;
-            }
-        }
-        else
-        {
-            if (other.GetComponent<Character>())
-            {
-                _actions?.Invoke();
-            }
-        }
+        if (!other.TryGetComponent<Character>(out _)) return;
+        
+        _actions?.Invoke();
+        
+        if (_isOnce) _collider.enabled = false;
     }
 
     protected virtual void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<Character>())
-        {
-            _actionsStay?.Invoke();
-        }
+        if (!other.TryGetComponent<Character>(out _)) return;
+        
+        _actionsStay?.Invoke();
     }
 
     [ContextMenu("Activate Trigger")]
