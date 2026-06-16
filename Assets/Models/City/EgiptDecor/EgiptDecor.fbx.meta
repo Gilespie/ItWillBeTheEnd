@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c79dd0d1e43d8294bb9f4af4b0d546a4
+guid: 36d2cdd870c351b4eb88d193bb48d19c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,78 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: m_Ank
-    second: {fileID: 2100000, guid: a045adb685e8f964d9a52876ce2ffe0b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Balance
-    second: {fileID: 2100000, guid: 327e0d662e010284b9cca23d84efaf89, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Crystals
-    second: {fileID: 2100000, guid: a702374b33cf656428e6f74d9e380ef2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Cup
-    second: {fileID: 2100000, guid: 8bcfc6df84103724795ac02e5b676d0c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Decor
-    second: {fileID: 2100000, guid: 247ddc9fca433154a9d68c43ebe10a3c, type: 2}
+      name: m_DecorsAll
+    second: {fileID: 2100000, guid: 0e6ff6d530e82db4fbe81c7c5ff0094c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: m_Glass
-    second: {fileID: 2100000, guid: 730b37f964a9dcb448d3a43df5084cf3, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Metal
-    second: {fileID: 2100000, guid: f76c1928cac2fea48a5e1f061ebcde9a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Pedistal
-    second: {fileID: 2100000, guid: 2f73ad81c7a80514590abfb59823288e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_PedistalPiramide
-    second: {fileID: 2100000, guid: 556d6371653a5b64697b28a7299a7304, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Piramide
-    second: {fileID: 2100000, guid: 7a6a57495939f3c4397095b729307f0e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Shelf
-    second: {fileID: 2100000, guid: b0a08634aa24fb440a1fb713a7955f95, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Staff
-    second: {fileID: 2100000, guid: f633372589f09774287e2cf482dd508b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Statue
-    second: {fileID: 2100000, guid: 2c2f6e13079b5294180c54e780202a90, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Wood
-    second: {fileID: 2100000, guid: df7a8525ab7d66844844bb5dca7c9810, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: m_Wood2
-    second: {fileID: 2100000, guid: 85425f2403fc979478f67d6cd0898756, type: 2}
+    second: {fileID: 2100000, guid: 750fdfe9dbe4288408a41e592b8e5b60, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -151,7 +86,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
