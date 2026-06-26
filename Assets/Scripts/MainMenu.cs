@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-        _playButton.onClick.AddListener(() => LoadSceneManager.Instance.LoadScene(_startLevelName));
+        //_playButton.onClick.AddListener(() => LoadSceneManager.Instance.LoadScene(_startLevelName));
         _settingsButton.onClick.AddListener(ShowSettings);
         //_controlButton.onClick.AddListener(ShowControls);
         _creditsButton.onClick.AddListener(ShowCredits);

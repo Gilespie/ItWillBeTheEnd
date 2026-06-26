@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterInputController : MonoBehaviour 
 {
-    [SerializeField] TypeOfInput _typeInput = TypeOfInput.Press;
+    //[SerializeField] TypeOfInput _typeInput = TypeOfInput.Press;
 
     [Header("Buttons")]
     [SerializeField] KeyCode _jumpKey = KeyCode.Space;
@@ -11,7 +11,8 @@ public class CharacterInputController : MonoBehaviour
     [SerializeField] KeyCode _interactKey = KeyCode.E;
     [SerializeField] KeyCode _pushingKey = KeyCode.F;
     [SerializeField] KeyCode _slowTimeKey = KeyCode.T;
-    [SerializeField] KeyCode _ragdollKey = KeyCode.R;
+    //[SerializeField] KeyCode _ragdollKey = KeyCode.R;
+    [SerializeField] KeyCode _pauseKey = KeyCode.Escape;
 
     bool _isCrouching = false;
     public bool IsCrouching => _isCrouching;
@@ -39,6 +40,8 @@ public class CharacterInputController : MonoBehaviour
 
     bool _isActive = true;
 
+    bool _isPaused = false;
+
     public float VerticalSwim => Input.GetAxis("Jump") > 0 ? 1 : (Input.GetKey(KeyCode.LeftControl) ? -1 : 0);
 
     void Update()
@@ -47,31 +50,44 @@ public class CharacterInputController : MonoBehaviour
 
         _direction = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Jump"), Input.GetAxis("Vertical"));
 
-        switch (_typeInput)
+        _isCrouching = Input.GetKey(_crouchKey);
+        _isSprinting = Input.GetKey(_sprintKey);
+
+        _isJumping = Input.GetKeyDown(_jumpKey);
+        _isInteracting = Input.GetKeyDown(_interactKey);
+        _isPushing = Input.GetKey(_pushingKey);
+        
+        if(Input.GetKeyDown(_pauseKey))
         {
-            case TypeOfInput.Press:
-                if (Input.GetKeyDown(_crouchKey)) _isCrouching = !_isCrouching;
-                if(Input.GetKeyDown(_sprintKey)) _isSprinting = !_isSprinting;
-                if(Input.GetKeyDown(_ragdollKey)) _isRagdoll = !_isRagdoll;
-                if(Input.GetKeyDown(_slowTimeKey)) _isSlowTime = !_isSlowTime;
-
-                _isJumping = Input.GetKeyDown(_jumpKey);
-                //if(Input.GetKeyDown(_interactKey)) _isInteracting = !_isInteracting;
-                _isInteracting = Input.GetKeyDown(_interactKey);
-
-                _isPushing = Input.GetKey(_pushingKey);
-                break;
-
-            case TypeOfInput.Holding:
-                _isCrouching = Input.GetKey(_crouchKey);
-                _isSprinting = Input.GetKey(_sprintKey);
-
-                _isJumping = Input.GetKeyDown(_jumpKey);
-                _isInteracting = Input.GetKey(_interactKey);
-                _isPushing = Input.GetKey(_pushingKey);
-                break;
+            _isPaused = !_isPaused;
+            EventManager.Trigger(EventType.OnPaused, _isPaused);
         }
-    }
+
+    /*switch (_typeInput)
+    {
+        case TypeOfInput.Press:
+            if (Input.GetKeyDown(_crouchKey)) _isCrouching = !_isCrouching;
+            if(Input.GetKeyDown(_sprintKey)) _isSprinting = !_isSprinting;
+            //if(Input.GetKeyDown(_ragdollKey)) _isRagdoll = !_isRagdoll;
+            if(Input.GetKeyDown(_slowTimeKey)) _isSlowTime = !_isSlowTime;
+
+            _isJumping = Input.GetKeyDown(_jumpKey);
+            //if(Input.GetKeyDown(_interactKey)) _isInteracting = !_isInteracting;
+            _isInteracting = Input.GetKeyDown(_interactKey);
+
+            _isPushing = Input.GetKey(_pushingKey);
+            break;
+
+        case TypeOfInput.Holding:
+            _isCrouching = Input.GetKey(_crouchKey);
+            _isSprinting = Input.GetKey(_sprintKey);
+
+            _isJumping = Input.GetKeyDown(_jumpKey);
+            _isInteracting = Input.GetKeyDown(_interactKey);
+            _isPushing = Input.GetKey(_pushingKey);
+            break;
+    }*/
+}
 
     public void ToggleComponent()
     {

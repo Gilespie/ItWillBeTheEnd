@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
 
 public class Rocket : MonoBehaviour
@@ -11,6 +10,7 @@ public class Rocket : MonoBehaviour
     [SerializeField] private float _damage = 500f;
     [SerializeField] private float _forceExplosion = 50f;
     [SerializeField] private float _forceUpExplosion = 5f;
+    [SerializeField] private float _stopDistance = 1f;
     [SerializeField] private LayerMask _player;
 
     [SerializeField] float _timeToDeactivate = 5f;
@@ -42,38 +42,44 @@ public class Rocket : MonoBehaviour
         if (_isExploded || _target == null)
             return;
 
-        _direction = (_target.position - transform.position).normalized;
+        Vector3 dir = _target.position - transform.position;
+
+        if (dir.sqrMagnitude <= _stopDistance * _stopDistance)
+        {
+            Explode(transform.position);
+
+            return;
+        }
+
+        _direction = dir.normalized;
+
         Quaternion view = Quaternion.LookRotation(_direction);
 
         _rb.MoveRotation(view);
         _rb.MovePosition(_rb.position + _direction * _speedFly * Time.fixedDeltaTime);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider != null)
-        {
-            Explosion(collision.contacts[0].point);
-
-            if(!_isVFX)
-                Instantiate(_explosionPrefab, collision.contacts[0].point, _explosionPrefab.transform.rotation);
-            else
-                Instantiate(_explosionVFX, collision.contacts[0].point, _explosionVFX.transform.rotation);
-            //CameraShake.Instance.ActiveShake();
-
-            _mesh.SetActive(false);
-            _col.enabled = false;
-            _trailParticle.Stop();
-
-            _isExploded = true;
-            StartCoroutine(WaitParticles());
-            //Destroy(gameObject);
-        }
-    }
-
     public void SetTarget(Transform target)
     {
         _target = target;
+    }
+
+    void Explode(Vector3 point)
+    {
+        Explosion(point);
+
+        if (!_isVFX)
+            Instantiate(_explosionPrefab, point, _explosionPrefab.transform.rotation);
+        else
+            Instantiate(_explosionVFX, point, _explosionVFX.transform.rotation);
+        CameraShake.Instance.ActiveShake();
+
+        _mesh.SetActive(false);
+        _col.enabled = false;
+        _trailParticle.Stop();
+
+        _isExploded = true;
+        StartCoroutine(WaitParticles());
     }
 
     private void Explosion(Vector3 centre)
@@ -103,10 +109,4 @@ public class Rocket : MonoBehaviour
         yield return new WaitForSeconds(_timeToDeactivate);
         gameObject.SetActive(false);
     }
-
-    /*private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, _radius);
-    }*/
 }

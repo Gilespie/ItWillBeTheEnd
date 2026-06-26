@@ -22,7 +22,7 @@ public abstract class FadeTextParticle : MonoBehaviour
 
     public virtual void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out Player player))
+        if(other.TryGetComponent(out Character player))
         {
             _isPlayerInside = true;
         }
@@ -30,7 +30,7 @@ public abstract class FadeTextParticle : MonoBehaviour
 
     public virtual void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out Player player))
+        if (other.TryGetComponent(out Character player))
         {
             _isPlayerInside = false;
         }

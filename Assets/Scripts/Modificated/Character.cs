@@ -247,8 +247,8 @@ public class Character : MonoBehaviour, IDamageable
         _ragdoll.ActivateCollision();
 
         _view.PlayBloodVFX();
-        //PlayVoice();
-        //StartCoroutine(GameOverPanel());
+        EventManager.Trigger(EventType.OnDead);
+        _view.PlayVoice();
     }
 
     void ChangeMovement(MovementAdvance newMovement)

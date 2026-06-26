@@ -1,7 +1,5 @@
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.VFX;
+
 
 public class DronMovement : MonoBehaviour
 {
@@ -16,7 +14,7 @@ public class DronMovement : MonoBehaviour
     [SerializeField] private float targetChangeInterval = 2f;
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private float _maxSpeedLimit = 5f;
-    [SerializeField] private float _stopDistance = 1f;
+    [SerializeField] private float _arrivalDistance = 1f;
     Vector3 _currentPosTarget;
 
     [Header("AI")]
@@ -26,7 +24,7 @@ public class DronMovement : MonoBehaviour
 
     [Header("FOV")]
     [SerializeField] private LayerMask _visionMask;
-    [SerializeField]private float _fovDistance;
+    private float _fovDistance;
     private float _fovAngle;
 
     [Header("AI - Light")]
@@ -34,12 +32,13 @@ public class DronMovement : MonoBehaviour
     [SerializeField] private Color _patrolColor = Color.cyan;
     [SerializeField] private Color _chaseColor = Color.red;
     [SerializeField] private Color _searchColor = Color.yellow;
+    [SerializeField] private bool _startIdle = true;
 
     [Header("Explosion")]
     [SerializeField] float _explosionForce = 3000;
     [SerializeField] float _explosionUpForce = 1;
     [SerializeField] float _explosionRadius = 5;
-    [SerializeField] float _explosionDistance = 3;
+    [SerializeField] float _explodeDistance = 3;
     [SerializeField] LayerMask _damageMask;
     [SerializeField] GameObject _explosiveVFX;
 
@@ -65,10 +64,19 @@ public class DronMovement : MonoBehaviour
         _fovAngle = _droneLight.spotAngle;
         _fovDistance = _droneLight.range;
 
-        if (_patrolPoints != null && _patrolPoints.Length > 0)
+        if (_startIdle)
         {
-            _currentIndex = Random.Range(0, _patrolPoints.Length);
-            _currentTarget = _patrolPoints[_currentIndex].position;
+            _state = DroneStates.Idle;
+        }
+        else
+        {
+            if (_patrolPoints != null && _patrolPoints.Length > 0)
+            {
+                _currentIndex = Random.Range(0, _patrolPoints.Length);
+                _currentTarget = _patrolPoints[_currentIndex].position;
+            }
+
+            _state = DroneStates.Patrol;
         }
 
         SetLightColor(_patrolColor);
@@ -95,6 +103,13 @@ public class DronMovement : MonoBehaviour
 
         switch (_state)
         {
+            case DroneStates.Idle:
+                if (sees)
+                {
+                    EnterChase();
+                }
+                break;
+
             case DroneStates.Patrol:
                 if (sees) EnterChase();
                 break;
@@ -116,9 +131,12 @@ public class DronMovement : MonoBehaviour
                 {
                     EnterChase();
                 }
-                else if ((transform.position - _lastSeenPosition).sqrMagnitude < _stopDistance * _stopDistance)
+                else if ((transform.position - _lastSeenPosition).sqrMagnitude < _arrivalDistance * _arrivalDistance)
                 {
-                    EnterPatrol();
+                    if (_startIdle)
+                        EnterIdle();
+                    else
+                        EnterPatrol();
                 }
                 else
                 {
@@ -154,6 +172,13 @@ public class DronMovement : MonoBehaviour
         SetLightColor(_patrolColor);
     }
 
+    void EnterIdle()
+    {
+        _state = DroneStates.Idle;
+        _rb.linearVelocity = Vector3.zero;
+        SetLightColor(_patrolColor);
+    }
+
     bool CanSeePlayer()
     {
         float sqrtDistance = (_player.position - _eyePoint.position).sqrMagnitude;
@@ -184,11 +209,6 @@ public class DronMovement : MonoBehaviour
 
         _currentIndex = Random.Range(0, _patrolPoints.Length);
 
-        /*if (_currentIndex >= _patrolPoints.Length)
-        {
-            _currentIndex = 0;
-        }*/
-
         return _patrolPoints[_currentIndex].position;
     }
 
@@ -201,7 +221,7 @@ public class DronMovement : MonoBehaviour
 
         float sqrDistance = (_player.position - transform.position).sqrMagnitude;
 
-        if (sqrDistance <= _explosionDistance * _explosionDistance)
+        if (sqrDistance <= _explodeDistance * _explodeDistance)
         {
             Explode();
         }
@@ -209,6 +229,9 @@ public class DronMovement : MonoBehaviour
 
     void MoveToTarget()
     {
+        if (_state == DroneStates.Idle)
+            return;
+
         Vector3 direction = (_currentTarget - transform.position).normalized;
 
         Vector3 flatDirection = _currentTarget - transform.position;
@@ -226,7 +249,7 @@ public class DronMovement : MonoBehaviour
         }
 
         if (_state == DroneStates.Patrol &&
-            (_currentTarget - transform.position).sqrMagnitude < _stopDistance * _stopDistance)
+            (_currentTarget - transform.position).sqrMagnitude < _arrivalDistance * _arrivalDistance)
         {
             _currentTarget = GetNextTarget();
         }
@@ -286,7 +309,7 @@ public class DronMovement : MonoBehaviour
 
         _rb.MovePosition(_rb.position + dir.normalized * _patrolSpeed * Time.fixedDeltaTime);
 
-        if(distanceSQRT < _stopDistance * _stopDistance)
+        if(distanceSQRT < _arrivalDistance * _arrivalDistance)
         {
             Explode();
         }

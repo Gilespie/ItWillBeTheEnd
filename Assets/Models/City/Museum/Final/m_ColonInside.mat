@@ -40,7 +40,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: e911970a1a720cf4780422fdfba57fc1, type: 3}
+        m_Texture: {fileID: 2800000, guid: f718f1e90ab2ee944b83d07371fe9a0a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -72,7 +72,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetalRoughAO:
-        m_Texture: {fileID: 2800000, guid: 156bbf0ccc0b6ac478d8caf2cfa969fe, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -80,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: 6bace01875a2ecb49853c02c3789f4c4, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6f3b919bb6dcf5c458a813191969a06b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -130,7 +130,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 1
     - _Metallic: 0
-    - _MetallicIntensity: 0
+    - _MetallicIntensity: 1
     - _Mode: 0
     - _NormalIntensity: 0.99
     - _OcclusionStrength: 1
@@ -139,7 +139,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RotationInDegrees: 0
-    - _RoughnessIntensity: 1
+    - _RoughnessIntensity: 0.376
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

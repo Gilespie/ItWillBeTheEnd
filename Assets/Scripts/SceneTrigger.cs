@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class SceneTrigger : Trigger
 {
-    [SerializeField] private string _levelName = "";
+    [SerializeField] EventType _eventType;
+    [SerializeField] string _levelName = "";
 
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
-
-        LoadSceneManager.Instance.LoadScene(_levelName);
+        EventManager.Trigger(_eventType, _levelName);
     }
 }

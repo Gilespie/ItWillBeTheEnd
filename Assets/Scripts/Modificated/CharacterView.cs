@@ -6,9 +6,18 @@ public class CharacterView : MonoBehaviour
     [SerializeField] ParticleSystem[] _bubbleVFX;
     [SerializeField] ParticleSystem _dustVFX;
 
+    [SerializeField] AudioSource _audioSource;
+    [SerializeField] AudioClip[] _voices;
+
     public void PlayBloodVFX()
     {
         _bloodVFX.Play();
+    }
+
+    public void PlayVoice()
+    {
+        int index = Random.Range(0, _voices.Length);
+        _audioSource.PlayOneShot(_voices[index]);
     }
 
     public void PlayBubbleVFX(bool value)

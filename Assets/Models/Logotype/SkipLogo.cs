@@ -1,22 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
 
 public class SkipLogo : MonoBehaviour
 {
-    [SerializeField] private Input m_Input;
-    [SerializeField] private string m_Level;
-    private float timer = 0f;
+    [SerializeField] KeyCode _skipLogoKey;
+    [SerializeField] string _levelName;
+    bool _isSkipped = false;
 
     void Update()
     {
-        timer += Time.deltaTime;
+        if(_isSkipped) return;
 
-        if(timer >= 15f || Input.GetKey(KeyCode.Space))
+        if(Input.GetKeyDown(_skipLogoKey))
         {
-            SceneManager.LoadScene(m_Level);
+            EventManager.Trigger(EventType.OnSceneTransition, _levelName);
+            _isSkipped = true;
         }
     }
 }

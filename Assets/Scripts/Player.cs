@@ -74,7 +74,7 @@ public class Player : Destructable
     [SerializeField] private AudioClip[] _voices;
     private AudioSource _audioSource;
 
-    public DeathScreenManager deathScreenManager;
+    //public DeathScreenManager deathScreenManager;
     [SerializeField] private float _secondsUntilRestart = 3f;
 
     private bool _wasGround = false;
@@ -483,7 +483,7 @@ public class Player : Destructable
 
     public void Die()
     {
-        deathScreenManager.ActivateFadeIn();
+        //deathScreenManager.ActivateFadeIn();
     }
 
     public void PlayFootStep()

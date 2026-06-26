@@ -1,76 +1,77 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
-using UnityEngine.UI;
 
-public class LoadSceneManager : MonoBehaviour
+public class LoadSceneManager : SingletonBase<LoadSceneManager>
 {
-    #region Singleton
-    public static LoadSceneManager Instance;
+    [SerializeField] float _minLoadingTime = 3f;
+    [SerializeField] LoadProgressUI _loaderUI;
+    [SerializeField] ScreenFader _fader;
+    bool _isLoading = false;
 
-    private void Awake()
+    void OnEnable()
     {
-        if (!Instance)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-    #endregion
-
-    [Header("UI")]
-    [SerializeField] private Image _loadingBG;
-    [SerializeField] private float _fadeTime = 0.5f;
-    [SerializeField] private float _loadingSpeed = 0.3f;
-    [SerializeField] private TextMeshProUGUI _stateText;
-    [SerializeField] private Slider _sliderProgress;
-    private bool _isLoading = false;
-
-    private void Start()
-    {
-        _sliderProgress.value = 0.0f;
-        _stateText.text = $"";
-
-        _loadingBG.enabled = false;
-        _stateText.enabled = false;
-        _sliderProgress.gameObject.SetActive(false);
+        EventManager.Subscribe(EventType.OnDead, RestartGame);
+        EventManager.Subscribe(EventType.OnSceneTransition, LoadScene);
     }
 
-    public void LoadScene(string sceneName)
+    void Start()
     {
+        _fader.FadeIn();
+    }
+
+    void OnDisable()
+    {
+        EventManager.Unsubscribe(EventType.OnDead, RestartGame);
+        EventManager.Unsubscribe(EventType.OnSceneTransition, LoadScene);
+    }
+
+    public void LoadScene(params object[] args)
+    {
+        string sceneName = (string)args[0];
+
         if (!_isLoading)
         {
             StartCoroutine(LoadSceneAsync(sceneName));
         }
     }
 
-    private IEnumerator LoadSceneAsync(string sceneName)
+    public void RestartGame(params object[] args)
+    {
+        string currentLevelname = SceneManager.GetActiveScene().name;
+
+        LoadScene(currentLevelname);
+    }
+
+    /*void OnSceneRequested(params object[] args)
+    {
+        if (args == null || args.Length == 0 || args[0] is not string sceneName)
+        {
+            Debug.LogError($"{nameof(LoadSceneManager)}: OnSceneFinish без имени сцены");
+            return;
+        }
+
+        TryLoad(sceneName);
+    }
+
+    void OnRestartRequested(params object[] args)
+    {
+        string currentLevelName = SceneManager.GetActiveScene().name;
+        TryLoad(currentLevelName);
+    }
+
+    void TryLoad(string sceneName)
+    {
+        if (_isLoading) return;
+        StartCoroutine(LoadSceneAsync(sceneName));
+    }*/
+
+    /*IEnumerator LoadSceneAsync(string sceneName)
     {
         _isLoading = true;
 
-        _loadingBG.enabled = true;
-
-        float t = 0.0f;
-
-        while (t < 1.0f)
-        {
-            t += Time.deltaTime / _fadeTime;
-            _loadingBG.color = new Color(0f, 0f, 0f, Mathf.Lerp(0f, 1f, t));
-            yield return null;
-        }
-
-        _loadingBG.color = new Color(0f, 0f, 0f, 1f);
-
-        _sliderProgress.gameObject.SetActive(true);
-
-        _stateText.enabled = true;
-        _stateText.text = "Loading...";
-
+        _loaderUI.Show();
+       
         AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName);
         asyncOp.allowSceneActivation = false;
 
@@ -86,7 +87,7 @@ public class LoadSceneManager : MonoBehaviour
                 Time.deltaTime * _loadingSpeed
             );
 
-            _sliderProgress.value = fakeProgress;
+            _loaderUI.SetProgress(fakeProgress);
             yield return null;
         }
 
@@ -98,7 +99,7 @@ public class LoadSceneManager : MonoBehaviour
                 Time.deltaTime * _loadingSpeed
             );
 
-            _sliderProgress.value = fakeProgress;
+            _loaderUI.SetProgress( fakeProgress );
             yield return null;
         }
 
@@ -107,19 +108,44 @@ public class LoadSceneManager : MonoBehaviour
         while (!asyncOp.isDone)
             yield return null;
 
-        _stateText.enabled = false;
-        _sliderProgress.gameObject.SetActive(false);
+        _loaderUI.Hide();
 
-        t = 0.0f;
+        _isLoading = false;
+    }*/
 
-        while (t < 1.0f)
+    IEnumerator LoadSceneAsync(string sceneName)
+    {
+        _isLoading = true;
+
+        yield return _fader.FadeOut();
+
+        _loaderUI.ShowText();
+
+        AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName);
+        asyncOp.allowSceneActivation = false;
+
+        float elapsedTime = 0f;
+
+        while (asyncOp.progress < 0.9f)
         {
-            t += Time.deltaTime / _fadeTime;
-            _loadingBG.color = new Color(0f, 0f, 0f, Mathf.Lerp(1f, 0f, t));
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        _loadingBG.color = new Color(0f, 0f, 0f, 0f);
+        while (elapsedTime < _minLoadingTime)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        asyncOp.allowSceneActivation = true;
+
+        while (!asyncOp.isDone)
+            yield return null;
+
+        _loaderUI.HideText();
+
+        yield return _fader.FadeIn();
 
         _isLoading = false;
     }

@@ -7,5 +7,7 @@ public enum EventType
     OnCheckpoint,
     OnEndGame,
     OnLiftFalled,
-    OnFalled
+    OnFalled,
+    OnSceneTransition,
+    OnPaused,
 }
