@@ -49,7 +49,11 @@ public class Switch : MonoBehaviour, IInteractable
         PlaySound(_sfxOn, _sfxOff);
         ActivateLamp(_isActive);
         _event?.Invoke();
-        StartCoroutine(ResetRoutine()); 
+
+        if(_interactMode == InteractMode.Toggle)
+        {
+            StartCoroutine(ResetRoutine()); 
+        }
         _count++;
     }
 
@@ -65,19 +69,12 @@ public class Switch : MonoBehaviour, IInteractable
         _light.color = _colorOff;
         _animator.SetBool("isActive", false);
         PlaySound(_sfxOn, _sfxOff);
-        ActivateLamp(false);
+        ActivateLamp(_isActive);
     }
 
     private void ActivateLamp(bool isActive)
     {
-        if (_isActive)
-        {
-            _meshRenderer.material.SetColor("_EmissionColor", _colorOn);
-        }
-        else
-        {
-            _meshRenderer.material.SetColor("_EmissionColor", _colorOff);
-        }
+        _meshRenderer.material.SetColor("_EmissionColor", isActive ? _colorOn : _colorOff);   
     }
 
     IEnumerator ResetRoutine()

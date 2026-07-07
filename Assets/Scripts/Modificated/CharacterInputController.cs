@@ -2,16 +2,12 @@ using UnityEngine;
 
 public class CharacterInputController : MonoBehaviour 
 {
-    //[SerializeField] TypeOfInput _typeInput = TypeOfInput.Press;
-
     [Header("Buttons")]
     [SerializeField] KeyCode _jumpKey = KeyCode.Space;
     [SerializeField] KeyCode _sprintKey = KeyCode.LeftShift;
     [SerializeField] KeyCode _crouchKey = KeyCode.LeftControl;
     [SerializeField] KeyCode _interactKey = KeyCode.E;
     [SerializeField] KeyCode _pushingKey = KeyCode.F;
-    [SerializeField] KeyCode _slowTimeKey = KeyCode.T;
-    //[SerializeField] KeyCode _ragdollKey = KeyCode.R;
     [SerializeField] KeyCode _pauseKey = KeyCode.Escape;
 
     bool _isCrouching = false;
@@ -42,6 +38,8 @@ public class CharacterInputController : MonoBehaviour
 
     bool _isPaused = false;
 
+    public bool IsPressedAny => Input.anyKey;
+
     public float VerticalSwim => Input.GetAxis("Jump") > 0 ? 1 : (Input.GetKey(KeyCode.LeftControl) ? -1 : 0);
 
     void Update()
@@ -62,32 +60,7 @@ public class CharacterInputController : MonoBehaviour
             _isPaused = !_isPaused;
             EventManager.Trigger(EventType.OnPaused, _isPaused);
         }
-
-    /*switch (_typeInput)
-    {
-        case TypeOfInput.Press:
-            if (Input.GetKeyDown(_crouchKey)) _isCrouching = !_isCrouching;
-            if(Input.GetKeyDown(_sprintKey)) _isSprinting = !_isSprinting;
-            //if(Input.GetKeyDown(_ragdollKey)) _isRagdoll = !_isRagdoll;
-            if(Input.GetKeyDown(_slowTimeKey)) _isSlowTime = !_isSlowTime;
-
-            _isJumping = Input.GetKeyDown(_jumpKey);
-            //if(Input.GetKeyDown(_interactKey)) _isInteracting = !_isInteracting;
-            _isInteracting = Input.GetKeyDown(_interactKey);
-
-            _isPushing = Input.GetKey(_pushingKey);
-            break;
-
-        case TypeOfInput.Holding:
-            _isCrouching = Input.GetKey(_crouchKey);
-            _isSprinting = Input.GetKey(_sprintKey);
-
-            _isJumping = Input.GetKeyDown(_jumpKey);
-            _isInteracting = Input.GetKeyDown(_interactKey);
-            _isPushing = Input.GetKey(_pushingKey);
-            break;
-    }*/
-}
+    }
 
     public void ToggleComponent()
     {

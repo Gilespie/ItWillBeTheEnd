@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -219,6 +218,7 @@ public class Character : MonoBehaviour, IDamageable
             _characterColliderResizer.SetSize(2f, new Vector3(0, 1f, 0));
         }
     }
+
     void HandleFallDeath(params object[] arg)
     {
         InstantKill();

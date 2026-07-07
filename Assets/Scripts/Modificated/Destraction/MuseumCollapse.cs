@@ -11,10 +11,13 @@ public class MuseumCollapse : MonoBehaviour
     [SerializeField] VisualEffect[] _vfxs;
     [SerializeField] AudioSource _as;
     [SerializeField] float _impusleForce = 0.01f;
+    [SerializeField] Animator _animator;
 
     public void ActivateCollapse()
     {
         _as.Play();
+
+        _animator.enabled = true;
 
         StartCoroutine(FallRoutine());
 
