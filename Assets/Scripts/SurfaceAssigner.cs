@@ -5,6 +5,6 @@ public class SurfaceAssigner : MonoBehaviour
 {
     private void Awake()
     {
-        GameManager.Instance.Surface = GetComponent<NavMeshSurface>();        
+        //GameManager.Instance.Surface = GetComponent<NavMeshSurface>();        
     }
 }

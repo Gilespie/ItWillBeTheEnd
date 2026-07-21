@@ -16,12 +16,12 @@ public class PointFollower : MonoBehaviour
 
     private void Awake()
     {
-        //GameManager.Instance.PointFollower = this;
+        GameManager.Instance.PointFollower = this;
     }
 
     void Start()
     {
-        //GameManager.Instance.Player = _player;
+        _player = GameManager.Instance.Player;
         _currentPosition = _player.transform.position + _offset + _bobOffset;
         transform.position = _currentPosition;
     }

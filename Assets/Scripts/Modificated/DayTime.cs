@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-//[ExecuteAlways]
+[ExecuteAlways]
 public class DayTime : MonoBehaviour
 {
     [SerializeField] private Light _dirLight;

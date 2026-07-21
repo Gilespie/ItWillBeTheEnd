@@ -1,31 +1,14 @@
 using Unity.AI.Navigation;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonBase<GameManager>
 {
-    #region Singlton
-    public static GameManager Instance;
-
-    private void Awake()
-    {
-        if(Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }  
-    }
-    #endregion
-
-    private Character _player;
+    private Character _character;
 
     public Character Player
     {
-        get { return _player; }
-        set { _player = value; }
+        get { return _character; }
+        set { _character = value; }
     }
 
     private Vector3 _actualCheckpoint;
@@ -36,7 +19,7 @@ public class GameManager : MonoBehaviour
         set { _actualCheckpoint = value; }
     }
 
-    private Transform[] _aiDogNodes;
+    /*private Transform[] _aiDogNodes;
 
     public Transform[] AIDogNodes
     {
@@ -50,22 +33,22 @@ public class GameManager : MonoBehaviour
     { 
         get { return _surface; }
         set { _surface = value; }
-    }
+    }*/
 
-    private CameraFollower _camera;
+/*    private CameraFollower _cameraFollower;
 
     public CameraFollower Camera
     {
-        get { return _camera; }
-        set { _camera = value; }
-    }
+        get { return _cameraFollower; }
+        set { _cameraFollower = value; }
+    }*/
 
-    private CameraPointFollow _cameraPoint;
+    private CameraPointFollow _cameraPointFollow;
 
-    public CameraPointFollow CameraPoint
+    public CameraPointFollow CameraPointFollow
     {
-        get { return _cameraPoint; }
-        set { _cameraPoint = value; }
+        get { return _cameraPointFollow; }
+        set { _cameraPointFollow = value; }
     }
 
     private PointFollower _pointFollower;

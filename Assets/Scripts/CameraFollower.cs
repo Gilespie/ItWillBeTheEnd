@@ -30,7 +30,7 @@ public class CameraFollower : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.Instance.Camera = this;    
+        //GameManager.Instance.Camera = this;    
     }
 
     private void Start()

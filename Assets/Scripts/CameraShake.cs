@@ -1,23 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class CameraShake : MonoBehaviour
+public class CameraShake : SingletonBase<CameraShake>
 {
-    public static CameraShake Instance;
-
-    void Awake()
-    {
-        if(Instance == null)
-        {
-            Instance = this;
-            //DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     [Header("Shake Intensity")]
     [SerializeField, Range(1f, 10f)] float _force = 5f;
     [SerializeField] float _shakeDuration = 1.5f;
@@ -25,11 +10,10 @@ public class CameraShake : MonoBehaviour
     Vector3 _shakeOffset;
     [SerializeField]CameraPointFollow _cameraPoint;
 
-    /*void Start()
+    void Start()
     {
-        _cameraPoint = GameManager.Instance.CameraPoint;
-        Debug.Log(_cameraPoint + " camera from gamemanager");
-    }*/
+        _cameraPoint = GameManager.Instance.CameraPointFollow;
+    }
 
     public void ActiveShake()
     {

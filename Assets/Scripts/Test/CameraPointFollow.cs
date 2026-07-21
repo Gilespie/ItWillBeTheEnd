@@ -32,12 +32,12 @@ public class CameraPointFollow : MonoBehaviour
         _defaultZPos = _offset.z;
         _defaultOffset = _offset;
         _lerp = true;
-        GameManager.Instance.CameraPoint = this;
+        GameManager.Instance.CameraPointFollow = this;
     }
 
     private void Start()
     {
-        //_target = GameManager.Instance.Player.transform;
+        _target = GameManager.Instance.PointFollower.transform;
         transform.position = _target.position + _offset;
         _lookTarget = _target;
 

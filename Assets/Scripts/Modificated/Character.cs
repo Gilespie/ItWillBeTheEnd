@@ -51,6 +51,8 @@ public class Character : MonoBehaviour, IDamageable
     {
         _characterColliderResizer.InitDefault();
 
+        GameManager.Instance.Player = this;
+
         EventManager.Subscribe(EventType.OnFalled, HandleFallDeath);
         EventManager.Subscribe(EventType.OnFinishOxygen, InstantKill);
     }

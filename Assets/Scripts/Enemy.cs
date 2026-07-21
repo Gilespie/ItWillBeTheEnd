@@ -39,7 +39,7 @@ public abstract class Enemy : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _rb = GetComponent<Rigidbody>();
         _player = GameManager.Instance.Player;
-        _aiNodes = GameManager.Instance.AIDogNodes;
+        //_aiNodes = GameManager.Instance.AIDogNodes;
 
         _actualNode = GetNewNode();
 
