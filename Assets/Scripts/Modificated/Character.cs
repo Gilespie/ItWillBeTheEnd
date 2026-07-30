@@ -20,7 +20,6 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] Collider _col;
     [SerializeField] CharacterColliderResizer _characterColliderResizer;
     [SerializeField] FallDamage _fallDamage;
-    [SerializeField] InputDisabler _inputDisabler;
     [SerializeField] Transform _headPoint;
     [SerializeField] CharacterView _view;
 
@@ -41,6 +40,9 @@ public class Character : MonoBehaviour, IDamageable
     bool _inWaterZone = false;
     bool _isOnAir = false;
     bool _isFalling = false;
+
+    bool _wasSwimming = false;
+    bool _wasSliding = false;
 
     PushableBox _currentBox;
     public PushableBox CurrentBox => _currentBox;
@@ -92,21 +94,26 @@ public class Character : MonoBehaviour, IDamageable
             }
         }
 
-        if (_inputController.IsInteracting && _interactRaycast.IsRaycasting(_characterRotator.Mesh.forward))
+        if (_inputController.IsInteracting)
         {
-            Pressing();
+            if (_interactRaycast.IsRaycasting(_characterRotator.Mesh.forward))
+            {
+                Pressing();
+            }
+
+            _inputController.ResetInteract();
         }
 
-        if (_inputController.IsJumping && _isGround && !_isCrouching && !_isSwimming && _currentMovement.CurrentSpeed < 0.1f)
+        if (_inputController.IsJumping && _isGround && !_isCrouching && !_isSwimming)
         {
             _animationController.SetTrigger(AnimParams.Jump);
-            //ChangePhysicMaterial(_slideMaterial);
-        }
-        else if (_inputController.IsJumping && _isGround && !_isCrouching && !_isSwimming && _currentMovement.CurrentSpeed > 0.1f)
-        {
-            _animationController.SetTrigger(AnimParams.Jump);
-            _currentMovement.Jump();
-            //ChangePhysicMaterial(_slideMaterial);
+
+            if (_currentMovement.CurrentSpeed > 0.1f)
+            {
+                _currentMovement.Jump();
+            }
+
+            _inputController.ResetJump();
         }
 
         if (_inputController.IsCrouching)
@@ -143,6 +150,8 @@ public class Character : MonoBehaviour, IDamageable
 
         _externalVelocity = _externalVelocityProvider != null ? _externalVelocityProvider.ExternalVelocity : Vector3.zero;
 
+        UpdateInputMap();
+
         if (_isSwimming)
         {
             ChangeMovement(_movements[3]);
@@ -172,18 +181,7 @@ public class Character : MonoBehaviour, IDamageable
         SlideCharacter();
         UpdateCollider();
 
-        Vector3 dir = _inputController.Direction;
-
-        if (_isSwimming)
-        {
-            dir.y = _inputController.VerticalSwim;
-
-            if (_headPoint.position.y >= _currentWaterZone.BoundY && dir.y > 0f)
-            {
-                dir.y = 0f;
-                Debug.Log("Head is above water, vertical movement disabled.");
-            }
-        }
+        Vector3 dir = GetCurrentDirection();
 
         _currentMovement.Advance(dir, _externalVelocity);
 
@@ -191,14 +189,11 @@ public class Character : MonoBehaviour, IDamageable
         {
             if (_isSwimming)
             {
-                Vector3 swimDir = _inputController.Direction;
-                swimDir.y = _inputController.VerticalSwim;
-
-                _characterRotator.RotateSwimming(swimDir);
+                _characterRotator.RotateSwimming(dir);
             }
             else
             {
-                _characterRotator.Rotate(_inputController.Direction, _rb.linearVelocity);
+                _characterRotator.Rotate(_currentMovement.SmoothedDirection, _rb.linearVelocity);
             }
         }
     }
@@ -207,6 +202,43 @@ public class Character : MonoBehaviour, IDamageable
     {
         EventManager.Unsubscribe(EventType.OnFalled, HandleFallDeath);
         EventManager.Unsubscribe(EventType.OnFinishOxygen, InstantKill);
+    }
+
+    void UpdateInputMap()
+    {
+        if (_isSwimming == _wasSwimming && _isSliding == _wasSliding) return;
+
+        if (_isSwimming)
+            _inputController.EnableMovementMap(); //change other direction Vector3
+        else if (_isSliding)
+            _inputController.EnableMovementMap(); //cgange to float forward/backward
+        else
+            _inputController.EnableMovementMap();
+
+        _wasSwimming = _isSwimming;
+        _wasSliding = _isSliding;
+    }
+
+    Vector3 GetCurrentDirection()
+    {
+        if (_isSwimming)
+        {
+            Vector3 swimDir = _inputController.SwimDirection;
+
+            if (_headPoint.position.y >= _currentWaterZone.BoundY && swimDir.y > 0f)
+            {
+                swimDir.y = 0f;
+            }
+
+            return swimDir;
+        }
+
+        if (_isSliding)
+        {
+            return new Vector3(0f, 0f, _inputController.SlideAxis);
+        }
+
+        return _inputController.Direction;
     }
 
     void UpdateCollider()
@@ -238,7 +270,6 @@ public class Character : MonoBehaviour, IDamageable
 
     void DisableCharacter()
     {
-        _inputDisabler.DisableControl();
         _rb.isKinematic = true;
         _col.enabled = false;
     }

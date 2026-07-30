@@ -6,6 +6,7 @@ public enum EventType
     OnFinishOxygen,
     OnCheckpoint,
     OnEndGame,
+    OnStartGame,
     OnLiftFalled,
     OnFalled,
     OnSceneTransition,

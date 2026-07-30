@@ -1,70 +1,175 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
-public class CharacterInputController : MonoBehaviour 
+public class CharacterInputController : MonoBehaviour
 {
-    [Header("Buttons")]
-    [SerializeField] KeyCode _jumpKey = KeyCode.Space;
-    [SerializeField] KeyCode _sprintKey = KeyCode.LeftShift;
-    [SerializeField] KeyCode _crouchKey = KeyCode.LeftControl;
-    [SerializeField] KeyCode _interactKey = KeyCode.E;
-    [SerializeField] KeyCode _pushingKey = KeyCode.F;
-    [SerializeField] KeyCode _pauseKey = KeyCode.Escape;
+    InputsActions _inputActions;
 
-    bool _isCrouching = false;
+    bool _isCrouching;
     public bool IsCrouching => _isCrouching;
 
-    bool _isJumping = false;
+    bool _isJumping;
     public bool IsJumping => _isJumping;
 
-    bool _isSprinting = false;
+    bool _isSprinting;
     public bool IsSprinting => _isSprinting;
 
-    bool _isInteracting = false;
+    bool _isInteracting;
     public bool IsInteracting => _isInteracting;
 
-    bool _isPushing = false;
+    bool _isPushing;
     public bool IsPushing => _isPushing;
 
-    bool _isRagdoll = false;
-    public bool IsRagdoll => _isRagdoll;
-
-    bool _isSlowTime = false;
-    public bool ISSlowTime => _isSlowTime;
-
     Vector3 _direction;
-    public Vector3 Direction => _direction;
+    public Vector3 Direction => new Vector3(_direction.x, 0f, _direction.y);
 
-    bool _isActive = true;
+    Vector2 _uiDirection;
+    public Vector2 UIDirection => _uiDirection;
 
-    bool _isPaused = false;
+    float _slideMoveAtm;
+    public float SlideAxis => _slideMoveAtm;
+
+    Vector3 _swimAtm;
+    public Vector3 SwimDirection => _swimAtm;
 
     public bool IsPressedAny => Input.anyKey;
 
-    public float VerticalSwim => Input.GetAxis("Jump") > 0 ? 1 : (Input.GetKey(KeyCode.LeftControl) ? -1 : 0);
+    void Awake()
+    {
+        _inputActions = SaveManager.Instance.InputActions;
+    }
+
+    void OnEnable()
+    {
+        _inputActions.PlayerMovement.Jump.started += HandleJump;
+        _inputActions.PlayerMovement.Interact.started += HandleInteract;
+        _inputActions.PlayerMovement.Crouch.started += HandleCrouch;
+        _inputActions.PlayerMovement.Crouch.canceled += HandleUncrouch;
+        _inputActions.PlayerMovement.Sprint.started += HandleSprint;
+        _inputActions.PlayerMovement.Sprint.canceled += HandleUnsprint;
+        _inputActions.PlayerMovement.Interact.started += HandlePush;
+        _inputActions.PlayerMovement.Interact.canceled += HandleUnpush;
+        _inputActions.PlayerMovement.Pause.started += HandlePause;
+        _inputActions.PlayerMovement.AnyKey.started += HandleAnyKey;
+
+        _inputActions.UI.Pause.started += HandleUIPause;
+        _inputActions.UI.Apply.started += HandleApply;
+    }
 
     void Update()
     {
-        if (!_isActive) return;
-
-        _direction = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Jump"), Input.GetAxis("Vertical"));
-
-        _isCrouching = Input.GetKey(_crouchKey);
-        _isSprinting = Input.GetKey(_sprintKey);
-
-        _isJumping = Input.GetKeyDown(_jumpKey);
-        _isInteracting = Input.GetKeyDown(_interactKey);
-        _isPushing = Input.GetKey(_pushingKey);
-        
-        if(Input.GetKeyDown(_pauseKey))
-        {
-            _isPaused = !_isPaused;
-            EventManager.Trigger(EventType.OnPaused, _isPaused);
-        }
+        _direction = _inputActions.PlayerMovement.Move.ReadValue<Vector2>();
+        _uiDirection = _inputActions.UI.UIMove.ReadValue<Vector2>();
     }
 
-    public void ToggleComponent()
+    void OnDisable()
     {
-        _isActive = !_isActive;
-        _direction = Vector3.zero;
+        _inputActions.PlayerMovement.Jump.started -= HandleJump;
+        _inputActions.PlayerMovement.Interact.started -= HandleInteract;
+        _inputActions.PlayerMovement.Crouch.started -= HandleCrouch;
+        _inputActions.PlayerMovement.Crouch.canceled -= HandleUncrouch;
+        _inputActions.PlayerMovement.Sprint.started -= HandleSprint;
+        _inputActions.PlayerMovement.Sprint.canceled -= HandleUnsprint;
+        _inputActions.PlayerMovement.Interact.started -= HandlePush;
+        _inputActions.PlayerMovement.Interact.canceled -= HandleUnpush;
+        _inputActions.PlayerMovement.Pause.started -= HandlePause;
+        _inputActions.PlayerMovement.AnyKey.started -= HandleAnyKey;
+
+        _inputActions.UI.Pause.started -= HandleUIPause;
+        _inputActions.UI.Apply.started -= HandleApply;
+
+        DisableAllInput();
+    }
+
+    public void EnableMovementMap()
+    {
+        _inputActions.PlayerMovement.Enable();
+        _inputActions.UI.Disable();
+    }
+
+    public void EnableUIMap()
+    {
+        _inputActions.PlayerMovement.Disable();
+        _inputActions.UI.Enable();
+    }
+
+    public void DisableAllInput()
+    {
+        _inputActions.PlayerMovement.Disable();
+        _inputActions.UI.Disable();
+
+        _direction = Vector2.zero;
+    }
+
+    public void ResetJump()
+    {
+        _isJumping = false;
+    }
+
+    public void ResetInteract()
+    {
+        _isInteracting = false;
+    }
+
+    void HandlePause(InputAction.CallbackContext context)
+    {
+        EventManager.Trigger(EventType.OnPaused);
+    }
+
+    void HandleUIPause(InputAction.CallbackContext context)
+    {
+        EventManager.Trigger(EventType.OnPaused);
+    }
+
+    void HandleJump(InputAction.CallbackContext context)
+    {
+        _isJumping = true;
+    }
+
+    void HandleSprint(InputAction.CallbackContext context)
+    {
+        _isSprinting = true;
+    }
+
+    void HandleUnsprint(InputAction.CallbackContext context)
+    {
+        _isSprinting = false;
+    }
+
+    void HandleCrouch(InputAction.CallbackContext context)
+    {
+        _isCrouching = true;
+    }
+
+    void HandleUncrouch(InputAction.CallbackContext context)
+    {
+        _isCrouching = false;
+    }
+
+    void HandleInteract(InputAction.CallbackContext context)
+    {
+        _isInteracting = true;
+    }
+
+    void HandlePush(InputAction.CallbackContext context)
+    {
+        _isPushing = true;
+    }
+
+    void HandleUnpush(InputAction.CallbackContext context)
+    {
+        _isPushing = false;
+    }
+
+    void HandleApply(InputAction.CallbackContext context)
+    {
+        _isInteracting = true;
+    }
+
+    void HandleAnyKey(InputAction.CallbackContext context)
+    {
+        EventManager.Trigger(EventType.OnStartGame);
+        Debug.Log("Started");
     }
 }
