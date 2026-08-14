@@ -620,6 +620,45 @@ public partial class @InputsActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Logo"",
+            ""id"": ""6b1c7ab2-4e41-4985-a010-82fa2c79ece7"",
+            ""actions"": [
+                {
+                    ""name"": ""AnyKey"",
+                    ""type"": ""Button"",
+                    ""id"": ""78c378f7-ea05-4c10-a1b9-15e0548dc9da"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""28d9e5f8-3c1c-48d3-b883-7652cdae4b23"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard"",
+                    ""action"": ""AnyKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49542092-e849-4afa-acc8-f45b924a3ff2"",
+                    ""path"": ""*/{Menu}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""AnyKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -662,12 +701,16 @@ public partial class @InputsActions: IInputActionCollection2, IDisposable
         m_UI_UIMove = m_UI.FindAction("UIMove", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
         m_UI_Apply = m_UI.FindAction("Apply", throwIfNotFound: true);
+        // Logo
+        m_Logo = asset.FindActionMap("Logo", throwIfNotFound: true);
+        m_Logo_AnyKey = m_Logo.FindAction("AnyKey", throwIfNotFound: true);
     }
 
     ~@InputsActions()
     {
         UnityEngine.Debug.Assert(!m_PlayerMovement.enabled, "This will cause a leak and performance issues, InputsActions.PlayerMovement.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, InputsActions.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Logo.enabled, "This will cause a leak and performance issues, InputsActions.Logo.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1030,6 +1073,102 @@ public partial class @InputsActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="UIActions" /> instance referencing this action map.
     /// </summary>
     public UIActions @UI => new UIActions(this);
+
+    // Logo
+    private readonly InputActionMap m_Logo;
+    private List<ILogoActions> m_LogoActionsCallbackInterfaces = new List<ILogoActions>();
+    private readonly InputAction m_Logo_AnyKey;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Logo".
+    /// </summary>
+    public struct LogoActions
+    {
+        private @InputsActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public LogoActions(@InputsActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Logo/AnyKey".
+        /// </summary>
+        public InputAction @AnyKey => m_Wrapper.m_Logo_AnyKey;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Logo; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="LogoActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(LogoActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="LogoActions" />
+        public void AddCallbacks(ILogoActions instance)
+        {
+            if (instance == null || m_Wrapper.m_LogoActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_LogoActionsCallbackInterfaces.Add(instance);
+            @AnyKey.started += instance.OnAnyKey;
+            @AnyKey.performed += instance.OnAnyKey;
+            @AnyKey.canceled += instance.OnAnyKey;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="LogoActions" />
+        private void UnregisterCallbacks(ILogoActions instance)
+        {
+            @AnyKey.started -= instance.OnAnyKey;
+            @AnyKey.performed -= instance.OnAnyKey;
+            @AnyKey.canceled -= instance.OnAnyKey;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="LogoActions.UnregisterCallbacks(ILogoActions)" />.
+        /// </summary>
+        /// <seealso cref="LogoActions.UnregisterCallbacks(ILogoActions)" />
+        public void RemoveCallbacks(ILogoActions instance)
+        {
+            if (m_Wrapper.m_LogoActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="LogoActions.AddCallbacks(ILogoActions)" />
+        /// <seealso cref="LogoActions.RemoveCallbacks(ILogoActions)" />
+        /// <seealso cref="LogoActions.UnregisterCallbacks(ILogoActions)" />
+        public void SetCallbacks(ILogoActions instance)
+        {
+            foreach (var item in m_Wrapper.m_LogoActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_LogoActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="LogoActions" /> instance referencing this action map.
+    /// </summary>
+    public LogoActions @Logo => new LogoActions(this);
     private int m_KeyboardSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1148,5 +1287,20 @@ public partial class @InputsActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnApply(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Logo" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="LogoActions.AddCallbacks(ILogoActions)" />
+    /// <seealso cref="LogoActions.RemoveCallbacks(ILogoActions)" />
+    public interface ILogoActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "AnyKey" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAnyKey(InputAction.CallbackContext context);
     }
 }

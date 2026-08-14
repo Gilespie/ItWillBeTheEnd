@@ -48250,7 +48250,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &995968181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48263,9 +48263,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cf5f344dd8656445a4bc523f05574c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playButton: {fileID: 1271552923}
-  _exitButton: {fileID: 1450428040}
-  _panel: {fileID: 1176592305}
+  _root: {fileID: 0}
+  _defaultButton: {fileID: 0}
+  _settingsPanel: {fileID: 0}
+  _continueBTN: {fileID: 0}
+  _restartBTN: {fileID: 0}
+  _loadBTN: {fileID: 0}
+  _settingsBTN: {fileID: 0}
+  _exitBTN: {fileID: 0}
 --- !u!114 &995968182
 MonoBehaviour:
   m_ObjectHideFlags: 0
