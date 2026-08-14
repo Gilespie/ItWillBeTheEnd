@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Utilities;
 
 public class CharacterInputController : MonoBehaviour
 {
@@ -38,6 +37,8 @@ public class CharacterInputController : MonoBehaviour
     void Awake()
     {
         _inputActions = SaveManager.Instance.InputActions;
+
+        EnableMovementMap();
     }
 
     void OnEnable()

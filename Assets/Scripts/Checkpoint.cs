@@ -1,20 +1,13 @@
-using System;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    Collider _collider;
-
-    void Awake()
-    {
-        _collider = GetComponent<Collider>();
-    }
+    [SerializeField] Collider _collider;
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Player>())
+        if (other.GetComponent<Character>())
         {
-            GameManager.Instance.ActualCheckpoint = transform.position;
             EventManager.Trigger(EventType.OnCheckpoint);
             _collider.enabled = false;
         }

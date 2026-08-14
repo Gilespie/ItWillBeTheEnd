@@ -5,7 +5,7 @@ public class CheckpointUI : MonoBehaviour
 {
     [SerializeField] private Image _saveIcon;
     [SerializeField] private AudioClip _clip;
-    private Animation _animation;
+    [SerializeField] private Animation _animation;
 
     private void OnEnable()
     {
@@ -14,7 +14,6 @@ public class CheckpointUI : MonoBehaviour
 
     private void Start()
     {
-        _animation = GetComponentInChildren<Animation>();
         _saveIcon.color = new(_saveIcon.color.r, _saveIcon.color.g, _saveIcon.color.b, 0);
     }
 
@@ -27,6 +26,6 @@ public class CheckpointUI : MonoBehaviour
     {
         _animation.Stop();
         _animation.Play();
-        AudioManager.Instance.PlayUI(_clip);
+        //AudioManager.Instance.PlayUI(_clip);
     }
 }

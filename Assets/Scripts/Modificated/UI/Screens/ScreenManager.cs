@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ScreenManager : SingletonBase<ScreenManager>
 {
-    [SerializeField] CharacterInputController characterInputController;
+    [SerializeField] CharacterInputController _characterInputController;
 
     List<IScreen> _screens = new List<IScreen>();
 
@@ -32,7 +32,7 @@ public class ScreenManager : SingletonBase<ScreenManager>
     {
         if (_screens.Count == 0)
         {
-            characterInputController.EnableUIMap();
+            _characterInputController.EnableUIMap();
         }
 
         if (_screens.Count > 0) _screens[_screens.Count - 1].Deactivate();
@@ -64,7 +64,7 @@ public class ScreenManager : SingletonBase<ScreenManager>
         }
         else
         {
-            characterInputController.EnableMovementMap();
+            _characterInputController.EnableMovementMap();
         }
     }
 
@@ -79,6 +79,6 @@ public class ScreenManager : SingletonBase<ScreenManager>
 
         _screens.Clear();
 
-        characterInputController.EnableMovementMap();
+        _characterInputController.EnableMovementMap();
     }
 }

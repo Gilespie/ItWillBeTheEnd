@@ -20,6 +20,6 @@ public class KeyboardScreen : ScreenBase
             rebindKey.ResetRebind();
         }
 
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveGame();
     }
 }

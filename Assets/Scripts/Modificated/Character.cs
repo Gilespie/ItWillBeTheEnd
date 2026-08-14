@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Character : MonoBehaviour, IDamageable
+public class Character : MonoBehaviour, IDamageable, ISaveable
 {
     [SerializeField] bool _isAlive = true;
     public bool IsAlive => _isAlive;
@@ -57,6 +57,11 @@ public class Character : MonoBehaviour, IDamageable
 
         EventManager.Subscribe(EventType.OnFalled, HandleFallDeath);
         EventManager.Subscribe(EventType.OnFinishOxygen, InstantKill);
+    }
+
+    void OnEnable()
+    {
+        SaveManager.Instance.Register(this);
     }
 
     void Start()
@@ -196,6 +201,11 @@ public class Character : MonoBehaviour, IDamageable
                 _characterRotator.Rotate(_currentMovement.SmoothedDirection, _rb.linearVelocity);
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        SaveManager.Instance.Unregister(this);
     }
 
     void OnDestroy()
@@ -425,5 +435,21 @@ public class Character : MonoBehaviour, IDamageable
     public void PlayJump()
     {
         _currentMovement.Jump();
+    }
+
+    public void CaptureState(SaveGameData data)
+    {
+        data.x = transform.position.x;
+        data.y = transform.position.y;
+        data.z = transform.position.z;
+        data.IsAlive = _isAlive;
+        data.СurrentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+    }
+
+    public void RestoreState(SaveGameData data)
+    {
+        Vector3 pos = new Vector3(data.x, data.y, data.z);
+        transform.position = pos;
+        _isAlive = data.IsAlive;
     }
 }

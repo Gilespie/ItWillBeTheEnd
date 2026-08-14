@@ -65,17 +65,17 @@ public class SettingsMenu : MonoBehaviour
     void InitQualitySelector()
     {
         List<string> quality = new(QualitySettings.names);
-        _qualitySelector.Initialize(quality, SaveManager.Instance.Data.QualityIndex);
+        _qualitySelector.Initialize(quality, SaveManager.Instance.Settings.QualityIndex);
     }
 
     void InitVSyncSelector()
     {
-        _vSyncSelector.Initialize(new List<string>{"OFF", "ON"}, SaveManager.Instance.Data.VSync);
+        _vSyncSelector.Initialize(new List<string>{"OFF", "ON"}, SaveManager.Instance.Settings.VSync);
     }
 
     void InitFullscreenSelector()
     {
-        _fullscreenSelector.Initialize(new List<string>{"OFF", "ON"}, SaveManager.Instance.Data.Fullscreen ? 1 : 0);
+        _fullscreenSelector.Initialize(new List<string>{"OFF", "ON"}, SaveManager.Instance.Settings.Fullscreen ? 1 : 0);
     }
 
     void InitVolume()
@@ -85,39 +85,39 @@ public class SettingsMenu : MonoBehaviour
 
     void ChangeResolution(int index)
     {
-        SaveManager.Instance.Data.ResolutionIndex = index;
+        SaveManager.Instance.Settings.ResolutionIndex = index;
 
         Resolution res = _resolutions[index];
 
         Screen.SetResolution(
             res.width,
             res.height,
-            SaveManager.Instance.Data.Fullscreen);
+            SaveManager.Instance.Settings.Fullscreen);
 
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveSettings();
     }
 
     void ChangeQuality(int index)
     {
-        SaveManager.Instance.Data.QualityIndex = index;
+        SaveManager.Instance.Settings.QualityIndex = index;
         SaveManager.Instance.Apply();
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveSettings();
     }
 
     void ChangeFullscreen(int index)
     {
-        SaveManager.Instance.Data.Fullscreen = index == 1;
+        SaveManager.Instance.Settings.Fullscreen = index == 1;
 
         SaveManager.Instance.Apply();
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveSettings();
     }
 
     void ChangeVSync(int index)
     {
-        SaveManager.Instance.Data.VSync = index;
+        SaveManager.Instance.Settings.VSync = index;
 
         SaveManager.Instance.Apply();
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveSettings();
     }
 
     void ChangeVolume(int value)

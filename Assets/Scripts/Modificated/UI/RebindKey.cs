@@ -102,7 +102,7 @@ public class RebindKey : MonoBehaviour
         _action.Enable();
 
         RefreshDisplay();
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveSettings();
 
         operation.Dispose();
     }
