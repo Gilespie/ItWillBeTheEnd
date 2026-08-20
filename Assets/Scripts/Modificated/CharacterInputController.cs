@@ -37,7 +37,7 @@ public class CharacterInputController : MonoBehaviour
     void Awake()
     {
         _inputActions = SaveManager.Instance.InputActions;
-
+        ScreenManager.Instance.SetInputController(this);
         EnableMovementMap();
     }
 

@@ -7,6 +7,11 @@ public class ScreenManager : SingletonBase<ScreenManager>
 
     List<IScreen> _screens = new List<IScreen>();
 
+    public void SetInputController(CharacterInputController controller)
+    {
+        _characterInputController = controller;
+    }
+
     public bool IfScreenActive(IScreen screen)
     {
         if (_screens.Count <= 0) return false;

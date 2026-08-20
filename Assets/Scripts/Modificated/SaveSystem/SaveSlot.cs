@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -8,7 +9,15 @@ public class SaveSlot<T> where T : new()
 
     public SaveSlot(string fileName)
     {
-        _path = Path.Combine(Application.persistentDataPath, fileName);
+        string folder = Path.Combine(
+             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+             "GilespieCo",
+             "Saves");
+
+        if (!Directory.Exists(folder))
+            Directory.CreateDirectory(folder);
+
+        _path = Path.Combine(folder, fileName);
         Data = new T();
     }
 

@@ -57,11 +57,11 @@ public class Character : MonoBehaviour, IDamageable, ISaveable
 
         EventManager.Subscribe(EventType.OnFalled, HandleFallDeath);
         EventManager.Subscribe(EventType.OnFinishOxygen, InstantKill);
+        SaveManager.Instance.Register(this);
     }
 
     void OnEnable()
     {
-        SaveManager.Instance.Register(this);
     }
 
     void Start()
@@ -205,13 +205,13 @@ public class Character : MonoBehaviour, IDamageable, ISaveable
 
     private void OnDisable()
     {
-        SaveManager.Instance.Unregister(this);
     }
 
     void OnDestroy()
     {
         EventManager.Unsubscribe(EventType.OnFalled, HandleFallDeath);
         EventManager.Unsubscribe(EventType.OnFinishOxygen, InstantKill);
+        SaveManager.Instance.Unregister(this);
     }
 
     void UpdateInputMap()

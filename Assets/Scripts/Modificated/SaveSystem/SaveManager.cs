@@ -97,6 +97,9 @@ public class SaveManager : SingletonBase<SaveManager>
 
     public void LoadGame()
     {
+        if (!_game.Exists)
+            return;
+
         _game.Load();
 
         foreach (var s in _saveables)
